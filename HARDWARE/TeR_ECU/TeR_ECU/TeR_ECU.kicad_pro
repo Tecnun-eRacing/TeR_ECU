@@ -332,20 +332,36 @@
       "Micro"
     ],
     [
-      "763bc47c-f6c5-429a-a1dd-14577a286d8d",
-      "CAN1"
-    ],
-    [
-      "11dd3511-985c-496e-87d9-5abf38cddb19",
+      "5e77d980-0e17-4264-b0d2-78c6bd2786ec",
       "CAN2"
     ],
     [
-      "1f5167a5-924b-4482-9366-66f09b173d1c",
-      "UniPort1"
+      "89fa6b65-e09d-462b-a9d8-e2037e38fa73",
+      "LV_BMS"
     ],
     [
-      "dd59c3ed-2117-401f-8e0f-5e5867b40ad3",
-      "UniPort2"
+      "277954e6-e504-4754-bfff-78bccbfcfb29",
+      "CAN1"
+    ],
+    [
+      "c9231e89-0d66-4ea8-9e74-d5a61fdabf8a",
+      "LV_CAN"
+    ],
+    [
+      "b3d71585-a15b-4975-adfa-12ed469b60dd",
+      "PowerTrain"
+    ],
+    [
+      "b76a95f3-584c-4daf-bbe9-70945b593e94",
+      "POWER"
+    ],
+    [
+      "a7e5ef7e-c831-4d4f-a194-90a98bc5e16b",
+      "Detección señales"
+    ],
+    [
+      "3120aa2d-43f7-45e0-8e9f-779f72cfb5e6",
+      "Functions"
     ]
   ],
   "text_variables": {}
