@@ -296,6 +296,10 @@
     (stroke (width 0) (type default))
     (uuid 99f25483-478b-4a8c-97d8-510fd56de81d)
   )
+  (wire (pts (xy 66.04 124.46) (xy 129.54 124.46))
+    (stroke (width 0) (type default))
+    (uuid 9cf497dd-48f9-4eb3-a236-e064dca8b924)
+  )
   (wire (pts (xy 102.87 100.33) (xy 129.54 100.33))
     (stroke (width 0) (type default))
     (uuid 9dad3b1e-cadf-4c69-95f6-5897e902f62e)
@@ -901,6 +905,10 @@
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid ad1fa80c-7fc9-4546-87d8-082cda82b1b1)
     )
+    (pin "LEDs" output (at 129.54 124.46 180)
+      (effects (font (size 1.27 1.27)) (justify left))
+      (uuid 2f85ec3b-c707-4cc5-a10b-7d8426771bff)
+    )
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902" (page "2"))
@@ -958,6 +966,10 @@
     (pin "BSPD_5V" output (at 66.04 81.28 0)
       (effects (font (size 1.27 1.27)) (justify right))
       (uuid f472a000-1770-4f38-bc5f-4df424b5202a)
+    )
+    (pin "LEDs" input (at 66.04 124.46 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+      (uuid cba3558f-79ad-4b5a-963f-ad6f38b58f34)
     )
     (instances
       (project "TeR_ECU"
