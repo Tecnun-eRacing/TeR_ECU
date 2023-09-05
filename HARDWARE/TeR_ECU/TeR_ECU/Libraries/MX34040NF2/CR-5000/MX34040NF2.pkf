@@ -1,0 +1,10 @@
+(unit MM)
+
+(package "MX34040NF2"
+    (type UNDEF)
+    (uver 2)
+    (mountForm default
+        (footprintRef "MX34040NF2")
+        (spec "default")
+    )
+)

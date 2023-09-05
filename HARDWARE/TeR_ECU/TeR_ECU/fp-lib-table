@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "MX34040NF2")(type "Legacy")(uri "${KIPRJMOD}/Libraries/MX34040NF2/KiCad/MX34040NF2.mod")(options "")(descr ""))
+)

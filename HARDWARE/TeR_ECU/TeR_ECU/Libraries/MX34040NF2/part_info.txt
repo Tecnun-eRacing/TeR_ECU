@@ -1,0 +1,9 @@
+Manufacturer=JAE
+PartNumber=MX34040NF2
+PartCategory=Integrated Circuit
+PackageCategory=Other
+PinCount=42
+Version=3.2
+Released=2018-01-08 12:51:28
+Downloaded=2023-09-05 07:52:35
+3D=Y

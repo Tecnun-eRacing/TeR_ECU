@@ -397,6 +397,58 @@
         )
       )
     )
+    (symbol "power:+12V" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
+      (property "Reference" "#PWR" (at 0 -3.81 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "Value" "+12V" (at 0 3.556 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Footprint" "" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "Datasheet" "" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_keywords" "global power" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_description" "Power symbol creates a global label with name \"+12V\"" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (symbol "+12V_0_1"
+        (polyline
+          (pts
+            (xy -0.762 1.27)
+            (xy 0 2.54)
+          )
+          (stroke (width 0) (type default))
+          (fill (type none))
+        )
+        (polyline
+          (pts
+            (xy 0 0)
+            (xy 0 2.54)
+          )
+          (stroke (width 0) (type default))
+          (fill (type none))
+        )
+        (polyline
+          (pts
+            (xy 0 2.54)
+            (xy 0.762 1.27)
+          )
+          (stroke (width 0) (type default))
+          (fill (type none))
+        )
+      )
+      (symbol "+12V_1_1"
+        (pin power_in line (at 0 0 90) (length 0) hide
+          (name "+12V" (effects (font (size 1.27 1.27))))
+          (number "1" (effects (font (size 1.27 1.27))))
+        )
+      )
+    )
     (symbol "power:+24V" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
       (property "Reference" "#PWR" (at 0 -3.81 0)
         (effects (font (size 1.27 1.27)) hide)
@@ -964,7 +1016,32 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "U2") (unit 1)
+          (reference "U5") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:+12V") (at 113.03 82.55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 2f1f0e16-2b2f-4a31-80ad-57344b9e7e93)
+    (property "Reference" "#PWR042" (at 113.03 86.36 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+12V" (at 113.03 77.47 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 113.03 82.55 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 113.03 82.55 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 4638ed40-4818-47e1-8236-3c41e525ea28))
+    (instances
+      (project "TeR_ECU"
+        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
+          (reference "#PWR042") (unit 1)
         )
       )
     )
@@ -1025,7 +1102,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C12") (unit 1)
+          (reference "C20") (unit 1)
         )
       )
     )
@@ -1056,7 +1133,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C13") (unit 1)
+          (reference "C21") (unit 1)
         )
       )
     )
@@ -1147,7 +1224,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C18") (unit 1)
+          (reference "C19") (unit 1)
         )
       )
     )
@@ -1298,7 +1375,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C9") (unit 1)
+          (reference "C16") (unit 1)
         )
       )
     )
@@ -1360,7 +1437,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C17") (unit 1)
+          (reference "C18") (unit 1)
         )
       )
     )
@@ -1543,7 +1620,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C10") (unit 1)
+          (reference "C17") (unit 1)
         )
       )
     )
@@ -1632,7 +1709,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "U3") (unit 1)
+          (reference "U6") (unit 1)
         )
       )
     )
@@ -1844,36 +1921,6 @@
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
           (reference "#PWR013") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:+5V") (at 113.03 82.55 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid febbc1e2-e765-49e5-b1b4-a551de75d502)
-    (property "Reference" "#PWR016" (at 113.03 86.36 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+5V" (at 113.03 78.74 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 113.03 82.55 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 113.03 82.55 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 47f27644-df21-42ed-b03e-7262dde66415))
-    (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "#PWR016") (unit 1)
-        )
-      )
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR042") (unit 1)
         )
       )
     )
