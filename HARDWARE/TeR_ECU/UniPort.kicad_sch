@@ -427,7 +427,7 @@
     (property "Value" "RJ45_Shielded" (at 127 72.39 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 127 86.995 90)
+    (property "Footprint" "Connector_RJ:RJ45_Ninigi_GE" (at 127 86.995 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 127 86.995 90)

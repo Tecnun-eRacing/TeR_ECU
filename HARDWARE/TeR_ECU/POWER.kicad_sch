@@ -984,7 +984,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR017") (unit 1)
+          (reference "#PWR0106") (unit 1)
         )
       )
     )
@@ -1254,7 +1254,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR012") (unit 1)
+          (reference "#PWR0104") (unit 1)
         )
       )
     )
@@ -1375,7 +1375,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C16") (unit 1)
+          (reference "C22") (unit 1)
         )
       )
     )
@@ -1390,7 +1390,7 @@
     (property "Value" "TCK-141" (at 52.07 78.74 0)
       (effects (font (size 1.524 1.524)))
     )
-    (property "Footprint" "Footprints:IND_TCK-141_TRP" (at 44.45 83.82 0)
+    (property "Footprint" "footprints:IND_TCK-141_TRP" (at 44.45 83.82 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "TCK-141" (at 44.45 83.82 0)
@@ -1559,7 +1559,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR019") (unit 1)
+          (reference "#PWR0105") (unit 1)
         )
       )
     )
@@ -1589,7 +1589,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR011") (unit 1)
+          (reference "#PWR0103") (unit 1)
         )
       )
     )
@@ -1799,7 +1799,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR010") (unit 1)
+          (reference "#PWR0101") (unit 1)
         )
       )
     )
@@ -1814,7 +1814,7 @@
     (property "Value" "TCK-141" (at 55.88 29.21 0)
       (effects (font (size 1.524 1.524)))
     )
-    (property "Footprint" "Footprints:IND_TCK-141_TRP" (at 48.26 34.29 0)
+    (property "Footprint" "footprints:IND_TCK-141_TRP" (at 48.26 34.29 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "TCK-141" (at 48.26 34.29 0)
@@ -1920,7 +1920,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR013") (unit 1)
+          (reference "#PWR0102") (unit 1)
         )
       )
     )
