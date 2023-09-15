@@ -874,7 +874,7 @@
   (symbol (lib_id "power:+24V") (at 115.57 119.38 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 059f267a-9b99-436c-a7b5-e487a7638507)
-    (property "Reference" "#PWR066" (at 119.38 119.38 0)
+    (property "Reference" "#PWR070" (at 119.38 119.38 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+24V" (at 111.76 119.38 90)
@@ -890,7 +890,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR066") (unit 1)
+          (reference "#PWR070") (unit 1)
         )
       )
     )
@@ -899,7 +899,7 @@
   (symbol (lib_id "power:+5V") (at 153.67 81.28 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 0749b52b-d1e6-4e65-ba29-a2ce7ab77414)
-    (property "Reference" "#PWR057" (at 149.86 81.28 0)
+    (property "Reference" "#PWR063" (at 149.86 81.28 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 158.75 81.28 90)
@@ -915,7 +915,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR057") (unit 1)
+          (reference "#PWR063") (unit 1)
         )
       )
     )
@@ -924,7 +924,7 @@
   (symbol (lib_id "power:GND") (at 160.02 115.57 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 0f780e7e-9149-4c6a-b474-096a0696b4d6)
-    (property "Reference" "#PWR065" (at 160.02 121.92 0)
+    (property "Reference" "#PWR068" (at 160.02 121.92 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 160.02 120.65 0)
@@ -940,7 +940,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR065") (unit 1)
+          (reference "#PWR068") (unit 1)
         )
       )
     )
@@ -975,7 +975,7 @@
   (symbol (lib_id "power:+5V") (at 115.57 101.6 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 3618e09b-627a-4b3f-920f-1b51b912e866)
-    (property "Reference" "#PWR054" (at 119.38 101.6 0)
+    (property "Reference" "#PWR066" (at 119.38 101.6 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 110.49 101.6 90)
@@ -991,7 +991,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR054") (unit 1)
+          (reference "#PWR066") (unit 1)
         )
       )
     )
@@ -1006,7 +1006,7 @@
     (property "Value" "MX34040NF2" (at 135.89 63.5 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "MX34040NF2" (at 143.51 163.5 0)
+    (property "Footprint" "MX34040NF2:MX34040NF2" (at 143.51 163.5 0)
       (effects (font (size 1.27 1.27)) (justify left top) hide)
     )
     (property "Datasheet" "https://www.jae.com/direct/topics/topics_file_download/topics_id=64950&ext_no=06&_lang=en&v=" (at 143.51 263.5 0)
@@ -1081,7 +1081,7 @@
   (symbol (lib_id "power:+12V") (at 115.57 116.84 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 53741d3b-d40c-4f57-90d4-775e5d7cafb3)
-    (property "Reference" "#PWR052" (at 119.38 116.84 0)
+    (property "Reference" "#PWR069" (at 119.38 116.84 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+12V" (at 109.22 116.84 90)
@@ -1097,7 +1097,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR052") (unit 1)
+          (reference "#PWR069") (unit 1)
         )
       )
     )
@@ -1106,7 +1106,7 @@
   (symbol (lib_id "power:+3.3V") (at 118.11 78.74 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 9d81eec5-001f-4abc-801b-84ec8a2ffa01)
-    (property "Reference" "#PWR062" (at 121.92 78.74 0)
+    (property "Reference" "#PWR061" (at 121.92 78.74 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 111.76 78.74 90)
@@ -1122,7 +1122,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR062") (unit 1)
+          (reference "#PWR061") (unit 1)
         )
       )
     )
@@ -1131,7 +1131,7 @@
   (symbol (lib_id "power:+24V") (at 115.57 73.66 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid abfa0886-4c0a-46ad-9be0-f49bf55c47ef)
-    (property "Reference" "#PWR051" (at 119.38 73.66 0)
+    (property "Reference" "#PWR060" (at 119.38 73.66 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+24V" (at 109.22 73.66 90)
@@ -1147,7 +1147,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR051") (unit 1)
+          (reference "#PWR060") (unit 1)
         )
       )
     )
@@ -1156,7 +1156,7 @@
   (symbol (lib_id "power:GND") (at 157.48 85.09 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid ace02387-a1b9-41f6-b2d9-04f56366052c)
-    (property "Reference" "#PWR063" (at 163.83 85.09 0)
+    (property "Reference" "#PWR064" (at 163.83 85.09 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 162.56 85.09 90)
@@ -1172,7 +1172,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR063") (unit 1)
+          (reference "#PWR064") (unit 1)
         )
       )
     )
@@ -1181,7 +1181,7 @@
   (symbol (lib_id "power:+24V") (at 167.64 68.58 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid c0515955-5cb8-42d0-8d8e-bde97911beab)
-    (property "Reference" "#PWR067" (at 163.83 68.58 0)
+    (property "Reference" "#PWR059" (at 163.83 68.58 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+24V" (at 173.99 68.58 90)
@@ -1197,7 +1197,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR067") (unit 1)
+          (reference "#PWR059") (unit 1)
         )
       )
     )
@@ -1206,7 +1206,7 @@
   (symbol (lib_id "power:+5V") (at 115.57 114.3 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid d619cedc-7221-4839-b9f5-b0dfafc56274)
-    (property "Reference" "#PWR055" (at 119.38 114.3 0)
+    (property "Reference" "#PWR067" (at 119.38 114.3 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+5V" (at 110.49 114.3 90)
@@ -1222,7 +1222,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR055") (unit 1)
+          (reference "#PWR067") (unit 1)
         )
       )
     )
@@ -1231,7 +1231,7 @@
   (symbol (lib_id "power:GND") (at 165.1 78.74 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid db423eff-5ec4-4eb2-b09d-211b014a5a06)
-    (property "Reference" "#PWR053" (at 165.1 85.09 0)
+    (property "Reference" "#PWR062" (at 165.1 85.09 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 165.1 82.55 0)
@@ -1247,7 +1247,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR053") (unit 1)
+          (reference "#PWR062") (unit 1)
         )
       )
     )
@@ -1256,7 +1256,7 @@
   (symbol (lib_id "power:+24V") (at 116.84 87.63 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid fbdc89e8-629c-4a06-b64f-2dc54b60cb8c)
-    (property "Reference" "#PWR056" (at 120.65 87.63 0)
+    (property "Reference" "#PWR065" (at 120.65 87.63 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+24V" (at 113.03 87.63 90)
@@ -1272,7 +1272,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-          (reference "#PWR056") (unit 1)
+          (reference "#PWR065") (unit 1)
         )
       )
     )

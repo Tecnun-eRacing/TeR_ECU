@@ -162,58 +162,6 @@
         )
       )
     )
-    (symbol "power:+24V" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
-      (property "Reference" "#PWR" (at 0 -3.81 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Value" "+24V" (at 0 3.556 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_keywords" "global power" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_description" "Power symbol creates a global label with name \"+24V\"" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "+24V_0_1"
-        (polyline
-          (pts
-            (xy -0.762 1.27)
-            (xy 0 2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 0)
-            (xy 0 2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 2.54)
-            (xy 0.762 1.27)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-      )
-      (symbol "+24V_1_1"
-        (pin power_in line (at 0 0 90) (length 0) hide
-          (name "+24V" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
     (symbol "power:GND" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
       (property "Reference" "#PWR" (at 0 -6.35 0)
         (effects (font (size 1.27 1.27)) hide)
@@ -267,7 +215,7 @@
     (stroke (width 0) (type default))
     (uuid 01f78296-cca4-4f05-b453-6932429754db)
   )
-  (wire (pts (xy 144.78 77.47) (xy 152.4 77.47))
+  (wire (pts (xy 144.78 77.47) (xy 153.67 77.47))
     (stroke (width 0) (type default))
     (uuid 0c8ccb04-b6b2-442e-b6a3-d540f073a859)
   )
@@ -316,6 +264,10 @@
     (uuid 5b643ab1-aaca-439d-8f65-d7f2be7df7c8)
   )
 
+  (hierarchical_label "24V_Port" (shape input) (at 153.67 85.09 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid 26aa60b4-c42b-49d3-b6f3-a44629b0f0c7)
+  )
   (hierarchical_label "CAN+" (shape bidirectional) (at 153.67 92.71 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left))
     (uuid 4b6aaa29-4008-4e34-9e33-5f2013b77379)
@@ -325,63 +277,32 @@
     (uuid 8c086e5d-3603-4e95-979a-60c29171b256)
   )
 
-  (symbol (lib_id "power:+24V") (at 153.67 85.09 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 00332975-dc08-43cd-bab3-e9b7727bfc1b)
-    (property "Reference" "#PWR012" (at 149.86 85.09 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+24V" (at 157.48 85.09 90)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "" (at 153.67 85.09 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 153.67 85.09 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 6b3bc680-e4d1-4e51-ada6-a8759c58138d))
-    (instances
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "#PWR012") (unit 1)
-        )
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
-          (reference "#PWR039") (unit 1)
-        )
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-          (reference "#PWR045") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:GND") (at 152.4 77.47 90) (unit 1)
+  (symbol (lib_id "power:GND") (at 153.67 77.47 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 1745c818-70d4-45b0-bfa3-30ce33b3177b)
-    (property "Reference" "#PWR011" (at 158.75 77.47 0)
+    (property "Reference" "#PWR035" (at 160.02 77.47 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Value" "GND" (at 156.21 77.47 90)
+    (property "Value" "GND" (at 157.48 77.47 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "" (at 152.4 77.47 0)
+    (property "Footprint" "" (at 153.67 77.47 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (at 152.4 77.47 0)
+    (property "Datasheet" "" (at 153.67 77.47 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 4c98713c-80ba-477e-b89a-69fb4083f36f))
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "#PWR011") (unit 1)
+          (reference "#PWR035") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
-          (reference "#PWR019") (unit 1)
+          (reference "#PWR028") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-          (reference "#PWR043") (unit 1)
+          (reference "#PWR037") (unit 1)
         )
       )
     )
@@ -390,7 +311,7 @@
   (symbol (lib_id "power:GND") (at 127 100.33 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 57adf174-b870-42ba-92ec-be9a1239acc4)
-    (property "Reference" "#PWR013" (at 127 106.68 0)
+    (property "Reference" "#PWR036" (at 127 106.68 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 127 105.41 0)
@@ -406,13 +327,13 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "#PWR013") (unit 1)
+          (reference "#PWR036") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
-          (reference "#PWR017") (unit 1)
+          (reference "#PWR029") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-          (reference "#PWR041") (unit 1)
+          (reference "#PWR038") (unit 1)
         )
       )
     )
@@ -421,7 +342,7 @@
   (symbol (lib_id "Connector:RJ45_Shielded") (at 127 87.63 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid c825d89f-d7fa-4950-88ab-6059bf7715b5)
-    (property "Reference" "J1" (at 127 69.85 0)
+    (property "Reference" "J3" (at 127 69.85 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "RJ45_Shielded" (at 127 72.39 0)
@@ -445,13 +366,13 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "J1") (unit 1)
+          (reference "J3") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
           (reference "J2") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-          (reference "J3") (unit 1)
+          (reference "J4") (unit 1)
         )
       )
     )

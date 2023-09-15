@@ -1916,13 +1916,13 @@
   (symbol (lib_id "Device:C") (at 55.88 63.5 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 0e73d7fa-930a-4a42-816c-9c61a7000f3e)
-    (property "Reference" "C12" (at 58.42 62.23 0)
+    (property "Reference" "C9" (at 58.42 62.23 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "1uF" (at 58.42 64.77 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" (at 54.9148 59.69 0)
+    (property "Footprint" "Capacitor_SMD:C_0603_1608Metric" (at 54.9148 59.69 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 55.88 63.5 0)
@@ -1933,7 +1933,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C12") (unit 1)
+          (reference "C9") (unit 1)
         )
       )
     )
@@ -1942,13 +1942,13 @@
   (symbol (lib_id "Device:C") (at 24.13 63.5 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 24670bf8-d5cb-46ca-afe1-b1d28a7e376c)
-    (property "Reference" "C10" (at 26.67 62.23 0)
+    (property "Reference" "C7" (at 26.67 62.23 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "10nF" (at 26.67 64.77 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" (at 23.1648 59.69 0)
+    (property "Footprint" "Capacitor_SMD:C_0603_1608Metric" (at 23.1648 59.69 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 24.13 63.5 0)
@@ -1959,7 +1959,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C10") (unit 1)
+          (reference "C7") (unit 1)
         )
       )
     )
@@ -1968,7 +1968,7 @@
   (symbol (lib_id "MCU_ST_STM32F4:STM32F446RETx") (at 152.4 96.52 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 33467022-27df-4fd8-8fd6-8aa416fe1152)
-    (property "Reference" "U3" (at 157.1341 142.24 0)
+    (property "Reference" "U1" (at 157.1341 142.24 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "STM32F446RETx" (at 157.1341 144.78 0)
@@ -2047,7 +2047,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "U3") (unit 1)
+          (reference "U1") (unit 1)
         )
       )
     )
@@ -2056,7 +2056,7 @@
   (symbol (lib_id "Device:C") (at 55.88 173.99 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 35cdc9c2-723d-45c9-afb4-b4e287e13b1f)
-    (property "Reference" "C15" (at 54.61 168.91 90)
+    (property "Reference" "C12" (at 54.61 168.91 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "10pF" (at 55.88 171.45 90)
@@ -2073,7 +2073,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C15") (unit 1)
+          (reference "C12") (unit 1)
         )
       )
     )
@@ -2082,13 +2082,13 @@
   (symbol (lib_id "Device:C") (at 24.13 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 3dacc1d9-5333-4080-a87e-5578dba62cd0)
-    (property "Reference" "C6" (at 26.67 26.67 0)
+    (property "Reference" "C2" (at 26.67 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 26.67 29.21 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 23.1648 24.13 0)
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 23.1648 24.13 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 24.13 27.94 0)
@@ -2099,7 +2099,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C6") (unit 1)
+          (reference "C2") (unit 1)
         )
       )
     )
@@ -2108,7 +2108,7 @@
   (symbol (lib_id "power:+3.3V") (at 15.24 24.13 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 436ad184-6688-4afd-949c-5d1b2feb875c)
-    (property "Reference" "#PWR022" (at 15.24 27.94 0)
+    (property "Reference" "#PWR05" (at 15.24 27.94 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 15.24 19.05 0)
@@ -2124,7 +2124,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR022") (unit 1)
+          (reference "#PWR05") (unit 1)
         )
       )
     )
@@ -2133,7 +2133,7 @@
   (symbol (lib_id "Jumper:Jumper_3_Bridged12") (at 29.21 128.27 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 50268250-f0ba-40c7-b5cc-bfca35800ff5)
-    (property "Reference" "JP3" (at 29.21 121.92 0)
+    (property "Reference" "JP1" (at 29.21 121.92 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "BOOT0" (at 29.21 124.46 0)
@@ -2151,7 +2151,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "JP3") (unit 1)
+          (reference "JP1") (unit 1)
         )
       )
     )
@@ -2160,7 +2160,7 @@
   (symbol (lib_id "Device:R") (at 29.21 138.43 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 51cf5d0b-283f-430c-a523-c9336522913e)
-    (property "Reference" "R6" (at 31.75 137.16 0)
+    (property "Reference" "R5" (at 31.75 137.16 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "10k" (at 31.75 139.7 0)
@@ -2177,7 +2177,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "R6") (unit 1)
+          (reference "R5") (unit 1)
         )
       )
     )
@@ -2186,13 +2186,13 @@
   (symbol (lib_id "Device:C") (at 54.61 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 540f8172-3afa-44f4-a06b-b46f5ca8783a)
-    (property "Reference" "C9" (at 57.15 26.67 0)
+    (property "Reference" "C5" (at 57.15 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 57.15 29.21 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 53.6448 24.13 0)
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 53.6448 24.13 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 54.61 27.94 0)
@@ -2203,7 +2203,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C9") (unit 1)
+          (reference "C5") (unit 1)
         )
       )
     )
@@ -2212,7 +2212,7 @@
   (symbol (lib_id "Device:R") (at 35.56 88.9 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 560f1c6e-39e5-4fd7-8123-c813e70f74cb)
-    (property "Reference" "R5" (at 35.56 91.44 90)
+    (property "Reference" "R4" (at 35.56 91.44 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "100R" (at 35.56 86.36 90)
@@ -2229,7 +2229,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "R5") (unit 1)
+          (reference "R4") (unit 1)
         )
       )
     )
@@ -2238,7 +2238,7 @@
   (symbol (lib_id "power:+3.3VADC") (at 24.13 55.88 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 5ff1a9c8-f619-40ed-accb-8e7358969e23)
-    (property "Reference" "#PWR024" (at 27.94 57.15 0)
+    (property "Reference" "#PWR011" (at 27.94 57.15 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3VADC" (at 24.13 50.8 0)
@@ -2254,7 +2254,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR024") (unit 1)
+          (reference "#PWR011") (unit 1)
         )
       )
     )
@@ -2263,13 +2263,13 @@
   (symbol (lib_id "Device:C") (at 34.29 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 631ac539-5b58-423d-aaae-bcca1a6a790e)
-    (property "Reference" "C7" (at 36.83 26.67 0)
+    (property "Reference" "C3" (at 36.83 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 36.83 29.21 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 33.3248 24.13 0)
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 33.3248 24.13 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 34.29 27.94 0)
@@ -2280,7 +2280,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C7") (unit 1)
+          (reference "C3") (unit 1)
         )
       )
     )
@@ -2289,7 +2289,7 @@
   (symbol (lib_id "Device:C") (at 45.72 96.52 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 65d97e6f-e5c2-413f-aadd-21ed35ea4704)
-    (property "Reference" "C13" (at 48.26 95.25 0)
+    (property "Reference" "C10" (at 48.26 95.25 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 48.26 97.79 0)
@@ -2306,7 +2306,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C13") (unit 1)
+          (reference "C10") (unit 1)
         )
       )
     )
@@ -2315,7 +2315,7 @@
   (symbol (lib_id "power:+3.3V") (at 60.96 127 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 66c61f1e-8e69-4c83-bcc2-6f982b277c1f)
-    (property "Reference" "#PWR033" (at 60.96 130.81 0)
+    (property "Reference" "#PWR017" (at 60.96 130.81 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 60.96 121.92 0)
@@ -2331,7 +2331,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR033") (unit 1)
+          (reference "#PWR017") (unit 1)
         )
       )
     )
@@ -2340,7 +2340,7 @@
   (symbol (lib_id "Device:R") (at 52.07 138.43 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 6ce8c3d4-b443-4ee8-9417-fab73831e3c3)
-    (property "Reference" "R7" (at 54.61 137.16 0)
+    (property "Reference" "R6" (at 54.61 137.16 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "10k" (at 54.61 139.7 0)
@@ -2357,7 +2357,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "R7") (unit 1)
+          (reference "R6") (unit 1)
         )
       )
     )
@@ -2366,7 +2366,7 @@
   (symbol (lib_id "power:+3.3V") (at 55.88 55.88 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 6ffbb7db-9155-48b6-9139-214cc65d2383)
-    (property "Reference" "#PWR026" (at 55.88 59.69 0)
+    (property "Reference" "#PWR012" (at 55.88 59.69 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 55.88 50.8 0)
@@ -2382,7 +2382,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR026") (unit 1)
+          (reference "#PWR012") (unit 1)
         )
       )
     )
@@ -2391,7 +2391,7 @@
   (symbol (lib_id "power:GND") (at 44.45 130.81 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 73d76e9c-5c32-44e0-b456-915960ea1498)
-    (property "Reference" "#PWR032" (at 44.45 137.16 0)
+    (property "Reference" "#PWR019" (at 44.45 137.16 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 44.45 135.89 0)
@@ -2407,7 +2407,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR032") (unit 1)
+          (reference "#PWR019") (unit 1)
         )
       )
     )
@@ -2416,7 +2416,7 @@
   (symbol (lib_id "power:GND") (at 64.77 179.07 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 787b2d6d-36ab-473a-81c0-19b790707367)
-    (property "Reference" "#PWR035" (at 64.77 185.42 0)
+    (property "Reference" "#PWR022" (at 64.77 185.42 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 64.77 184.15 0)
@@ -2432,7 +2432,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR035") (unit 1)
+          (reference "#PWR022") (unit 1)
         )
       )
     )
@@ -2441,7 +2441,7 @@
   (symbol (lib_id "power:GND") (at 152.4 144.78 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 7f91dd7e-faa8-4837-93cb-7bc3b19e1dfd)
-    (property "Reference" "#PWR029" (at 152.4 151.13 0)
+    (property "Reference" "#PWR020" (at 152.4 151.13 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 152.4 149.86 0)
@@ -2457,7 +2457,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR029") (unit 1)
+          (reference "#PWR020") (unit 1)
         )
       )
     )
@@ -2466,7 +2466,7 @@
   (symbol (lib_id "Device:R") (at 48.26 166.37 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 82df6343-d5b0-4c43-9c8e-8ca0b9a61a3d)
-    (property "Reference" "R8" (at 50.8 165.1 0)
+    (property "Reference" "R7" (at 50.8 165.1 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "300R" (at 50.8 167.64 0)
@@ -2483,7 +2483,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "R8") (unit 1)
+          (reference "R7") (unit 1)
         )
       )
     )
@@ -2492,13 +2492,13 @@
   (symbol (lib_id "Device:C") (at 44.45 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 83436c01-83bb-48be-a30e-87b26441dfa3)
-    (property "Reference" "C8" (at 46.99 26.67 0)
+    (property "Reference" "C4" (at 46.99 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 46.99 29.21 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 43.4848 24.13 0)
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 43.4848 24.13 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 44.45 27.94 0)
@@ -2509,7 +2509,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C8") (unit 1)
+          (reference "C4") (unit 1)
         )
       )
     )
@@ -2518,7 +2518,7 @@
   (symbol (lib_id "Connector:Conn_01x04_Pin") (at 271.78 35.56 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 98204d09-6ad0-4de7-9c43-4455821be84c)
-    (property "Reference" "J4" (at 273.05 33.02 0)
+    (property "Reference" "J1" (at 273.05 33.02 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "Debug" (at 273.05 35.56 0)
@@ -2537,7 +2537,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "J4") (unit 1)
+          (reference "J1") (unit 1)
         )
       )
     )
@@ -2572,7 +2572,7 @@
   (symbol (lib_id "power:GND") (at 24.13 69.85 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid a1c75ef8-8266-4eea-bd61-6da7f1ffcb61)
-    (property "Reference" "#PWR025" (at 24.13 76.2 0)
+    (property "Reference" "#PWR013" (at 24.13 76.2 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 24.13 74.93 0)
@@ -2588,7 +2588,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR025") (unit 1)
+          (reference "#PWR013") (unit 1)
         )
       )
     )
@@ -2623,7 +2623,7 @@
   (symbol (lib_id "power:GND") (at 55.88 69.85 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid a9c5d59a-b73b-482c-a56d-1d8203ba1b56)
-    (property "Reference" "#PWR027" (at 55.88 76.2 0)
+    (property "Reference" "#PWR014" (at 55.88 76.2 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 55.88 74.93 0)
@@ -2639,7 +2639,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR027") (unit 1)
+          (reference "#PWR014") (unit 1)
         )
       )
     )
@@ -2648,7 +2648,7 @@
   (symbol (lib_id "Device:C") (at 15.24 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid aa4c46f0-c912-4cdf-b42a-22b08436e92c)
-    (property "Reference" "C5" (at 17.78 26.67 0)
+    (property "Reference" "C1" (at 17.78 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "10uF" (at 17.78 29.21 0)
@@ -2665,7 +2665,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C5") (unit 1)
+          (reference "C1") (unit 1)
         )
       )
     )
@@ -2674,7 +2674,7 @@
   (symbol (lib_id "Jumper:Jumper_3_Bridged12") (at 52.07 128.27 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid bb93f2ce-bc54-4595-9285-29c6ba2b3dce)
-    (property "Reference" "JP4" (at 52.07 121.92 0)
+    (property "Reference" "JP2" (at 52.07 121.92 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "BOOT1" (at 52.07 124.46 0)
@@ -2692,7 +2692,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "JP4") (unit 1)
+          (reference "JP2") (unit 1)
         )
       )
     )
@@ -2701,7 +2701,7 @@
   (symbol (lib_id "power:+3.3V") (at 147.32 45.72 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid becd2318-e319-43c0-bf5c-9ac154c9f71d)
-    (property "Reference" "#PWR020" (at 147.32 49.53 0)
+    (property "Reference" "#PWR09" (at 147.32 49.53 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 147.32 40.64 0)
@@ -2717,7 +2717,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR020") (unit 1)
+          (reference "#PWR09") (unit 1)
         )
       )
     )
@@ -2726,7 +2726,7 @@
   (symbol (lib_id "power:GND") (at 36.83 104.14 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid c03a1d20-e98f-483f-bdff-d4a583656e6e)
-    (property "Reference" "#PWR028" (at 36.83 110.49 0)
+    (property "Reference" "#PWR015" (at 36.83 110.49 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 36.83 109.22 0)
@@ -2742,7 +2742,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR028") (unit 1)
+          (reference "#PWR015") (unit 1)
         )
       )
     )
@@ -2751,7 +2751,7 @@
   (symbol (lib_id "Device:C") (at 64.77 27.94 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid c1a3aabf-3a62-4ab6-85f4-4cc28ef98439)
-    (property "Reference" "C16" (at 67.31 26.67 0)
+    (property "Reference" "C6" (at 67.31 26.67 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "100nF" (at 67.31 29.21 0)
@@ -2768,7 +2768,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C16") (unit 1)
+          (reference "C6") (unit 1)
         )
       )
     )
@@ -2777,7 +2777,7 @@
   (symbol (lib_id "power:+3.3V") (at 260.35 27.94 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid c27e7532-a2d4-4ada-b6dc-3e3cd0b47592)
-    (property "Reference" "#PWR036" (at 260.35 31.75 0)
+    (property "Reference" "#PWR06" (at 260.35 31.75 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 260.35 22.86 0)
@@ -2793,7 +2793,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR036") (unit 1)
+          (reference "#PWR06") (unit 1)
         )
       )
     )
@@ -2802,7 +2802,7 @@
   (symbol (lib_id "power:GND") (at 260.35 40.64 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid cbc62f77-a53f-44b4-956b-206c923ba4aa)
-    (property "Reference" "#PWR037" (at 260.35 46.99 0)
+    (property "Reference" "#PWR08" (at 260.35 46.99 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 260.35 45.72 0)
@@ -2818,7 +2818,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR037") (unit 1)
+          (reference "#PWR08") (unit 1)
         )
       )
     )
@@ -2827,7 +2827,7 @@
   (symbol (lib_id "power:GND") (at 15.24 31.75 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid cd7bacae-e9fd-4579-a308-c0488376ea92)
-    (property "Reference" "#PWR023" (at 15.24 38.1 0)
+    (property "Reference" "#PWR07" (at 15.24 38.1 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 15.24 36.83 0)
@@ -2843,7 +2843,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR023") (unit 1)
+          (reference "#PWR07") (unit 1)
         )
       )
     )
@@ -2852,7 +2852,7 @@
   (symbol (lib_id "power:+3.3VADC") (at 160.02 45.72 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d0951931-85d3-45bb-9fe4-76d2c094faf9)
-    (property "Reference" "#PWR021" (at 163.83 46.99 0)
+    (property "Reference" "#PWR010" (at 163.83 46.99 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3VADC" (at 160.02 40.64 0)
@@ -2868,7 +2868,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR021") (unit 1)
+          (reference "#PWR010") (unit 1)
         )
       )
     )
@@ -2877,7 +2877,7 @@
   (symbol (lib_id "power:GND") (at 20.32 179.07 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d3039e91-3073-4679-a556-e61cc36a50cc)
-    (property "Reference" "#PWR034" (at 20.32 185.42 0)
+    (property "Reference" "#PWR021" (at 20.32 185.42 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 20.32 184.15 0)
@@ -2893,7 +2893,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR034") (unit 1)
+          (reference "#PWR021") (unit 1)
         )
       )
     )
@@ -2902,7 +2902,7 @@
   (symbol (lib_id "power:GND") (at 21.59 130.81 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid dde3d177-40b9-4a1e-8081-23b81b170a74)
-    (property "Reference" "#PWR030" (at 21.59 137.16 0)
+    (property "Reference" "#PWR018" (at 21.59 137.16 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 21.59 135.89 0)
@@ -2918,7 +2918,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR030") (unit 1)
+          (reference "#PWR018") (unit 1)
         )
       )
     )
@@ -2953,13 +2953,13 @@
   (symbol (lib_id "Device:C") (at 35.56 63.5 180) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid e32da8c0-9008-4d09-8c91-85ada326d36c)
-    (property "Reference" "C11" (at 38.1 62.23 0)
+    (property "Reference" "C8" (at 38.1 62.23 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "1uF" (at 38.1 64.77 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" (at 34.5948 59.69 0)
+    (property "Footprint" "Capacitor_SMD:C_0603_1608Metric" (at 34.5948 59.69 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 35.56 63.5 0)
@@ -2970,7 +2970,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C11") (unit 1)
+          (reference "C8") (unit 1)
         )
       )
     )
@@ -2979,7 +2979,7 @@
   (symbol (lib_id "power:+3.3V") (at 38.1 127 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid e9656d14-70ed-4a51-a2e7-da6f9f8fdb4b)
-    (property "Reference" "#PWR031" (at 38.1 130.81 0)
+    (property "Reference" "#PWR016" (at 38.1 130.81 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 38.1 121.92 0)
@@ -2995,7 +2995,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "#PWR031") (unit 1)
+          (reference "#PWR016") (unit 1)
         )
       )
     )
@@ -3004,7 +3004,7 @@
   (symbol (lib_id "Device:C") (at 29.21 173.99 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid f5ac7384-646e-46af-aa18-61737d9bbe63)
-    (property "Reference" "C14" (at 27.94 168.91 90)
+    (property "Reference" "C11" (at 27.94 168.91 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Value" "10pF" (at 29.21 171.45 90)
@@ -3021,7 +3021,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/c1b7b6cf-4e14-47f9-86b4-701be991c781"
-          (reference "C14") (unit 1)
+          (reference "C11") (unit 1)
         )
       )
     )

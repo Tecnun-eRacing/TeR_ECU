@@ -690,9 +690,6 @@
   (junction (at 43.18 83.82) (diameter 0) (color 0 0 0 0)
     (uuid 0d508171-5cf9-4d7b-9611-857b377cfb85)
   )
-  (junction (at 26.67 83.82) (diameter 0) (color 0 0 0 0)
-    (uuid 348fbe25-9692-4386-ac09-d58812d0650b)
-  )
   (junction (at 104.14 34.29) (diameter 0) (color 0 0 0 0)
     (uuid 49bd44b2-731d-4edf-8020-8c6a7412c43b)
   )
@@ -701,9 +698,6 @@
   )
   (junction (at 172.72 29.21) (diameter 0) (color 0 0 0 0)
     (uuid 7740d86f-065b-4f55-a31c-9757cf68d7a0)
-  )
-  (junction (at 30.48 34.29) (diameter 0) (color 0 0 0 0)
-    (uuid 81857191-5320-421d-b66b-7fc49d42bfdd)
   )
   (junction (at 146.05 29.21) (diameter 0) (color 0 0 0 0)
     (uuid aa6970ad-1777-4e6e-8b0f-e8d5b2ad8236)
@@ -748,6 +742,14 @@
     (stroke (width 0) (type default))
     (uuid 13d6be0d-a9d9-49f5-aedf-57264a41ae44)
   )
+  (wire (pts (xy 27.94 34.29) (xy 39.37 34.29))
+    (stroke (width 0) (type default))
+    (uuid 14f1e7d6-03e9-48b0-9dca-ca3663a42ccf)
+  )
+  (wire (pts (xy 178.435 94.615) (xy 166.37 94.615))
+    (stroke (width 0) (type default))
+    (uuid 1ae51714-411a-4d90-9cb0-ba0b7f12f0f1)
+  )
   (wire (pts (xy 63.5 34.29) (xy 64.77 34.29))
     (stroke (width 0) (type default))
     (uuid 1ccab413-71fb-4903-abe9-e342491b1f58)
@@ -777,10 +779,6 @@
     (stroke (width 0) (type default))
     (uuid 31d50971-0734-4dab-8da4-9f91cf5c8f07)
   )
-  (wire (pts (xy 26.67 87.63) (xy 26.67 83.82))
-    (stroke (width 0) (type default))
-    (uuid 332ba096-63f4-4372-b99a-76d99d2866f6)
-  )
   (wire (pts (xy 172.72 38.1) (xy 172.72 39.37))
     (stroke (width 0) (type default))
     (uuid 369d4e2e-f2c9-49fe-b2fe-47bf77229bdc)
@@ -789,7 +787,7 @@
     (stroke (width 0) (type default))
     (uuid 3d026982-c653-4e8c-8a79-2be712e73cee)
   )
-  (wire (pts (xy 34.29 83.82) (xy 35.56 83.82))
+  (wire (pts (xy 24.13 83.82) (xy 35.56 83.82))
     (stroke (width 0) (type default))
     (uuid 3e07b093-00c4-4295-b5cc-db10d8f1e579)
   )
@@ -806,21 +804,9 @@
     (stroke (width 0) (type default))
     (uuid 5216db06-a917-4a88-859e-9dbe7211cf78)
   )
-  (wire (pts (xy 30.48 38.1) (xy 30.48 34.29))
-    (stroke (width 0) (type default))
-    (uuid 524b0e35-f3a0-40ed-bb78-17217188e1fc)
-  )
   (wire (pts (xy 146.05 30.48) (xy 146.05 29.21))
     (stroke (width 0) (type default))
     (uuid 575f97b5-893b-4094-85e1-cde5df7b6792)
-  )
-  (wire (pts (xy 38.1 34.29) (xy 39.37 34.29))
-    (stroke (width 0) (type default))
-    (uuid 57fd44bd-63c0-461f-a153-270e65cdf92c)
-  )
-  (wire (pts (xy 30.48 34.29) (xy 27.94 34.29))
-    (stroke (width 0) (type default))
-    (uuid 5907a15a-10f6-4b91-9748-b4d377fb5eb9)
   )
   (wire (pts (xy 59.69 83.82) (xy 60.96 83.82))
     (stroke (width 0) (type default))
@@ -847,6 +833,11 @@
     (stroke (width 0) (type default))
     (uuid 6f4042f5-eb88-4086-bc3a-e14b757a3a1f)
   )
+  (polyline (pts (xy 125.73 116.84) (xy 199.39 116.84))
+    (stroke (width 0) (type default))
+    (uuid 71d5ea68-6f2f-4246-84ac-da6d1ecaaf24)
+  )
+
   (wire (pts (xy 35.56 83.82) (xy 43.18 83.82))
     (stroke (width 0) (type default))
     (uuid 88540ecb-d261-40dc-8cbc-b421052588d1)
@@ -876,6 +867,11 @@
     (stroke (width 0) (type default))
     (uuid a8dfdbf4-dc08-41e5-a63a-ea06df6e42a7)
   )
+  (polyline (pts (xy 199.39 116.84) (xy 199.39 68.58))
+    (stroke (width 0) (type default))
+    (uuid a90303aa-7fe6-4fb1-a47b-efcb411f7ffe)
+  )
+
   (wire (pts (xy 181.61 29.21) (xy 172.72 29.21))
     (stroke (width 0) (type default))
     (uuid aa435eb8-9df5-4002-b18e-b2cd1fdea4d3)
@@ -892,10 +888,6 @@
   (wire (pts (xy 64.77 34.29) (xy 73.66 34.29))
     (stroke (width 0) (type default))
     (uuid c9e5d5ba-3f7d-451d-b106-51f012c41ad6)
-  )
-  (wire (pts (xy 26.67 83.82) (xy 24.13 83.82))
-    (stroke (width 0) (type default))
-    (uuid cb2f7fd2-5698-408c-be7c-6d1f4db35db7)
   )
   (wire (pts (xy 39.37 34.29) (xy 46.99 34.29))
     (stroke (width 0) (type default))
@@ -925,6 +917,10 @@
     (stroke (width 0) (type default))
     (uuid f12e29b8-aac8-4059-a424-d0f0f36e93c3)
   )
+  (wire (pts (xy 158.75 94.615) (xy 149.225 94.615))
+    (stroke (width 0) (type default))
+    (uuid f18e00e4-85ca-4107-8bcf-f80e60636b65)
+  )
   (wire (pts (xy 172.72 29.21) (xy 167.64 29.21))
     (stroke (width 0) (type default))
     (uuid fd082fe2-694f-4106-a9ef-789b419a1650)
@@ -943,6 +939,10 @@
     (effects (font (size 2 2) (thickness 0.4) bold) (justify left bottom))
     (uuid 20cf576a-8f3e-49ae-af07-c899f7869120)
   )
+  (text "Fused Power Input\n" (at 129.54 74.295 0)
+    (effects (font (size 2 2) (thickness 0.4) bold) (justify left bottom))
+    (uuid 29b8320d-85c1-4cab-a89a-47296a2b72d7)
+  )
   (text "Vamos sobrados, el traco da max 1 AMP" (at 20.32 62.23 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 2b0c3361-d4c9-409b-91eb-0374ab1bdb7d)
@@ -951,13 +951,27 @@
     (effects (font (size 2 2) bold) (justify left bottom))
     (uuid 4bebadfd-a367-4dc9-aaab-51bbb3722fb3)
   )
+  (text "Habría que hacer calculos/experimental de consumo placa\n"
+    (at 133.35 111.125 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 5a4f22ae-ad02-42ab-85fc-471069dcd00d)
+  )
   (text "Mirar emi_consideration.pdf\n" (at 16.51 115.57 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 60f96aaa-b427-453b-8ee4-f38fbd3123e3)
   )
+  (text "24V->12V Buck Converter For Vector Logger" (at 33.02 72.39 0)
+    (effects (font (size 2 2) (thickness 0.4) bold) (justify left bottom))
+    (uuid cf99dbdf-69f3-4281-a54b-06aa475d4b3e)
+  )
   (text "Mirar emi_consideration.pdf\n" (at 20.32 66.04 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid f00610cb-d58b-46ba-95e5-b9a57ad23202)
+  )
+
+  (hierarchical_label "24V_IN" (shape input) (at 149.225 94.615 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
+    (uuid 52782fa0-6bd5-408c-b8a7-dc976e757424)
   )
 
   (symbol (lib_id "power:GND") (at 160.02 39.37 0) (unit 1)
@@ -984,7 +998,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0106") (unit 1)
+          (reference "#PWR043") (unit 1)
         )
       )
     )
@@ -1025,7 +1039,7 @@
   (symbol (lib_id "power:+12V") (at 113.03 82.55 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 2f1f0e16-2b2f-4a31-80ad-57344b9e7e93)
-    (property "Reference" "#PWR042" (at 113.03 86.36 0)
+    (property "Reference" "#PWR048" (at 113.03 86.36 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+12V" (at 113.03 77.47 0)
@@ -1041,37 +1055,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR042") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:PWR_FLAG") (at 30.48 38.1 0) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 342912bc-eebc-436b-812d-b8dec6b27378)
-    (property "Reference" "#FLG01" (at 30.48 40.005 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "PWR_FLAG" (at 30.48 41.91 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 30.48 38.1 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 30.48 38.1 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 953386ae-8f88-48ca-a05a-bbac0eff7c5c))
-    (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "#FLG01") (unit 1)
-        )
-      )
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG01") (unit 1)
+          (reference "#PWR048") (unit 1)
         )
       )
     )
@@ -1102,7 +1086,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C20") (unit 1)
+          (reference "C17") (unit 1)
         )
       )
     )
@@ -1133,7 +1117,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C21") (unit 1)
+          (reference "C18") (unit 1)
         )
       )
     )
@@ -1163,7 +1147,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG02") (unit 1)
+          (reference "#FLG01") (unit 1)
         )
       )
     )
@@ -1193,7 +1177,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR015") (unit 1)
+          (reference "#PWR050") (unit 1)
         )
       )
     )
@@ -1224,7 +1208,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C19") (unit 1)
+          (reference "C22") (unit 1)
         )
       )
     )
@@ -1254,7 +1238,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0104") (unit 1)
+          (reference "#PWR044") (unit 1)
         )
       )
     )
@@ -1284,7 +1268,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR038") (unit 1)
+          (reference "#PWR051") (unit 1)
         )
       )
     )
@@ -1314,7 +1298,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG05") (unit 1)
+          (reference "#FLG03") (unit 1)
         )
       )
     )
@@ -1344,7 +1328,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG06") (unit 1)
+          (reference "#FLG04") (unit 1)
         )
       )
     )
@@ -1375,7 +1359,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C22") (unit 1)
+          (reference "C19") (unit 1)
         )
       )
     )
@@ -1437,99 +1421,33 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C18") (unit 1)
+          (reference "C21") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "Device:Polyfuse") (at 34.29 34.29 90) (unit 1)
+  (symbol (lib_id "Device:Polyfuse") (at 162.56 94.615 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 7af3d321-5a44-4c4e-aae2-d05557d7a263)
-    (property "Reference" "F2" (at 34.29 29.21 90)
+    (uuid 8da15620-c510-4f41-a154-f34ff4fe93e5)
+    (property "Reference" "F1" (at 162.56 88.9 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "500ma" (at 34.29 31.75 90)
+    (property "Value" "500mA" (at 162.56 91.44 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Fuse:Fuse_0805_2012Metric" (at 39.37 33.02 0)
+    (property "Footprint" "" (at 167.64 93.345 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
-    (property "Datasheet" "~" (at 34.29 34.29 0)
+    (property "Datasheet" "~" (at 162.56 94.615 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b0bacbaa-dca6-47a4-b74c-5f5200a09287))
-    (pin "2" (uuid cc96a623-52ba-4879-a6ae-fe04df9aa9b7))
+    (pin "1" (uuid c53a5892-c5bf-4c3d-adeb-d67f624cc1a3))
+    (pin "2" (uuid 9f504f1f-aa96-4957-9c6a-709bf2f07a8f))
     (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "F2") (unit 1)
-        )
-      )
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "F2") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:Polyfuse") (at 30.48 83.82 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 7c8e074d-7376-4bcf-8b0d-a893c295e0e7)
-    (property "Reference" "F2" (at 30.48 78.74 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "500ma" (at 30.48 81.28 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Fuse:Fuse_0805_2012Metric" (at 35.56 82.55 0)
-      (effects (font (size 1.27 1.27)) (justify left) hide)
-    )
-    (property "Datasheet" "~" (at 30.48 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 28bdd456-a926-4743-adc4-6c447b0219a9))
-    (pin "2" (uuid de207ecd-fd19-438e-b524-83fa026fd94d))
-    (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "F2") (unit 1)
-        )
-      )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
           (reference "F1") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:PWR_FLAG") (at 26.67 87.63 0) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 824bfbdb-74f1-4613-845d-b1dcfb6ab3d5)
-    (property "Reference" "#FLG01" (at 26.67 89.535 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "PWR_FLAG" (at 26.67 91.44 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 26.67 87.63 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 26.67 87.63 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid bfe56b03-0bb1-43d6-a7ef-e12b06104456))
-    (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "#FLG01") (unit 1)
-        )
-      )
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG04") (unit 1)
         )
       )
     )
@@ -1559,7 +1477,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0105") (unit 1)
+          (reference "#PWR041") (unit 1)
         )
       )
     )
@@ -1589,7 +1507,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0103") (unit 1)
+          (reference "#PWR046") (unit 1)
         )
       )
     )
@@ -1620,7 +1538,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "C17") (unit 1)
+          (reference "C20") (unit 1)
         )
       )
     )
@@ -1629,7 +1547,7 @@
   (symbol (lib_id "Regulator_Switching:TSR_1-24120") (at 80.01 86.36 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid a0a26e21-f9f1-4f2a-a88e-c2ecf7458ffe)
-    (property "Reference" "U4" (at 80.01 76.2 0)
+    (property "Reference" "U6" (at 80.01 76.2 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "TSR_1-24120" (at 80.01 78.74 0)
@@ -1647,7 +1565,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "U4") (unit 1)
+          (reference "U6") (unit 1)
         )
       )
     )
@@ -1677,7 +1595,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR016") (unit 1)
+          (reference "#PWR042") (unit 1)
         )
       )
     )
@@ -1709,7 +1627,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "U6") (unit 1)
+          (reference "U4") (unit 1)
         )
       )
     )
@@ -1739,7 +1657,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR018") (unit 1)
+          (reference "#PWR040") (unit 1)
         )
       )
     )
@@ -1769,7 +1687,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR040") (unit 1)
+          (reference "#PWR052") (unit 1)
         )
       )
     )
@@ -1799,7 +1717,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0101") (unit 1)
+          (reference "#PWR039") (unit 1)
         )
       )
     )
@@ -1860,7 +1778,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#FLG03") (unit 1)
+          (reference "#FLG02") (unit 1)
         )
       )
     )
@@ -1890,7 +1808,37 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR014") (unit 1)
+          (reference "#PWR047") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:+24V") (at 178.435 94.615 270) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid fa716d19-193b-48d3-b20e-fbb319553ad3)
+    (property "Reference" "#PWR010" (at 174.625 94.615 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+24V" (at 182.245 94.615 90)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "" (at 178.435 94.615 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 178.435 94.615 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 73c53df2-0eae-4ad1-b6e5-c8ffab66d22b))
+    (instances
+      (project "TER_PEDAL"
+        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
+          (reference "#PWR010") (unit 1)
+        )
+      )
+      (project "TeR_ECU"
+        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
+          (reference "#PWR049") (unit 1)
         )
       )
     )
@@ -1920,7 +1868,7 @@
       )
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR0102") (unit 1)
+          (reference "#PWR045") (unit 1)
         )
       )
     )

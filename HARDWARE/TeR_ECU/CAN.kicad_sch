@@ -689,7 +689,7 @@
   (symbol (lib_id "power:GND") (at 77.47 73.66 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 001a77c6-246b-4114-b84b-5a85801b12a8)
-    (property "Reference" "#PWR03" (at 71.12 73.66 0)
+    (property "Reference" "#PWR031" (at 71.12 73.66 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 73.66 73.66 90)
@@ -705,10 +705,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "#PWR03") (unit 1)
+          (reference "#PWR031") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "#PWR05") (unit 1)
+          (reference "#PWR024") (unit 1)
         )
       )
     )
@@ -717,7 +717,7 @@
   (symbol (lib_id "Device:R") (at 139.7 76.2 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 01fd648b-4ce5-4eb9-adbf-fa0bfba0e7a9)
-    (property "Reference" "R1" (at 142.24 74.93 0)
+    (property "Reference" "R10" (at 142.24 74.93 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "50R" (at 142.24 77.47 0)
@@ -734,10 +734,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "R1") (unit 1)
+          (reference "R10") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "R3") (unit 1)
+          (reference "R8") (unit 1)
         )
       )
     )
@@ -746,7 +746,7 @@
   (symbol (lib_id "power:GND") (at 120.65 85.09 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 22767dab-1c99-461c-8314-54c27e73956f)
-    (property "Reference" "#PWR09" (at 114.3 85.09 0)
+    (property "Reference" "#PWR032" (at 114.3 85.09 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 116.84 85.09 90)
@@ -762,10 +762,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "#PWR09") (unit 1)
+          (reference "#PWR032") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "#PWR08") (unit 1)
+          (reference "#PWR025") (unit 1)
         )
       )
     )
@@ -774,7 +774,7 @@
   (symbol (lib_id "Device:R") (at 139.7 93.98 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 39f9dea7-70c2-4c2b-9730-5bcef20466ea)
-    (property "Reference" "R2" (at 142.24 92.71 0)
+    (property "Reference" "R11" (at 142.24 92.71 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "50R" (at 142.24 95.25 0)
@@ -791,10 +791,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "R2") (unit 1)
+          (reference "R11") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "R4") (unit 1)
+          (reference "R9") (unit 1)
         )
       )
     )
@@ -803,7 +803,7 @@
   (symbol (lib_id "power:+3.3V") (at 93.98 71.12 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 3a6c8d0e-ae31-4c76-9d44-29c1c3c5c216)
-    (property "Reference" "#PWR02" (at 93.98 74.93 0)
+    (property "Reference" "#PWR030" (at 93.98 74.93 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "+3.3V" (at 93.98 66.04 0)
@@ -819,10 +819,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "#PWR02") (unit 1)
+          (reference "#PWR030") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "#PWR06") (unit 1)
+          (reference "#PWR023") (unit 1)
         )
       )
     )
@@ -831,7 +831,7 @@
   (symbol (lib_id "Device:C") (at 124.46 85.09 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 47ba39b9-2848-4f5b-869f-b21cbfa53754)
-    (property "Reference" "C3" (at 124.46 77.47 90)
+    (property "Reference" "C16" (at 124.46 77.47 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "4.7nF" (at 124.46 80.01 90)
@@ -848,10 +848,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "C3") (unit 1)
+          (reference "C16") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "C4") (unit 1)
+          (reference "C14") (unit 1)
         )
       )
     )
@@ -860,7 +860,7 @@
   (symbol (lib_id "power:GND") (at 176.53 102.87 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 4ceb104b-4c9c-4f1e-a277-3f95994f7343)
-    (property "Reference" "#PWR04" (at 176.53 109.22 0)
+    (property "Reference" "#PWR034" (at 176.53 109.22 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 176.53 107.95 0)
@@ -876,10 +876,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "#PWR04") (unit 1)
+          (reference "#PWR034") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "#PWR010") (unit 1)
+          (reference "#PWR027") (unit 1)
         )
       )
     )
@@ -888,7 +888,7 @@
   (symbol (lib_id "Device:C") (at 85.09 73.66 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 6a332dd2-0fe3-44d0-94ee-ae291cd3ac2a)
-    (property "Reference" "C1" (at 85.09 66.04 90)
+    (property "Reference" "C15" (at 85.09 66.04 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "100nF" (at 85.09 68.58 90)
@@ -905,10 +905,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "C1") (unit 1)
+          (reference "C15") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "C2") (unit 1)
+          (reference "C13") (unit 1)
         )
       )
     )
@@ -917,7 +917,7 @@
   (symbol (lib_id "power:GND") (at 93.98 99.06 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 7b254557-8283-40d6-96a8-533ff43b4399)
-    (property "Reference" "#PWR01" (at 93.98 105.41 0)
+    (property "Reference" "#PWR033" (at 93.98 105.41 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Value" "GND" (at 93.98 104.14 0)
@@ -933,10 +933,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "#PWR01") (unit 1)
+          (reference "#PWR033") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "#PWR07") (unit 1)
+          (reference "#PWR026") (unit 1)
         )
       )
     )
@@ -945,7 +945,7 @@
   (symbol (lib_id "Interface_CAN_LIN:SN65HVD230") (at 93.98 85.09 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8d6523ed-37e3-450b-a5a9-56ac567a6879)
-    (property "Reference" "U1" (at 96.1741 74.93 0)
+    (property "Reference" "U3" (at 96.1741 74.93 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "SN65HVD230" (at 96.1741 77.47 0)
@@ -968,7 +968,7 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "U1") (unit 1)
+          (reference "U3") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
           (reference "U2") (unit 1)
@@ -980,7 +980,7 @@
   (symbol (lib_id "Power_Protection:NUP2105L") (at 176.53 97.79 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid e4c4e052-cfe6-42b3-bef0-65439dd5feea)
-    (property "Reference" "D1" (at 182.88 96.52 0)
+    (property "Reference" "D5" (at 182.88 96.52 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "NUP2105L" (at 182.88 99.06 0)
@@ -998,10 +998,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "D1") (unit 1)
+          (reference "D5") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "D2") (unit 1)
+          (reference "D4") (unit 1)
         )
       )
     )
@@ -1010,7 +1010,7 @@
   (symbol (lib_id "Jumper:SolderJumper_3_Open") (at 139.7 85.09 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid eaeb6ff1-3d38-462a-bd86-bb3bfc0cfdf5)
-    (property "Reference" "JP1" (at 142.24 83.82 90)
+    (property "Reference" "JP4" (at 142.24 83.82 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "SolderJumper_3_Open" (at 142.24 86.36 90)
@@ -1028,10 +1028,10 @@
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/277954e6-e504-4754-bfff-78bccbfcfb29"
-          (reference "JP1") (unit 1)
+          (reference "JP4") (unit 1)
         )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/5e77d980-0e17-4264-b0d2-78c6bd2786ec"
-          (reference "JP2") (unit 1)
+          (reference "JP3") (unit 1)
         )
       )
     )
