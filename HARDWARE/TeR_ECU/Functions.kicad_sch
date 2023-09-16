@@ -292,6 +292,9 @@
   (junction (at 185.42 60.96) (diameter 0) (color 0 0 0 0)
     (uuid a5897c95-c943-4b6b-a93f-c744fd7fc143)
   )
+  (junction (at 77.47 72.39) (diameter 0) (color 0 0 0 0)
+    (uuid b9de434c-77fd-4f7a-9aaa-7a2270887835)
+  )
 
   (wire (pts (xy 177.8 60.96) (xy 185.42 60.96))
     (stroke (width 0) (type default))
@@ -356,7 +359,7 @@
     (uuid 8c4fc86b-ea0e-470a-8833-6fe0cef09153)
   )
 
-  (wire (pts (xy 73.66 72.39) (xy 80.01 72.39))
+  (wire (pts (xy 73.66 72.39) (xy 77.47 72.39))
     (stroke (width 0) (type default))
     (uuid 9c5c0cc9-e427-47d3-bd7e-cd3e94288278)
   )
@@ -392,6 +395,10 @@
   (wire (pts (xy 101.6 67.31) (xy 101.6 60.96))
     (stroke (width 0) (type default))
     (uuid ce90a48a-2842-4dc8-b472-ac475a8826a9)
+  )
+  (wire (pts (xy 77.47 72.39) (xy 80.01 72.39))
+    (stroke (width 0) (type default))
+    (uuid d5669e92-e8f0-4f5d-81df-000e3410d7e9)
   )
   (wire (pts (xy 101.6 80.01) (xy 101.6 77.47))
     (stroke (width 0) (type default))
@@ -458,6 +465,32 @@
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/3120aa2d-43f7-45e0-8e9f-779f72cfb5e6"
           (reference "Q2") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Device:R") (at 77.47 76.2 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 13c7c4a0-8bb0-46c9-8d3a-f0fb8117d5a0)
+    (property "Reference" "R1" (at 80.01 74.93 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "10k" (at 80.01 77.47 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 75.692 76.2 90)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 77.47 76.2 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 9fcf9509-524c-4041-b501-300104a173ea))
+    (pin "2" (uuid 9e99cd6b-c530-4ad6-bc10-4e1b37736999))
+    (instances
+      (project "TeR_ECU"
+        (path "/84413845-c4f3-4743-bcd2-a67649c90902/3120aa2d-43f7-45e0-8e9f-779f72cfb5e6"
+          (reference "R1") (unit 1)
         )
       )
     )
@@ -610,6 +643,31 @@
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/3120aa2d-43f7-45e0-8e9f-779f72cfb5e6"
           (reference "R20") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:GND") (at 77.47 80.01 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 92dccb0c-e686-4e6c-b752-e5f083ba7473)
+    (property "Reference" "#PWR01" (at 77.47 86.36 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "GND" (at 77.47 85.09 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 77.47 80.01 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 77.47 80.01 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 02c0c3b6-11eb-437d-8360-467760271c5a))
+    (instances
+      (project "TeR_ECU"
+        (path "/84413845-c4f3-4743-bcd2-a67649c90902/3120aa2d-43f7-45e0-8e9f-779f72cfb5e6"
+          (reference "#PWR01") (unit 1)
         )
       )
     )

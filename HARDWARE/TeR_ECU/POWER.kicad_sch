@@ -926,7 +926,8 @@
     (uuid fd082fe2-694f-4106-a9ef-789b419a1650)
   )
 
-  (text "Vamos sobrados, el traco da max 1 AMP" (at 16.51 111.76 0)
+  (text "El traco del Vector no esta fuseado, el Vector es responsable de estar fuseado\n"
+    (at 16.51 111.76 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 1e710dd4-4972-4478-90e3-8f3b3bfa9a20)
   )
@@ -956,10 +957,6 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 5a4f22ae-ad02-42ab-85fc-471069dcd00d)
   )
-  (text "Mirar emi_consideration.pdf\n" (at 16.51 115.57 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 60f96aaa-b427-453b-8ee4-f38fbd3123e3)
-  )
   (text "24V->12V Buck Converter For Vector Logger" (at 33.02 72.39 0)
     (effects (font (size 2 2) (thickness 0.4) bold) (justify left bottom))
     (uuid cf99dbdf-69f3-4281-a54b-06aa475d4b3e)
@@ -972,6 +969,10 @@
   (hierarchical_label "24V_IN" (shape input) (at 149.225 94.615 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 52782fa0-6bd5-408c-b8a7-dc976e757424)
+  )
+  (hierarchical_label "24V_IN" (shape input) (at 24.13 77.47 90) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid a923a6a2-db68-4052-9f46-10f6060da3ca)
   )
 
   (symbol (lib_id "power:GND") (at 160.02 39.37 0) (unit 1)
@@ -1436,7 +1437,7 @@
     (property "Value" "500mA" (at 162.56 91.44 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 167.64 93.345 0)
+    (property "Footprint" "Fuse:Fuse_0805_2012Metric" (at 167.64 93.345 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
     (property "Datasheet" "~" (at 162.56 94.615 0)
@@ -1779,36 +1780,6 @@
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
           (reference "#FLG02") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:+24V") (at 24.13 77.47 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid edbdc785-6eec-44e1-bde1-5c2822a8537d)
-    (property "Reference" "#PWR010" (at 24.13 81.28 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+24V" (at 24.13 73.66 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 24.13 77.47 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 24.13 77.47 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 8bdbb376-d05d-4f81-8045-4b3b750636ef))
-    (instances
-      (project "TER_PEDAL"
-        (path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-          (reference "#PWR010") (unit 1)
-        )
-      )
-      (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-          (reference "#PWR047") (unit 1)
         )
       )
     )
