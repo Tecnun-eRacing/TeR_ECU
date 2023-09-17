@@ -413,6 +413,11 @@
     (uuid fad790cd-79af-4463-b808-05a6e3e9dfbd)
   )
 
+  (text "Todos estos pulldown de los mosfet pueden sobrar ya que el micro tiene\npulldown internos configurables pero están por si el micro falla para que \ncosas como la luz de freno no se enciendan."
+    (at 76.2 111.125 0)
+    (effects (font (size 1.27 1.27) bold) (justify left bottom))
+    (uuid 6eb62cf1-2f1c-4ef2-9bc3-6b086dc3b966)
+  )
   (text "Transitores para activar cosas\n" (at 64.77 35.56 0)
     (effects (font (size 2.5 2.5)) (justify left bottom))
     (uuid b2fca1bd-efc5-4e71-bb77-f4252f316777)
