@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "MX34040NF2")(type "KiCad")(uri "${KIPRJMOD}/Libraries/MX34040NF2/KiCad/MX34040NF2.kicad_sym")(options "")(descr ""))
   (lib (name "NucleoF446")(type "KiCad")(uri "${KIPRJMOD}/Libraries/NUCLEO-F446RE.kicad_sym")(options "")(descr ""))
+  (lib (name "NUCLEO-F446RE")(type "KiCad")(uri "${KIPRJMOD}/Libraries/Nucleo-F446RE/NUCLEO-F446RE.kicad_sym")(options "")(descr ""))
 )
