@@ -179,8 +179,8 @@
     (property "Datasheet" "~" (at 121.92 72.39 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid cbf38ccc-644a-4415-a53f-68aa83f175bb))
-    (pin "2" (uuid cd8240c4-39f1-468e-a4a7-0db192b3e1f1))
+    (pin "1" (uuid 73d73613-da87-48bd-b789-88923e9a424f))
+    (pin "2" (uuid 519c904d-9f93-4b62-b970-fc7fd3a6a586))
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
@@ -256,7 +256,7 @@
     (property "Datasheet" "" (at 121.92 97.79 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 6c67bcf3-228b-4a89-86f3-76ee07e110a5))
+    (pin "1" (uuid c0015b3f-76b9-4eb4-abb4-4074482a9681))
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
@@ -307,8 +307,8 @@
     (property "Datasheet" "~" (at 121.92 87.63 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b1adae8e-2b1d-44c1-a0a8-d46a0ebb0274))
-    (pin "2" (uuid 83e4e32a-409a-4cb9-b625-ed0226688f60))
+    (pin "1" (uuid 09e943be-c0dd-452e-81d2-a85c9f24877c))
+    (pin "2" (uuid 7d852152-0f05-4bca-b347-fd0e55cae9b1))
     (instances
       (project "TeR_ECU"
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
