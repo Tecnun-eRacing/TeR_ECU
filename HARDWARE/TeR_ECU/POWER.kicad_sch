@@ -760,7 +760,7 @@
     (property "Reference" "F1" (at 165.1 33.02 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "800mA" (at 165.1 35.56 90)
+    (property "Value" "500mA" (at 165.1 35.56 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Fuse:Fuse_0805_2012Metric" (at 170.18 38.1 0)
