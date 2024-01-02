@@ -692,10 +692,10 @@
       (net 1 "GND") (pintype "passive") (tstamp 5446512c-e039-4ab2-ba5d-554c79b3dd74))
     (pad "SH" thru_hole circle (at 12.215 9.4 90) (size 3 3) (drill 1.6) (layers "*.Cu" "*.Mask")
       (net 1 "GND") (pintype "passive") (tstamp 62dfb70e-cd4a-476a-903e-2433576569a6))
-    (model "${KICAD7_3DMODEL_DIR}/Connector_RJ.3dshapes/RJ45_Amphenol_RJHSE538X.step"
-      (offset (xyz 8.5 -6.5 0))
+    (model "${KIPRJMOD}/Libraries/3Dmodels/432028916.stp"
+      (offset (xyz -3.1 -9.7 -4.6))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 180))
+      (rotate (xyz 0 0 0))
     )
   )
 
@@ -892,10 +892,10 @@
       (net 1 "GND") (pintype "passive") (tstamp f577f1dd-2b20-44d4-a483-35f57756de6f))
     (pad "SH" thru_hole circle (at 12.215 9.4 90) (size 3 3) (drill 1.6) (layers "*.Cu" "*.Mask")
       (net 1 "GND") (pintype "passive") (tstamp 290989d3-3b5b-449d-a63d-3d0f6e875c31))
-    (model "${KICAD7_3DMODEL_DIR}/Connector_RJ.3dshapes/RJ45_Amphenol_RJHSE538X.wrl"
-      (offset (xyz 8.5 -6.5 -0.5))
+    (model "${KIPRJMOD}/Libraries/3Dmodels/432028916.stp"
+      (offset (xyz -3.1 -9.7 -4.6))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 180))
+      (rotate (xyz 0 0 0))
     )
   )
 
@@ -3451,10 +3451,10 @@
       (net 1 "GND") (pintype "passive") (tstamp 86013b75-0627-48e9-a5bd-b8c180fb5d47))
     (pad "SH" thru_hole circle (at 12.215 9.4 90) (size 3 3) (drill 1.6) (layers "*.Cu" "*.Mask")
       (net 1 "GND") (pintype "passive") (tstamp 0eadb11b-0866-4cac-b7a6-aa154f0d32f8))
-    (model "${KICAD7_3DMODEL_DIR}/Connector_RJ.3dshapes/RJ45_Amphenol_RJHSE538X.step"
-      (offset (xyz 7.5 -6.5 -1.5))
+    (model "${KIPRJMOD}/Libraries/3Dmodels/432028916.stp"
+      (offset (xyz -3.1 -9.7 -4))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 180))
+      (rotate (xyz 0 0 0))
     )
   )
 
