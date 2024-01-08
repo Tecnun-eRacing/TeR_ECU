@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "ter.h"
 #include "inverter.h" //FROM EPL!! ( :
+#include "te_r23.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +63,12 @@ struct ter_apps_t apps; //Sensor de acelerador
 
 struct inverter_emcu_setpoint_2_t iqcommand;
 
+struct te_r23_lv_rear_dash_t lv_rear_dash;
 
+struct te_r23_sensors_front_t sensors_front;
+
+int TSMS = 0;
+int BSPD = 0;
 
 /* USER CODE END PV */
 
@@ -138,6 +144,21 @@ int main(void)
 		inverter_emcu_setpoint_2_pack(TxData, &iqcommand, sizeof(iqcommand));
 		HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox1);
 		HAL_Delay(50);
+
+
+		if (lv_rear_dash.lv_rear_car_status==4) { // miro si estamos en estado 4 para encender el horn
+			HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_SET) // enciendo el pin del horn
+		}
+
+		if (sensors_front.lv_dash_brake_adc > 300) { // miro si hay que encender la brake light
+			HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET) // enciendo el pin de la brake light
+
+		}
+
+		TSMS = HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin) // leo el pin del TSMS y lo guardo en la variable TSMS
+
+		BSPID = HAL_GPIO_ReadPin(BSPD_GPIO_Port, BSPD_Pin) // leo el pin del BSPD y lo guardo en la variable BSPD
+
 
     /* USER CODE END WHILE */
 
@@ -220,6 +241,15 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
 	case TER_APPS_FRAME_ID: //Decode pedal data
 		ter_apps_unpack(&apps, data, TER_APPS_LENGTH);
 		break;
+
+	case TE_R23_LV_REAR_DASH_FRAME_ID: //Decode rear_dash data
+		te_r23_lv_rear_dash_unpack(&lv_rear_dash, data, TE_R23_LV_REAR_DASH_LENGTH);
+		break;
+
+	case TE_R23_SENSORS_FRONT_FRAME_ID : //Decode sensors_front data
+		te_r23_sensors_front_unpack(&sensors_front, data, TE_R23_SENSORS_FRONT_LENGTH);
+		break;
+
 
 	default:
 		return -1;
