@@ -67,8 +67,13 @@ struct te_r23_lv_rear_dash_t lv_rear_dash;
 
 struct te_r23_sensors_front_t sensors_front;
 
+
 int TSMS = 0;
 int BSPD = 0;
+
+int primeraVez = 0;
+
+uint32_t voltage_timestamp; //marca temporal
 
 /* USER CODE END PV */
 
@@ -146,18 +151,36 @@ int main(void)
 		HAL_Delay(50);
 
 
-		if (lv_rear_dash.lv_rear_car_status==4) { // miro si estamos en estado 4 para encender el horn
-			HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_SET) // enciendo el pin del horn
-		}
+		if (lv_rear_dash.lv_rear_car_status == 4) { // miro si estamos en el estado 4 para encender el horn
+
+			// Solo quiero que el horn suene cuando pasa del status 3 al 4, y no siempre que está en 4. Para eso uso la bandera primeraVez
+
+			if (primeraVez == 0) { // miro si es la primera vez que recibo el mensaje de car status 4
+				HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_SET); // enciendo el pin del horn
+
+				//delay de 2000ms
+				if (voltage_timestamp == 0) { // si no habia timestamp activalo
+					voltage_timestamp == HAL_GetTick();
+				} else if (HAL_GetTick() - voltage_timestamp > 2000) { // si han pasado más de 2000ms
+					HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_RESET); // apago el horn
+
+					primeraVez = 1; // poniendo la bandera a 1 indico que ya ha sonado el horn.
+
+					voltage_timestamp = 0; // reseteamos el timestamp
+				};
+
+			};
+
+		};
 
 		if (sensors_front.lv_dash_brake_adc > 300) { // miro si hay que encender la brake light
-			HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET) // enciendo el pin de la brake light
+			HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET); // enciendo el pin de la brake light
 
 		}
 
-		TSMS = HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin) // leo el pin del TSMS y lo guardo en la variable TSMS
+		TSMS = HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin); // leo el pin del TSMS y lo guardo en la variable TSMS
 
-		BSPID = HAL_GPIO_ReadPin(BSPD_GPIO_Port, BSPD_Pin) // leo el pin del BSPD y lo guardo en la variable BSPD
+		BSPD = HAL_GPIO_ReadPin(BSPD_GPIO_Port, BSPD_Pin); // leo el pin del BSPD y lo guardo en la variable BSPD
 
 
     /* USER CODE END WHILE */

@@ -1,5 +1,5 @@
-../Core/Src/main.c:153:6:SystemClock_Config	88	static,ignoring_inline_asm
-../Core/Src/main.c:87:5:main	16	static
-../Core/Src/main.c:216:9:decodeMsg	8	static
-../Core/Src/main.c:211:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
-../Core/Src/main.c:238:6:Error_Handler	0	static,ignoring_inline_asm
+../Core/Src/main.c:197:6:SystemClock_Config	88	static,ignoring_inline_asm
+../Core/Src/main.c:98:5:main	32	static
+../Core/Src/main.c:260:9:decodeMsg	8	static
+../Core/Src/main.c:255:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
+../Core/Src/main.c:291:6:Error_Handler	0	static,ignoring_inline_asm
