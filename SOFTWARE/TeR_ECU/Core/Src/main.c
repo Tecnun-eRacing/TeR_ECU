@@ -73,8 +73,6 @@ int BSPD = 0;
 
 int primeraVez = 0;
 
-uint32_t voltage_timestamp; //marca temporal
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -158,16 +156,11 @@ int main(void)
 			if (primeraVez == 0) { // miro si es la primera vez que recibo el mensaje de car status 4
 				HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_SET); // enciendo el pin del horn
 
-				//delay de 2000ms
-				if (voltage_timestamp == 0) { // si no habia timestamp activalo
-					voltage_timestamp == HAL_GetTick();
-				} else if (HAL_GetTick() - voltage_timestamp > 2000) { // si han pasado más de 2000ms
-					HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_RESET); // apago el horn
+				HAL_Delay(2000); //delay de 2000ms
 
-					primeraVez = 1; // poniendo la bandera a 1 indico que ya ha sonado el horn.
+				HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_RESET); // apago el horn
 
-					voltage_timestamp = 0; // reseteamos el timestamp
-				};
+				primeraVez = 1; // poniendo la bandera a 1 indico que ya ha sonado el horn.
 
 			};
 
