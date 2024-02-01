@@ -19,13 +19,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "can.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ter.h"
 #include "inverter.h" //FROM EPL!! ( :
-#include "te_r23.h"
+#include "tv_mds.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,18 +61,26 @@ uint8_t RxData[8];
 //Estructuras DBC
 
 struct ter_apps_t apps; //Sensor de acelerador
+struct ter_steer_t steer;
 
-struct inverter_emcu_setpoint_2_t iqcommand;
+struct inverter_emcu_setpoint_3_t trqReqRight;
+struct inverter_emcu_setpoint_3_t trqReqLeft;
 
-struct te_r23_lv_rear_dash_t lv_rear_dash;
+struct ter_front_v_t speed;
+struct ter_ang_rate_t angRate;
 
-struct te_r23_sensors_front_t sensors_front;
 
+
+pid_t tvPid;
 
 int TSMS = 0;
 int BSPD = 0;
 
 int primeraVez = 0;
+
+//Variables del sistema
+
+char tvEnabled = 1; //Estado del torque
 
 /* USER CODE END PV */
 
@@ -90,39 +99,39 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data); //Decodes message according to
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
-  /* USER CODE BEGIN 1 */
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_CAN1_Init();
-  MX_CAN2_Init();
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_CAN1_Init();
+	MX_CAN2_Init();
+	MX_TIM1_Init();
 
-  /* Initialize interrupts */
-  MX_NVIC_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize interrupts */
+	MX_NVIC_Init();
+	/* USER CODE BEGIN 2 */
 
 	HAL_CAN_Start(&hcan1); //Activamos el can
 	HAL_CAN_Start(&hcan2); //Activamos el can
@@ -130,124 +139,112 @@ int main(void)
 	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 	while (1) {
 
-		int comanda = (apps.apps_1 ); //Comanda media de prueba
+		int comanda = (apps.apps_1); //Comanda media de prueba
 
-		iqcommand.current_q_req = comanda * 100;
 
 		TxHeader.IDE = CAN_ID_STD; //CAN INVERTERS
 		TxHeader.StdId = INVERTER_EMCU_SETPOINT_2_FRAME_ID;
 		TxHeader.RTR = CAN_RTR_DATA;
 		TxHeader.DLC = INVERTER_EMCU_SETPOINT_2_LENGTH;
-		inverter_emcu_setpoint_2_pack(TxData, &iqcommand, sizeof(iqcommand));
+
 		HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox1);
 		HAL_Delay(50);
 
 
-		if (lv_rear_dash.lv_rear_car_status == 4) { // miro si estamos en el estado 4 para encender el horn
+		/* USER CODE END WHILE */
 
-			// Solo quiero que el horn suene cuando pasa del status 3 al 4, y no siempre que está en 4. Para eso uso la bandera primeraVez
-
-			if (primeraVez == 0) { // miro si es la primera vez que recibo el mensaje de car status 4
-				HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_SET); // enciendo el pin del horn
-
-				HAL_Delay(2000); //delay de 2000ms
-
-				HAL_GPIO_WritePin(HORN_GPIO_Port, HORN_Pin, GPIO_PIN_RESET); // apago el horn
-
-				primeraVez = 1; // poniendo la bandera a 1 indico que ya ha sonado el horn.
-
-			};
-
-		};
-
-		if (sensors_front.lv_dash_brake_adc > 300) { // miro si hay que encender la brake light
-			HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET); // enciendo el pin de la brake light
-
-		}
-
-		TSMS = HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin); // leo el pin del TSMS y lo guardo en la variable TSMS
-
-		BSPD = HAL_GPIO_ReadPin(BSPD_GPIO_Port, BSPD_Pin); // leo el pin del BSPD y lo guardo en la variable BSPD
-
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	/** Configure the main internal regulator output voltage
+	 */
+	__HAL_RCC_PWR_CLK_ENABLE();
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 160;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
-  RCC_OscInitStruct.PLL.PLLR = 2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+	RCC_OscInitStruct.PLL.PLLM = 8;
+	RCC_OscInitStruct.PLL.PLLN = 160;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = 2;
+	RCC_OscInitStruct.PLL.PLLR = 2;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
+		Error_Handler();
+	}
 }
 
 /**
-  * @brief NVIC Configuration.
-  * @retval None
-  */
-static void MX_NVIC_Init(void)
-{
-  /* CAN1_RX0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
-  /* CAN2_RX0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(CAN2_RX0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
+ * @brief NVIC Configuration.
+ * @retval None
+ */
+static void MX_NVIC_Init(void) {
+	/* CAN1_RX0_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	/* CAN2_RX0_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(CAN2_RX0_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
-	decodeMsg(RxHeader.StdId,RxData);
+	decodeMsg(RxHeader.StdId, RxData);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+
+	float dTorque = 0;
+	if (tvEnabled) {
+		//Compute Torque
+		float ref = yawRef(steer.angle, speed.vx_av);
+		float imuYawR = ter_ang_rate_yaw_rate_z_decode(angRate.yaw_rate_z);
+		float corr = pid(&tvPid,ref, imuYawR); //Computa el lazo
+		dTorque = mz2DeltaTorque(corr);
+	} else {
+		dTorque = 0;
+	}
+//Compute Torque output
+float gas = apps.apps_av/255.0; //Comanda de 0-1 de gas
+
+	trqReqRight.torque_req = gas*180/2 + dTorque/2;
+	trqReqLeft.torque_req = gas*180/2 - dTorque/2;
+
 }
 
 uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
@@ -258,14 +255,17 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
 		ter_apps_unpack(&apps, data, TER_APPS_LENGTH);
 		break;
 
-	case TE_R23_LV_REAR_DASH_FRAME_ID: //Decode rear_dash data
-		te_r23_lv_rear_dash_unpack(&lv_rear_dash, data, TE_R23_LV_REAR_DASH_LENGTH);
+	case TER_STEER_FRAME_ID:
+		ter_steer_unpack(&steer, data, TER_STEER_LENGTH);
 		break;
 
-	case TE_R23_SENSORS_FRONT_FRAME_ID : //Decode sensors_front data
-		te_r23_sensors_front_unpack(&sensors_front, data, TE_R23_SENSORS_FRONT_LENGTH);
+	case TER_FRONT_V_FRAME_ID:
+		ter_front_v_unpack(&speed, data, TER_FRONT_V_LENGTH);
 		break;
 
+	case TER_ANG_RATE_FRAME_ID:
+		ter_ang_rate_unpack(&angRate, data, TER_ANG_RATE_LENGTH);
+		break;
 
 	default:
 		return -1;
@@ -278,17 +278,16 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
