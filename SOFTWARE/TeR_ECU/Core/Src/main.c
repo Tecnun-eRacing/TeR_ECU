@@ -24,8 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ter.h"
-#include "inverter.h" //FROM EPL!! ( :
+#include "TeR_CAN.h"
 #include "tv_mds.h"
 /* USER CODE END Includes */
 
@@ -48,33 +47,7 @@
 
 /* USER CODE BEGIN PV */
 
-//Datos transmision
-CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
-uint8_t TxData[8] = { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }; //Header de recepción
-uint32_t TxMailbox1; //Mailbox para el periferico
-uint32_t TxMailbox2; //Mailbox para el periferico
-
-//Datos recepcion
-CAN_RxHeaderTypeDef RxHeader;
-uint8_t RxData[8];
-
-//Estructuras DBC
-
-struct ter_apps_t apps; //Sensor de acelerador
-struct ter_steer_t steer;
-
-struct inverter_emcu_setpoint_3_t trqReqRight;
-struct inverter_emcu_setpoint_3_t trqReqLeft;
-
-struct ter_front_v_t speed;
-struct ter_ang_rate_t angRate;
-
-
-
 pid_t tvPid;
-
-int TSMS = 0;
-int BSPD = 0;
 
 int primeraVez = 0;
 
@@ -89,7 +62,6 @@ void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
-uint8_t decodeMsg(uint32_t canId, uint8_t *data); //Decodes message according to DBC
 
 /* USER CODE END PFP */
 
@@ -222,9 +194,9 @@ static void MX_NVIC_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) { //No hay distinción de bus
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
-	decodeMsg(RxHeader.StdId, RxData);
+	decodeMsg(RxHeader.StdId, RxData); //llama a la decodificación
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -247,33 +219,6 @@ float gas = apps.apps_av/255.0; //Comanda de 0-1 de gas
 
 }
 
-uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
-
-	switch (canId) {
-
-	case TER_APPS_FRAME_ID: //Decode pedal data
-		ter_apps_unpack(&apps, data, TER_APPS_LENGTH);
-		break;
-
-	case TER_STEER_FRAME_ID:
-		ter_steer_unpack(&steer, data, TER_STEER_LENGTH);
-		break;
-
-	case TER_FRONT_V_FRAME_ID:
-		ter_front_v_unpack(&speed, data, TER_FRONT_V_LENGTH);
-		break;
-
-	case TER_ANG_RATE_FRAME_ID:
-		ter_ang_rate_unpack(&angRate, data, TER_ANG_RATE_LENGTH);
-		break;
-
-	default:
-		return -1;
-		break;
-
-	}
-	return 1;
-}
 
 /* USER CODE END 4 */
 
