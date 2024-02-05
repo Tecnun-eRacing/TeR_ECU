@@ -109,8 +109,8 @@
 ../TER_DATABASES/te_r23.c:1045:10:te_r23_lv_bms_lv_bms_vtot_encode	0	static
 ../TER_DATABASES/te_r23.c:1050:7:te_r23_lv_bms_lv_bms_vtot_decode	0	static
 ../TER_DATABASES/te_r23.c:1055:6:te_r23_lv_bms_lv_bms_vtot_is_in_range	0	static
-../TER_DATABASES/te_r23.c:1062:10:te_r23_lv_bms_lv_bms_temp_2_encode	8	static
-../TER_DATABASES/te_r23.c:1067:7:te_r23_lv_bms_lv_bms_temp_2_decode	8	static
+../TER_DATABASES/te_r23.c:1062:10:te_r23_lv_bms_lv_bms_temp_2_encode	0	static
+../TER_DATABASES/te_r23.c:1067:7:te_r23_lv_bms_lv_bms_temp_2_decode	0	static
 ../TER_DATABASES/te_r23.c:1072:6:te_r23_lv_bms_lv_bms_temp_2_is_in_range	0	static
 ../TER_DATABASES/te_r23.c:1077:10:te_r23_lv_bms_lv_bms_cell_v_5_encode	0	static
 ../TER_DATABASES/te_r23.c:1082:7:te_r23_lv_bms_lv_bms_cell_v_5_decode	0	static

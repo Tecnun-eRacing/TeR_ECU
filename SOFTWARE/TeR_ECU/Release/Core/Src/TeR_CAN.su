@@ -1,0 +1,4 @@
+../Core/Src/TeR_CAN.c:86:9:sendCan	16	static
+../Core/Src/TeR_CAN.c:99:9:command	8	static
+../Core/Src/TeR_CAN.c:52:9:decodeMsg	8	static
+../Core/Src/TeR_CAN.c:45:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static

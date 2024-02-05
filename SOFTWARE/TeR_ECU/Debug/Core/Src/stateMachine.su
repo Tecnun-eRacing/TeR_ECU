@@ -1,0 +1,8 @@
+../Core/Src/stateMachine.c:34:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/stateMachine.c:39:9:getState	16	static
+../Core/Src/stateMachine.c:58:6:stateMachine	8	static
+../Core/Src/stateMachine.c:86:6:waitingSL	4	static
+../Core/Src/stateMachine.c:87:6:rdy2Prech	4	static
+../Core/Src/stateMachine.c:88:6:precharging	4	static
+../Core/Src/stateMachine.c:89:6:precharged	4	static
+../Core/Src/stateMachine.c:90:6:driving	4	static

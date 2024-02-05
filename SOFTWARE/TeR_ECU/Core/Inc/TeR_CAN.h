@@ -31,7 +31,27 @@
 #include "ter.h"
 #include "inverter.h"
 #include "stm32f4xx_hal.h"
+#include "can.h"
+/* --------------------- Estructuras de datos del coche ----------------- */
+//TER.dbc
+struct TeR_t{
+	//Propias
+	struct ter_ecu_status_t status;
+	//Ocultas
+	uint32_t r2d;
+	//Externas
 
+	struct ter_apps_t apps; //Sensor de acelerador
+	struct ter_steer_t steer; //Volante
+	struct ter_front_v_t speed; // FrontAxle Speed
+	struct ter_ang_rate_t angRate; //Angular rate from imu
+
+//Inverters.dbc
+	struct inverter_emcu_setpoint_3_t trqReqRight;
+	struct inverter_emcu_setpoint_3_t trqReqLeft;
+};
+extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
+/* ---------------------------------------------------------------------- */
 
 
 

@@ -9,17 +9,16 @@
 
 #ifndef INC_STATEMACHINE_H_
 #define INC_STATEMACHINE_H_
+#include "TeR_CAN.h"
+#include "stm32f4xx_hal.h"
 
-enum State_t {WAITING_SL,RDY2PRECH,PRECHARGING,PRECHARGED,DRIVING}; //Estados
+typedef enum {
+	WAITING_SL, RDY2PRECH,PRECHARGING,PRECHARGED,DRIVING}state_t; //Estados
 
 
-struct stateMachine_t{
-uint8_t state; //Estado
-void (*currentState[5])(void); //Function pointer array
-};
+state_t getState(void); //Determina el estado en función de las lecturas y el can
+void stateMachine(void); //ejecuta el estado actual
 
-void checkState(stateMachine_t* machine); //Función que comprueba cada ciclo si el estado es valido
-void stateMachine(void); //Realiza las comprobaciones de cambio de estado y ejecuta el acual
 
 
 //Estados

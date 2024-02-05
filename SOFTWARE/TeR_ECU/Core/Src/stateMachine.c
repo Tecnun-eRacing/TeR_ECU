@@ -23,39 +23,69 @@
  * R2D
  * - Se puede conducir
  *-------------------------------------------------------------------------------------
- * La maquina de estados se basa en condiciones
+ * Tras valorar distintas maneras de implementar la maquina de estados
+ * lo más optimo es comprobar el estado cada ciclo en una escalera de privilegio
+ * puesto que las condiciones de estados más complejos están contenidos en los superiores,
+ * de esta manera si una condición no se cumple se degrada al estado más bajo.
  *
  */
 #include "stateMachine.h"
-#include "ter.h"
 
-
-
-void checkState(stateMachine_t* machine){
-machine->state = WAITING_SL;// Estado Inicial
-if(){//Si esta ok la safety
-
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	TeR.status.state = getState(); //se define el estado del TER
+	stateMachine(); //ejecuta el estado que toca
 }
 
+state_t getState(void) {
+	state_t status = WAITING_SL; //Iniciamos en el estado 0
+	//Lecturas
+	TeR.status.sl_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);// Leemos el estado de la safety
 
+	if (TeR.status.sl_status) { //Si esta ok la safety
+		status = RDY2PRECH; //Se puede precargar
+		if (1) { // Se está haciendo precarga?
+			status = PRECHARGING;
+
+		} else if (1) { // Esta precargado?
+			status = PRECHARGED;
+			if (TeR.r2d) { //la flag de ready2drive esta activada? (can)
+				status = DRIVING;
+			}
+		}
+	}
+	return status;
+}
+void stateMachine(void) {
+	switch (TeR.status.state) {
+	case WAITING_SL:
+		waitingSL();
+		break;
+
+	case RDY2PRECH:
+		rdy2Prech();
+		break;
+
+	case PRECHARGING:
+		precharging();
+		break;
+
+	case PRECHARGED:
+		precharged();
+		break;
+	case DRIVING:
+		driving();
+		break;
+	default:
+		//Handle Invalid state
+		break;
+	}
 }
 
+/* -------------------------[Estados]---------------------------- */
 
-void stateMachine(void);
-
-//Estados
-void waitingSL(void); // Comprueba
-void rdy2Prech(void); // Espera a recibir el comando de precarga
-void precharging(void); //Estado transitorio, monitoriza que todo va bien
-void precharged(void);//Espera a que se reciba el comando de r2d
-void driving(void); //Ejecuta la comanda de par
-
-
-
-
-
-
-
-
+void waitingSL(void){} // Comprueba
+void rdy2Prech(void){} // Espera a recibir el comando de precarga
+void precharging(void){} //Estado transitorio, monitoriza que todo va bien
+void precharged(void){} //Espera a que se reciba el comando de r2d
+void driving(void){} //Ejecuta la comanda de par
 

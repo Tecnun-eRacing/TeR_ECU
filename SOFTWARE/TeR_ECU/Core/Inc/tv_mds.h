@@ -4,7 +4,7 @@
  *  Created on: Jan 31, 2024
  *      Author: Ozuba Telmo Martinez de Salinas
  */
-
+#include "TeR_CAN.h"
 #ifndef INC_TV_MDS_H_
 #define INC_TV_MDS_H_
 
@@ -43,10 +43,12 @@ typedef struct {
 
 
 
-float prTorque();
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float pid(pid_t* pid, float yawRateRef, float imuYawRate);
 float mz2DeltaTorque(float alpha);
+
+float trqDistribution();
+
 
 #endif /* INC_TV_MDS_H_ */
