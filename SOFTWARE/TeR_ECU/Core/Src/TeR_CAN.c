@@ -4,13 +4,13 @@
  *  Created on: Feb 2, 2024
  *      Author: Ozuba
  *
-████████╗███████╗██████╗          ██████╗ █████╗ ███╗   ██╗
-╚══██╔══╝██╔════╝██╔══██╗        ██╔════╝██╔══██╗████╗  ██║
-   ██║   █████╗  ██████╔╝        ██║     ███████║██╔██╗ ██║
-   ██║   ██╔══╝  ██╔══██╗        ██║     ██╔══██║██║╚██╗██║
-   ██║   ███████╗██║  ██║███████╗╚██████╗██║  ██║██║ ╚████║
-   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
-*/
+ * ████████╗███████╗██████╗          ██████╗ █████╗ ███╗   ██╗
+ * ╚══██╔══╝██╔════╝██╔══██╗        ██╔════╝██╔══██╗████╗  ██║
+ *    ██║   █████╗  ██████╔╝        ██║     ███████║██╔██╗ ██║
+ *    ██║   ██╔══╝  ██╔══██╗        ██║     ██╔══██║██║╚██╗██║
+ *    ██║   ███████╗██║  ██║███████╗╚██████╗██║  ██║██║ ╚████║
+ *    ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
+ */
 
 /*
  *  Este Fichero tiene como Objetivo almacenar las funciones de decodificación
@@ -19,7 +19,7 @@
  *  Funciones:
  *  - decodeMSG -> Decodifica las estructuras pertinentes
  *  - sendCAN -> Envía los mensajes pertinentes (Esto no va a depender del estado, ya que los inverters siempre estarán a 0)
- *	- cmd() -> Función que se llama cuando se recibe el mensaje de comando para que cada placa lo interprete como corresponde
+ *  - command -> Función que se llama cuando se recibe el mensaje de comando para que cada placa lo interprete como corresponde
  *  A su vez están creados aqui todas las estructuras de memoria del can
  *
  */
