@@ -1,4 +1,7 @@
-../Core/Src/TeR_CAN.c:44:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
-../Core/Src/TeR_CAN.c:50:9:decodeMsg	16	static
-../Core/Src/TeR_CAN.c:84:9:sendCAN	8	static
-../Core/Src/TeR_CAN.c:100:9:command	16	static
+../Core/Src/TeR_CAN.c:60:9:initCAN	24	static
+../Core/Src/TeR_CAN.c:75:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/TeR_CAN.c:83:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
+../Core/Src/TeR_CAN.c:90:9:sendInvCAN	8	static
+../Core/Src/TeR_CAN.c:116:9:sendMainCAN	8	static
+../Core/Src/TeR_CAN.c:143:9:decodeMsg	16	static
+../Core/Src/TeR_CAN.c:178:9:command	16	static

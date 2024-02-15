@@ -31,11 +31,6 @@
  */
 #include "stateMachine.h"
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	TeR.status.state = getState(); //se define el estado del TER
-	stateMachine(); //ejecuta el estado que toca
-	sendCAN();
-}
 
 state_t getState(void) {
 	state_t status = WAITING_SL; //Iniciamos en el estado 0

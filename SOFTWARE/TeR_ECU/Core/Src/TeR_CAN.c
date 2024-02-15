@@ -68,8 +68,15 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan,CAN_HandleTypeDef *mainCan, TIM_Handle
 	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 
-	HAL_TIM_Base_Start_IT(tim);
+	HAL_TIM_Base_Start_IT(tim); //Arranca el ciclo
 	return 1;
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { //Envio temporizado
+	if (htim == tim) { //Si es nuestro timer(Da igual si solo hay 1)
+		sendInvCAN();
+		sendMainCAN();
+	}
 }
 
 
@@ -85,7 +92,7 @@ uint8_t sendInvCAN(void) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	/* ---------------------------[INVERTER CAN]-------------------------- */
 
-	if (HAL_CAN_GetTxMailboxesFreeLevel(pwrTrainCAN) > 0) { // Hay un slot para nuestro mensaje
+	if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 		switch (invIndex++) {
 
 		case 0://Torque Setpoint
@@ -116,7 +123,7 @@ uint8_t sendMainCAN(void) {
 
 		case 0:
 			TxHeader.StdId = TER_ECU_STATUS_FRAME_ID;
-			TxHeader.DLC = TER_ECU_STATUS_DLC;
+			TxHeader.DLC = TER_ECU_STATUS_LENGTH;
 			ter_ecu_status_pack(TxData, &TeR.status,sizeof(TxData));
 			break;
 
@@ -176,7 +183,7 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 			TxHeader.IDE = CAN_ID_STD;
 			TxHeader.RTR = CAN_RTR_DATA;
 			TxHeader.StdId = 1243; //BMS precharge action
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &TxMailbox1);
+			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mainMailbox);
 		}
 		break;
 

@@ -100,18 +100,14 @@ int main(void)
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 
-	HAL_CAN_Start(&hcan1); //Activamos el can
-	HAL_CAN_Start(&hcan2); //Activamos el can
-
-	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
-	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
-
+  initCAN(&hcan1, &hcan2, &htim2);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
+
 		;
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
