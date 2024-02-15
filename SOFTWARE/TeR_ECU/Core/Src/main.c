@@ -106,7 +106,7 @@ int main(void)
 	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 
-	HAL_TIM_Base_Start_IT(&htim2);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,7 +114,6 @@ int main(void)
 	while (1) {
 		;
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
 	}
   /* USER CODE END 3 */

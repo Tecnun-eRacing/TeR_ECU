@@ -1,8 +1,8 @@
-../Core/Src/stateMachine.c:39:9:getState	8	static
+../Core/Src/stateMachine.c:40:9:getState	8	static
+../Core/Src/stateMachine.c:90:6:waitingSL	0	static
+../Core/Src/stateMachine.c:95:6:rdy2Prech	0	static
+../Core/Src/stateMachine.c:100:6:precharging	0	static
+../Core/Src/stateMachine.c:105:6:precharged	0	static
+../Core/Src/stateMachine.c:110:6:driving	0	static
+../Core/Src/stateMachine.c:60:6:stateMachine	0	static
 ../Core/Src/stateMachine.c:34:6:HAL_TIM_PeriodElapsedCallback	8	static
-../Core/Src/stateMachine.c:58:6:stateMachine	0	static
-../Core/Src/stateMachine.c:86:6:waitingSL	0	static
-../Core/Src/stateMachine.c:87:6:rdy2Prech	0	static
-../Core/Src/stateMachine.c:88:6:precharging	0	static
-../Core/Src/stateMachine.c:89:6:precharged	0	static
-../Core/Src/stateMachine.c:90:6:driving	0	static

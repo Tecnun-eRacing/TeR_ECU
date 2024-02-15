@@ -28,6 +28,14 @@
 #include "stateMachine.h"
 
 /* ---------------------------[Estructuras del CAN]-------------------------- */
+//Pointer to timer and can peripheral being used
+CAN_HandleTypeDef *pwrTrainCAN;
+CAN_HandleTypeDef *mainCAN;
+
+
+TIM_HandleTypeDef *tim;
+
+
 //Datos transmision
 CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
 uint8_t TxData[8]; //Header de recepción
@@ -37,16 +45,38 @@ uint32_t TxMailbox2; //Mailbox para el CAN2
 //Datos recepcion
 CAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
+
+//Index for can senders
+uint8_t msgIndex1 = 0;
+uint8_t msgIndex2 = 0;
+
 /* -------------------------------------------------------------------------- */
 
 struct TeR_t TeR;
+
+
+/* ---------------------------[Inicialización + Interrupts]-------------------------- */
+
+uint8_t initCAN(CAN_HandleTypeDef *hPwrTrain,CAN_HandleTypeDef *hMainCan, TIM_HandleTypeDef *htim) {
+	//Inicializacion de los perifericos can
+	pwrTrainCAN = hPwrTrain;
+	mainCAN = hMainCan;
+	tim = htim;
+	//Arranque del periferico y la interrupcion
+	HAL_CAN_Start(pwrTrainCAN); //Activamos el can
+	HAL_CAN_Start(mainCAN); //Activamos el can
+	HAL_CAN_ActivateNotification(pwrTrainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
+	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
+
+	HAL_TIM_Base_Start_IT(tim);
+	return 1;
+}
 
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) { //No hay distinción de bus
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
 	decodeMsg(RxHeader.StdId, RxData); //llama a la decodificación
 }
-
 
 //Función de decodificación del CAN, si quieres que la ecu disponga de una señal hay que añadirla aquí.
 uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
@@ -82,15 +112,53 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
 	return 1;
 }
 
-//Función de envío de mensajes
-uint8_t sendCan(void) {
-	//Standar Config
+
+uint8_t sendCAN(void) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
+	/* ---------------------------[INVERTER CAN]-------------------------- */
 
-	TxHeader.StdId = TER_APPS_FRAME_ID;
-	ter_ecu_status_pack(TxData, &TeR.status, TER_ECU_STATUS_LENGTH);
-	HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox1);
+	if (HAL_CAN_GetTxMailboxesFreeLevel(pwrTrainCAN) > 0) { // Hay un slot para nuestro mensaje
+		switch (msgIndex1++) {
+
+		case 0:
+			TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
+			TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
+			ter_ecu_status_pack(TxData, &TeR.status,8);
+			break;
+		case 1:
+			//LV_Temps
+			TxHeader.StdId = TER_LV_TEMPS_FRAME_ID;
+			TxHeader.DLC = TER_LV_TEMPS_LENGTH;
+			ter_lv_temps_pack(TxData, &TeR.temps, sizeof(TxData));
+			break;
+
+		default: //Esto evita tener que contar mensajes
+			msgIndex1 = 0; //cualquier otro valor retorna al ultimo mensaje
+			return 1; //Evita que se envíe un mensaje doble terminando la funcion
+			break;
+		}
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &TxMailbox1); //Envía el mensaje procesado
+	}
+
+	/* ---------------------------[MAIN CAN]-------------------------- */
+
+	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
+			switch (msgIndex++) {
+
+			case 0:
+				TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
+				TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
+				ter_ecu_status_pack(TxData, &TeR.status,8);
+				break;
+
+			default: //Esto evita tener que contar mensajes
+				msgIndex = 0; //cualquier otro valor retorna al ultimo mensaje
+				return 1; //Evita que se envíe un mensaje doble terminando la funcion
+				break;
+			}
+			HAL_CAN_AddTxMessage(pwrTrainCAN, &TxHeader, TxData, &TxMailbox2); //Envía el mensaje procesado
+		}
 
 	return 1;
 }
@@ -104,18 +172,18 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 			TxHeader.IDE = CAN_ID_STD;
 			TxHeader.RTR = CAN_RTR_DATA;
 			TxHeader.StdId = 1243; //BMS precharge action
-			HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox1);
+			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &TxMailbox1);
 		}
 		break;
 
 	case 11: //Ready2Drive
-		if (TeR.status.state == PRECHARGED) { //Pone el coche en modo driving
-			//Bocina
+		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps > 30) { //Pone el coche en modo driving
+		//Bocina
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 			HAL_Delay(1000);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 			//Permite el paso al estado drive
-			TeR.r2d = 1;
+			TeR.status.r2d = 1;
 		}
 		break;
 

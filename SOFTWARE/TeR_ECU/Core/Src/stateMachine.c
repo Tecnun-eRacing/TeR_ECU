@@ -34,6 +34,7 @@
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	TeR.status.state = getState(); //se define el estado del TER
 	stateMachine(); //ejecuta el estado que toca
+	sendCAN();
 }
 
 state_t getState(void) {
@@ -48,13 +49,14 @@ state_t getState(void) {
 
 		} else if (1) { // Esta precargado?
 			status = PRECHARGED;
-			if (TeR.r2d) { //la flag de ready2drive esta activada? (can)
+			if (TeR.status.r2d) { //la flag de ready2drive esta activada? (can)
 				status = DRIVING;
 			}
 		}
 	}
 	return status;
 }
+
 void stateMachine(void) {
 	switch (TeR.status.state) {
 	case WAITING_SL:
@@ -79,13 +81,34 @@ void stateMachine(void) {
 		//Handle Invalid state
 		break;
 	}
+	//brake light
+
 }
 
 /* -------------------------[Estados]---------------------------- */
 
-void waitingSL(void){} // Comprueba
-void rdy2Prech(void){} // Espera a recibir el comando de precarga
-void precharging(void){} //Estado transitorio, monitoriza que todo va bien
-void precharged(void){} //Espera a que se reciba el comando de r2d
-void driving(void){} //Ejecuta la comanda de par
+void waitingSL(void){
+	TeR.trqReqLeft.torque_req = 0;
+	TeR.trqReqRight.torque_req = 0;
+	TeR.status.r2d = 0;
+} // Comprueba que la safety esta cerrada
+void rdy2Prech(void){
+	TeR.trqReqLeft.torque_req = 0;
+	TeR.trqReqRight.torque_req = 0;
+	TeR.status.r2d = 0;
+} // Espera a recibir el comando de precarga
+void precharging(void){
+	TeR.trqReqLeft.torque_req = 0;
+	TeR.trqReqRight.torque_req = 0;
+	TeR.status.r2d = 0;
+} //Estado transitorio, monitoriza que todo va bien
+void precharged(void){
+	TeR.trqReqLeft.torque_req = 0;
+	TeR.trqReqRight.torque_req = 0;
+	TeR.status.r2d = 0;
+} //Espera a que se reciba el comando de r2d
+void driving(void){
+	TeR.trqReqLeft.torque_req = TeR.apps.apps_av*(100/255);
+	TeR.trqReqRight.torque_req = TeR.apps.apps_av*(100/255);
+} //Ejecuta la comanda de par
 

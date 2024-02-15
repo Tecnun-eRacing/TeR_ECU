@@ -37,11 +37,10 @@
 struct TeR_t{
 	//Propias
 	struct ter_ecu_status_t status;
-	//Ocultas
-	uint32_t r2d;
 	//Externas
 
 	struct ter_apps_t apps; //Sensor de acelerador
+	struct ter_bpps_t bpps; //Freno
 	struct ter_steer_t steer; //Volante
 	struct ter_front_v_t speed; // FrontAxle Speed
 	struct ter_ang_rate_t angRate; //Angular rate from imu

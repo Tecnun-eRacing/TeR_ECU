@@ -49,6 +49,6 @@ float trqDistribution() {
 
 	TeR.trqReqRight.torque_req = gas * 180 / 2 + dTorque / 2;
 	TeR.trqReqLeft.torque_req = gas * 180 / 2 - dTorque / 2;
-
+return 1;
 }
 
