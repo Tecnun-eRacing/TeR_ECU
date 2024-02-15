@@ -29,7 +29,7 @@
 
 /* ---------------------------[Estructuras del CAN]-------------------------- */
 //Pointer to timer and can peripheral being used
-CAN_HandleTypeDef *pwrTrainCAN;
+CAN_HandleTypeDef *invCAN;
 CAN_HandleTypeDef *mainCAN;
 
 
@@ -39,16 +39,16 @@ TIM_HandleTypeDef *tim;
 //Datos transmision
 CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
 uint8_t TxData[8]; //Header de recepción
-uint32_t TxMailbox1; //Mailbox para el CAN1
-uint32_t TxMailbox2; //Mailbox para el CAN2
+uint32_t invMailbox; //Mailbox para el CAN1
+uint32_t mainMailbox; //Mailbox para el CAN2
 
 //Datos recepcion
 CAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
 
 //Index for can senders
-uint8_t msgIndex1 = 0;
-uint8_t msgIndex2 = 0;
+uint8_t invIndex;
+uint8_t mainIndex;
 
 /* -------------------------------------------------------------------------- */
 
@@ -57,15 +57,15 @@ struct TeR_t TeR;
 
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
-uint8_t initCAN(CAN_HandleTypeDef *hPwrTrain,CAN_HandleTypeDef *hMainCan, TIM_HandleTypeDef *htim) {
+uint8_t initCAN(CAN_HandleTypeDef *invCan,CAN_HandleTypeDef *mainCan, TIM_HandleTypeDef *htim) {
 	//Inicializacion de los perifericos can
-	pwrTrainCAN = hPwrTrain;
-	mainCAN = hMainCan;
+	invCAN = invCan;
+	mainCAN = mainCan;
 	tim = htim;
 	//Arranque del periferico y la interrupcion
-	HAL_CAN_Start(pwrTrainCAN); //Activamos el can
+	HAL_CAN_Start(invCAN); //Activamos el can
 	HAL_CAN_Start(mainCAN); //Activamos el can
-	HAL_CAN_ActivateNotification(pwrTrainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
+	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 
 	HAL_TIM_Base_Start_IT(tim);
@@ -73,10 +73,64 @@ uint8_t initCAN(CAN_HandleTypeDef *hPwrTrain,CAN_HandleTypeDef *hMainCan, TIM_Ha
 }
 
 
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) { //No hay distinción de bus
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
 	decodeMsg(RxHeader.StdId, RxData); //llama a la decodificación
 }
+
+
+
+uint8_t sendInvCAN(void) {
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.RTR = CAN_RTR_DATA;
+	/* ---------------------------[INVERTER CAN]-------------------------- */
+
+	if (HAL_CAN_GetTxMailboxesFreeLevel(pwrTrainCAN) > 0) { // Hay un slot para nuestro mensaje
+		switch (invIndex++) {
+
+		case 0://Torque Setpoint
+			TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
+			TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
+			ter_ecu_status_pack(TxData, &TeR.status,sizeof(TxData));
+			break;
+
+		default: //Esto evita tener que contar mensajes
+			invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
+			return 1; //Evita que se envíe un mensaje doble terminando la funcion
+			break;
+		}
+		HAL_CAN_AddTxMessage(invCAN, &TxHeader, TxData, &invMailbox); //Envía el mensaje procesado
+	}
+	return 1;
+}
+
+
+
+uint8_t sendMainCAN(void) {
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.RTR = CAN_RTR_DATA;
+	/* ---------------------------[MAIN CAN]-------------------------- */
+
+	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
+		switch (mainIndex++) {
+
+		case 0:
+			TxHeader.StdId = TER_ECU_STATUS_FRAME_ID;
+			TxHeader.DLC = TER_ECU_STATUS_DLC;
+			ter_ecu_status_pack(TxData, &TeR.status,sizeof(TxData));
+			break;
+
+		default: //Esto evita tener que contar mensajes
+			mainIndex = 0; //cualquier otro valor retorna al ultimo mensaje
+			return 1; //Evita que se envíe un mensaje doble terminando la funcion
+			break;
+		}
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mainMailbox); //Envía el mensaje procesado
+	}
+	return 1;
+}
+
+
 
 //Función de decodificación del CAN, si quieres que la ecu disponga de una señal hay que añadirla aquí.
 uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
@@ -112,56 +166,6 @@ uint8_t decodeMsg(uint32_t canId, uint8_t *data) {
 	return 1;
 }
 
-
-uint8_t sendCAN(void) {
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.RTR = CAN_RTR_DATA;
-	/* ---------------------------[INVERTER CAN]-------------------------- */
-
-	if (HAL_CAN_GetTxMailboxesFreeLevel(pwrTrainCAN) > 0) { // Hay un slot para nuestro mensaje
-		switch (msgIndex1++) {
-
-		case 0:
-			TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
-			TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
-			ter_ecu_status_pack(TxData, &TeR.status,8);
-			break;
-		case 1:
-			//LV_Temps
-			TxHeader.StdId = TER_LV_TEMPS_FRAME_ID;
-			TxHeader.DLC = TER_LV_TEMPS_LENGTH;
-			ter_lv_temps_pack(TxData, &TeR.temps, sizeof(TxData));
-			break;
-
-		default: //Esto evita tener que contar mensajes
-			msgIndex1 = 0; //cualquier otro valor retorna al ultimo mensaje
-			return 1; //Evita que se envíe un mensaje doble terminando la funcion
-			break;
-		}
-		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &TxMailbox1); //Envía el mensaje procesado
-	}
-
-	/* ---------------------------[MAIN CAN]-------------------------- */
-
-	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
-			switch (msgIndex++) {
-
-			case 0:
-				TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
-				TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
-				ter_ecu_status_pack(TxData, &TeR.status,8);
-				break;
-
-			default: //Esto evita tener que contar mensajes
-				msgIndex = 0; //cualquier otro valor retorna al ultimo mensaje
-				return 1; //Evita que se envíe un mensaje doble terminando la funcion
-				break;
-			}
-			HAL_CAN_AddTxMessage(pwrTrainCAN, &TxHeader, TxData, &TxMailbox2); //Envía el mensaje procesado
-		}
-
-	return 1;
-}
 
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(uint8_t cmd, uint8_t *args) {
