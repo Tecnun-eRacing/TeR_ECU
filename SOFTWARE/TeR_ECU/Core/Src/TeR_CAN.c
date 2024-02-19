@@ -66,7 +66,7 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan,CAN_HandleTypeDef *mainCan, TIM_Handle
 	HAL_CAN_Start(invCAN); //Activamos el can
 	HAL_CAN_Start(mainCAN); //Activamos el can
 	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
-	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
+	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO1_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 
 	HAL_TIM_Base_Start_IT(tim); //Arranca el ciclo
 	return 1;
@@ -74,6 +74,7 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan,CAN_HandleTypeDef *mainCan, TIM_Handle
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { //Envio temporizado
 	if (htim == tim) { //Si es nuestro timer(Da igual si solo hay 1)
+		stateMachine();
 		sendInvCAN();
 		sendMainCAN();
 	}
@@ -81,9 +82,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { //Envio temporizad
 
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
-	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
+	if(hcan == invCAN){
+	HAL_CAN_GetRxMessage(invCAN, CAN_RX_FIFO0, &RxHeader, RxData); //Recoge el mensaje
+	}
 	decodeMsg(RxHeader.StdId, RxData); //llama a la decodificación
 }
+
+void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+	if(hcan == mainCAN){
+	HAL_CAN_GetRxMessage(mainCAN, CAN_RX_FIFO1, &RxHeader, RxData); //Recoge el mensaje
+	}
+	decodeMsg(RxHeader.StdId, RxData); //llama a la decodificación
+}
+
 
 
 
@@ -98,7 +109,7 @@ uint8_t sendInvCAN(void) {
 		case 0://Torque Setpoint
 			TxHeader.StdId = INVERTER_EMCU_SETPOINT_3_FRAME_ID;
 			TxHeader.DLC = INVERTER_EMCU_SETPOINT_3_LENGTH;
-			ter_ecu_status_pack(TxData, &TeR.status,sizeof(TxData));
+			inverter_emcu_setpoint_3_pack(TxData, &TeR.trqReqLeft, sizeof(TxData));
 			break;
 
 		default: //Esto evita tener que contar mensajes

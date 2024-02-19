@@ -110,6 +110,7 @@ int main(void)
 
 		;
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
 	}
   /* USER CODE END 3 */
@@ -171,9 +172,6 @@ static void MX_NVIC_Init(void)
   /* CAN1_RX0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
-  /* CAN2_RX0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(CAN2_RX0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
   /* TIM2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM2_IRQn);

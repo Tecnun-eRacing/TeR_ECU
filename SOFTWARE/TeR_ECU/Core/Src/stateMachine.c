@@ -53,6 +53,7 @@ state_t getState(void) {
 }
 
 void stateMachine(void) {
+	TeR.status.state = 4;//getState(); //Actualiza el estado
 	switch (TeR.status.state) {
 	case WAITING_SL:
 		waitingSL();
@@ -103,7 +104,7 @@ void precharged(void){
 	TeR.status.r2d = 0;
 } //Espera a que se reciba el comando de r2d
 void driving(void){
-	TeR.trqReqLeft.torque_req = TeR.apps.apps_av*(100/255);
-	TeR.trqReqRight.torque_req = TeR.apps.apps_av*(100/255);
+	TeR.trqReqLeft.torque_req = TeR.apps.apps_av;
+	TeR.trqReqRight.torque_req = TeR.apps.apps_av;
 } //Ejecuta la comanda de par
 
