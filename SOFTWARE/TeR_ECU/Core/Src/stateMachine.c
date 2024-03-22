@@ -31,7 +31,6 @@
  */
 #include "stateMachine.h"
 
-
 state_t getState(void) {
 	state_t status = WAITING_SL; //Iniciamos en el estado 0
 	//Lecturas
@@ -53,7 +52,40 @@ state_t getState(void) {
 }
 
 void stateMachine(void) {
-	TeR.status.state = 4;//getState(); //Actualiza el estado
+	uint8_t state = getState(); //Get Current State
+	uint8_t stateChanged = TeR.status.state != state ? 1 : 0; //for state setup
+	TeR.status.state = state; //getState(); //Actualiza el estado
+
+	//-----------------------------------[Setups]--------------------------------------------//
+
+	if (stateChanged) { // Handles setup conditions for the new state
+		switch (TeR.status.state) {
+		case WAITING_SL:
+
+			break;
+
+		case RDY2PRECH:
+
+			break;
+
+		case PRECHARGING:
+
+			break;
+
+		case PRECHARGED:
+
+			break;
+		case DRIVING:
+
+			break;
+		default:
+			//Handle Invalid state
+			break;
+		}
+	}
+
+//-----------------------------------[LOOPS]--------------------------------------------//
+
 	switch (TeR.status.state) {
 	case WAITING_SL:
 		waitingSL();
@@ -83,27 +115,27 @@ void stateMachine(void) {
 
 /* -------------------------[Estados]---------------------------- */
 
-void waitingSL(void){
+void waitingSL(void) {
 	TeR.trqReqLeft.torque_req = 0;
 	TeR.trqReqRight.torque_req = 0;
 	TeR.status.r2d = 0;
 } // Comprueba que la safety esta cerrada
-void rdy2Prech(void){
+void rdy2Prech(void) {
 	TeR.trqReqLeft.torque_req = 0;
 	TeR.trqReqRight.torque_req = 0;
 	TeR.status.r2d = 0;
 } // Espera a recibir el comando de precarga
-void precharging(void){
+void precharging(void) {
 	TeR.trqReqLeft.torque_req = 0;
 	TeR.trqReqRight.torque_req = 0;
 	TeR.status.r2d = 0;
 } //Estado transitorio, monitoriza que todo va bien
-void precharged(void){
+void precharged(void) {
 	TeR.trqReqLeft.torque_req = 0;
 	TeR.trqReqRight.torque_req = 0;
 	TeR.status.r2d = 0;
 } //Espera a que se reciba el comando de r2d
-void driving(void){
+void driving(void) {
 	TeR.trqReqLeft.torque_req = TeR.apps.apps_av;
 	TeR.trqReqRight.torque_req = TeR.apps.apps_av;
 } //Ejecuta la comanda de par

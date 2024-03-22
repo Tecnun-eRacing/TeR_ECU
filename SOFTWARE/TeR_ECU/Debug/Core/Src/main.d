@@ -29,8 +29,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/can.h ../Core/Inc/main.h ../Core/Inc/tim.h \
  ../Core/Inc/gpio.h ../Core/Inc/TeR_CAN.h \
- /home/eracing/Documentos/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
- /home/eracing/Documentos/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
  ../Core/Inc/can.h ../Core/Inc/tv_mds.h ../Core/Inc/TeR_CAN.h \
  ../Core/Inc/stateMachine.h
 ../Core/Inc/main.h:
@@ -67,8 +67,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/tim.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/TeR_CAN.h:
-/home/eracing/Documentos/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
-/home/eracing/Documentos/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
 ../Core/Inc/can.h:
 ../Core/Inc/tv_mds.h:
 ../Core/Inc/TeR_CAN.h:
