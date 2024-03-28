@@ -30,20 +30,25 @@
  *
  */
 #include "stateMachine.h"
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
+		int32_t out_max); //kita de aki bro
+
+uint32_t beeptim;
+
 
 state_t getState(void) {
-	state_t status = WAITING_SL; //Iniciamos en el estado 0
+	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
 	TeR.status.sl_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);// Leemos el estado de la safety
+	TeR.status.bspd_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);// Leemos el estado del BSPD
 
 	if (TeR.status.sl_status) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
-		if (1) { // Se está haciendo precarga?
+		if (TeR.BmsAppState.app_state_app == 3) { // Se está haciendo precarga?
 			status = PRECHARGING;
-
-		} else if (1) { // Esta precargado?
+		} else if (TeR.BmsAppState.app_state_app == 4) { // Esta precargado?
 			status = PRECHARGED;
-			if (TeR.status.r2d) { //la flag de ready2drive esta activada? (can)
+			if (TeR.status.r2d && TeR.appStateRight.app_state_app >= 2) { //la flag de ready2drive esta activada? (can)
 				status = DRIVING;
 			}
 		}
@@ -60,7 +65,7 @@ void stateMachine(void) {
 
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (TeR.status.state) {
-		case WAITING_SL:
+		case WAIT_SL:
 
 			break;
 
@@ -73,10 +78,12 @@ void stateMachine(void) {
 			break;
 
 		case PRECHARGED:
+			TeR.appReqLeft.app_state_req = 2;
+			TeR.appReqRight.app_state_req = 2;
 
 			break;
 		case DRIVING:
-
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 			break;
 		default:
 			//Handle Invalid state
@@ -87,8 +94,8 @@ void stateMachine(void) {
 //-----------------------------------[LOOPS]--------------------------------------------//
 
 	switch (TeR.status.state) {
-	case WAITING_SL:
-		waitingSL();
+	case WAIT_SL:
+		waitSL();
 		break;
 
 	case RDY2PRECH:
@@ -115,28 +122,49 @@ void stateMachine(void) {
 
 /* -------------------------[Estados]---------------------------- */
 
-void waitingSL(void) {
-	TeR.trqReqLeft.torque_req = 0;
-	TeR.trqReqRight.torque_req = 0;
+void waitSL(void) {
+	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqRight.torque_nm_req = 0;
 	TeR.status.r2d = 0;
 } // Comprueba que la safety esta cerrada
 void rdy2Prech(void) {
-	TeR.trqReqLeft.torque_req = 0;
-	TeR.trqReqRight.torque_req = 0;
+	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqRight.torque_nm_req = 0;
 	TeR.status.r2d = 0;
 } // Espera a recibir el comando de precarga
 void precharging(void) {
-	TeR.trqReqLeft.torque_req = 0;
-	TeR.trqReqRight.torque_req = 0;
+	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqRight.torque_nm_req = 0;
 	TeR.status.r2d = 0;
 } //Estado transitorio, monitoriza que todo va bien
 void precharged(void) {
-	TeR.trqReqLeft.torque_req = 0;
-	TeR.trqReqRight.torque_req = 0;
+	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqRight.torque_nm_req = 0;
 	TeR.status.r2d = 0;
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
-	TeR.trqReqLeft.torque_req = TeR.apps.apps_av;
-	TeR.trqReqRight.torque_req = TeR.apps.apps_av;
+	if(beeptim>250000){
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+	}else{
+		beeptim++;
+	}
+	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqRight.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
+
+
 } //Ejecuta la comanda de par
 
+
+
+
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
+		int32_t out_max) {
+	//Saturar las salidas si la entrada excede el límite de calibracion
+	if (x < in_min)
+		return out_min;
+	if (x > in_max)
+		return out_max;
+	//Mapear si estamos en rango seguro
+	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	return val;
+}

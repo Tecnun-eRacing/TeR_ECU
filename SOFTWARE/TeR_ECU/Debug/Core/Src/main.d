@@ -31,6 +31,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/gpio.h ../Core/Inc/TeR_CAN.h \
  C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
  C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
  ../Core/Inc/can.h ../Core/Inc/tv_mds.h ../Core/Inc/TeR_CAN.h \
  ../Core/Inc/stateMachine.h
 ../Core/Inc/main.h:
@@ -69,6 +70,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/TeR_CAN.h:
 C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
 C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
 ../Core/Inc/can.h:
 ../Core/Inc/tv_mds.h:
 ../Core/Inc/TeR_CAN.h:

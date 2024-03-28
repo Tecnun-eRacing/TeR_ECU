@@ -30,30 +30,53 @@
 #define INC_TER_CAN_H_
 #include "ter.h"
 #include "inverter.h"
+#include "hvbms.h"
 #include "stm32f4xx_hal.h"
 #include "can.h"
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
 struct TeR_t{
-	//Propias
+//Propias
 	struct ter_ecu_status_t status;
-	//Externas
 
+//Externas
+	//TER.dbc
 	struct ter_apps_t apps; //Sensor de acelerador
 	struct ter_bpps_t bpps; //Freno
 	struct ter_steer_t steer; //Volante
 	struct ter_front_v_t speed; // FrontAxle Speed
 	struct ter_ang_rate_t angRate; //Angular rate from imu
 
-//Inverters.dbc
-	struct inverter_emcu_setpoint_3_t trqReqRight;
-	struct inverter_emcu_setpoint_3_t trqReqLeft;
+	//Inverters.dbc
+	//Enviados
+	struct inverter_emcu_setpoint_1_left_t appReqLeft; //Comanda estado inverter
+	struct inverter_emcu_setpoint_1_right_t appReqRight; //Comanda esatdo inverter
+
+	struct inverter_emcu_setpoint_2_right_t currentReqRight; //Pedido comanda Corriente
+	struct inverter_emcu_setpoint_2_left_t currentReqLeft; //Pedido comanda Corriente
+
+	struct inverter_emcu_setpoint_3_right_t trqReqRight; //Pedido comanda Torque
+	struct inverter_emcu_setpoint_3_left_t trqReqLeft; //Pedido comanda Torque
+
+
+
+	//Received
+	struct inverter_emcu_state_2_right_t appStateRight; //Estado inverter
+	struct inverter_emcu_state_2_left_t appStateLeft; //Estado inverter
+
+	//HVBMS.dbc
+	struct hvbms_bms_rx_ctrl_1_t BmsAppReq; //Comanda estado BMS
+	struct hvbms_bms_tx_state_3_t BmsAppState; //Estado BMS
+
 };
 extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
 /* ---------------------------------------------------------------------- */
 
 
-uint8_t initCAN(CAN_HandleTypeDef *invCan,CAN_HandleTypeDef *mainCan, TIM_HandleTypeDef *htim);
+uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
+		TIM_HandleTypeDef *hMainTIM, TIM_HandleTypeDef *hInvTIM);
+
+void canLoop(TIM_HandleTypeDef *srcTIM);
 uint8_t decodeMsg(uint32_t canId, uint8_t *data); //Decodes message according to DBC
 uint8_t sendInvCAN(void);
 uint8_t sendMainCAN(void);

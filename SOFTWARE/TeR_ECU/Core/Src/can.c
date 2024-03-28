@@ -41,13 +41,13 @@ void MX_CAN1_Init(void)
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 5;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
-  hcan1.Init.SyncJumpWidth = CAN_SJW_2TQ;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_6TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = ENABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
@@ -65,7 +65,7 @@ void MX_CAN1_Init(void)
 	canfilterconfig.FilterMaskIdLow = 0x0000;
 	canfilterconfig.FilterMode = CAN_FILTERMODE_IDMASK;
 	canfilterconfig.FilterScale = CAN_FILTERSCALE_32BIT;
-	canfilterconfig.SlaveStartFilterBank = 0; // doesn't matter in single can controllers
+	canfilterconfig.SlaveStartFilterBank = 14; // doesn't matter in single can controllers
 	if (HAL_CAN_ConfigFilter(&hcan1, &canfilterconfig) != HAL_OK) {
 		Error_Handler();
 	}
@@ -86,7 +86,7 @@ void MX_CAN2_Init(void)
   hcan2.Instance = CAN2;
   hcan2.Init.Prescaler = 2;
   hcan2.Init.Mode = CAN_MODE_NORMAL;
-  hcan2.Init.SyncJumpWidth = CAN_SJW_2TQ;
+  hcan2.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan2.Init.TimeSeg1 = CAN_BS1_8TQ;
   hcan2.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan2.Init.TimeTriggeredMode = DISABLE;
@@ -102,7 +102,7 @@ void MX_CAN2_Init(void)
   /* USER CODE BEGIN CAN2_Init 2 */
 	CAN_FilterTypeDef canfilterconfig;
 	canfilterconfig.FilterActivation = CAN_FILTER_ENABLE;
-	canfilterconfig.FilterBank = 14; // which filter bank to use from the assigned ones
+	canfilterconfig.FilterBank = 15; // which filter bank to use from the assigned ones
 	canfilterconfig.FilterFIFOAssignment = CAN_FILTER_FIFO1;
 	canfilterconfig.FilterIdHigh = 0;
 	canfilterconfig.FilterIdLow = 0;

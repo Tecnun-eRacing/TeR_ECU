@@ -1,7 +1,8 @@
-../Core/Src/stateMachine.c:35:9:getState	16	static
-../Core/Src/stateMachine.c:55:6:stateMachine	8	static
-../Core/Src/stateMachine.c:86:6:waitingSL	4	static
-../Core/Src/stateMachine.c:91:6:rdy2Prech	4	static
-../Core/Src/stateMachine.c:96:6:precharging	4	static
-../Core/Src/stateMachine.c:101:6:precharged	4	static
-../Core/Src/stateMachine.c:106:6:driving	4	static
+../Core/Src/stateMachine.c:39:9:getState	16	static
+../Core/Src/stateMachine.c:59:6:stateMachine	16	static
+../Core/Src/stateMachine.c:125:6:waitSL	4	static
+../Core/Src/stateMachine.c:130:6:rdy2Prech	4	static
+../Core/Src/stateMachine.c:135:6:precharging	4	static
+../Core/Src/stateMachine.c:140:6:precharged	4	static
+../Core/Src/stateMachine.c:145:6:driving	16	static
+../Core/Src/stateMachine.c:160:9:map	32	static

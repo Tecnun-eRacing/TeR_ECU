@@ -13,7 +13,7 @@
 #include "stm32f4xx_hal.h"
 
 typedef enum {
-	WAITING_SL, RDY2PRECH,PRECHARGING,PRECHARGED,DRIVING}state_t; //Estados
+	WAIT_SL,RDY2PRECH,PRECHARGING,PRECHARGED,DRIVING}state_t; //Estados
 
 
 state_t getState(void); //Determina el estado en función de las lecturas y el can
@@ -22,7 +22,7 @@ void stateMachine(void); //ejecuta el estado actual
 
 
 //Estados
-void waitingSL(void); // Comprueba
+void waitSL(void); // Comprueba SL esta bien
 void rdy2Prech(void); // Espera a recibir el comando de precarga
 void precharging(void); //Estado transitorio, monitoriza que todo va bien
 void precharged(void);//Espera a que se reciba el comando de r2d

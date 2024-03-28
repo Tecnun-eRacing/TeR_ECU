@@ -2,6 +2,7 @@
 "./Core/Src/can.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"
+"./Core/Src/scs.o"
 "./Core/Src/stateMachine.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"

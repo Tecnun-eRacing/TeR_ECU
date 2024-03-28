@@ -47,8 +47,8 @@ float trqDistribution() {
 	//Compute Torque output
 	float gas = TeR.apps.apps_av / 255.0; //Comanda de 0-1 de gas
 
-	TeR.trqReqRight.torque_req = gas * 180 / 2 + dTorque / 2;
-	TeR.trqReqLeft.torque_req = gas * 180 / 2 - dTorque / 2;
+	TeR.trqReqRight.torque_nm_req = gas * 180 / 2 + dTorque / 2;
+	TeR.trqReqLeft.torque_nm_req = gas * 180 / 2 - dTorque / 2;
 return 1;
 }
 
