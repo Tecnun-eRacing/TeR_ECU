@@ -52,7 +52,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -94,13 +93,11 @@ int main(void) {
 	MX_TIM2_Init();
 	MX_TIM3_Init();
 	MX_TIM5_Init();
-
-	/* Initialize interrupts */
-	MX_NVIC_Init();
 	/* USER CODE BEGIN 2 */
 
-	initCAN(&hcan1, &hcan2, &htim2, &htim3);
-
+	initCAN(&hcan1, &hcan2, &htim3, &htim2); //Arranca los can de inverters y main con sus respectivos temporizadores
+	initSCS(&htim5, &htim3);
+	startSCS(); //Activa el checking de SCS
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -159,25 +156,8 @@ void SystemClock_Config(void) {
 	}
 }
 
-/**
- * @brief NVIC Configuration.
- * @retval None
- */
-static void MX_NVIC_Init(void) {
-	/* CAN1_RX0_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
-	/* TIM2_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(TIM2_IRQn);
-}
-
 /* USER CODE BEGIN 4 */
-//Encapsula todos los eventos temporizados
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { //Envio temporizado
-	canLoop(htim);
 
-}
 /* USER CODE END 4 */
 
 /**

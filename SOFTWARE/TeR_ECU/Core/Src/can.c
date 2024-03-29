@@ -103,7 +103,7 @@ void MX_CAN2_Init(void)
 	CAN_FilterTypeDef canfilterconfig;
 	canfilterconfig.FilterActivation = CAN_FILTER_ENABLE;
 	canfilterconfig.FilterBank = 15; // which filter bank to use from the assigned ones
-	canfilterconfig.FilterFIFOAssignment = CAN_FILTER_FIFO1;
+	canfilterconfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
 	canfilterconfig.FilterIdHigh = 0;
 	canfilterconfig.FilterIdLow = 0;
 	canfilterconfig.FilterMaskIdHigh = 0;
@@ -148,6 +148,9 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     GPIO_InitStruct.Alternate = GPIO_AF9_CAN1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    /* CAN1 interrupt Init */
+    HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
   /* USER CODE BEGIN CAN1_MspInit 1 */
 
   /* USER CODE END CAN1_MspInit 1 */

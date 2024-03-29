@@ -27,7 +27,11 @@ Core/Src/scs.o: ../Core/Src/scs.c ../Core/Inc/scs.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h
+ ../Core/Inc/TeR_CAN.h \
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
+ ../Core/Inc/can.h ../Core/Inc/main.h ../Core/Inc/scs.h
 ../Core/Inc/scs.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -57,4 +61,10 @@ Core/Src/scs.o: ../Core/Src/scs.c ../Core/Inc/scs.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
-C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
+../Core/Inc/TeR_CAN.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
+../Core/Inc/can.h:
+../Core/Inc/main.h:
+../Core/Inc/scs.h:

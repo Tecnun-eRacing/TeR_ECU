@@ -1,4 +1,0 @@
-../Core/Src/tv_mds.c:16:7:yawRef	24	static
-../Core/Src/tv_mds.c:20:7:mz2DeltaTorque	8	static
-../Core/Src/tv_mds.c:24:7:pid	0	static
-../Core/Src/tv_mds.c:39:7:trqDistribution	24	static

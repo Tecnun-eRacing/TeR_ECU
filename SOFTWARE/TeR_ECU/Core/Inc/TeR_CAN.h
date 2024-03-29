@@ -33,13 +33,14 @@
 #include "hvbms.h"
 #include "stm32f4xx_hal.h"
 #include "can.h"
+#include "scs.h" //para el logging de scs
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
 struct TeR_t{
 //Propias
 	struct ter_ecu_status_t status;
 
-//Externas
+	//Externas
 	//TER.dbc
 	struct ter_apps_t apps; //Sensor de acelerador
 	struct ter_bpps_t bpps; //Freno
@@ -74,12 +75,12 @@ extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
 
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
-		TIM_HandleTypeDef *hMainTIM, TIM_HandleTypeDef *hInvTIM);
+		TIM_HandleTypeDef *hInvTIM, TIM_HandleTypeDef *hMainTIM);
 
 void canLoop(TIM_HandleTypeDef *srcTIM);
-uint8_t decodeMsg(uint32_t canId, uint8_t *data); //Decodes message according to DBC
-uint8_t sendInvCAN(void);
-uint8_t sendMainCAN(void);
+void decodeMsg(CAN_HandleTypeDef *hcan); //Decodes message according to DBC
+void sendInvCAN(TIM_HandleTypeDef *htim); //Función Callback de envío del CAN de inverters
+void sendMainCAN(TIM_HandleTypeDef *htim);// //Función Callback de envío del CAN principal
 uint8_t command(uint8_t cmd, uint8_t *args); //
 
 #endif /* INC_TER_CAN_H_ */

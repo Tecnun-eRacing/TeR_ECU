@@ -1,2 +1,0 @@
-TER_DATABASES/ter.o: ../TER_DATABASES/ter.c ../TER_DATABASES/ter.h
-../TER_DATABASES/ter.h:
