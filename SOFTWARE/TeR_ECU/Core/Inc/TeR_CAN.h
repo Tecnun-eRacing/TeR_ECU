@@ -12,7 +12,6 @@
  *    ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
  */
 
-
 /*  Este Fichero tiene como Objetivo almacenar las funciones de decodificación
  *  y envío de todos los mensajes de una placa, incluye como librerías aquellas
  *  autogeneradas mediante cantools y ofrece una interfáz de cara al micro con dos
@@ -24,8 +23,6 @@
  *  A su vez están creados aqui todas las estructuras de memoria del CAN que permiten su uso fuera de el
  */
 
-
-
 #ifndef INC_TER_CAN_H_
 #define INC_TER_CAN_H_
 #include "ter.h"
@@ -36,7 +33,7 @@
 #include "scs.h" //para el logging de scs
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
-struct TeR_t{
+struct TeR_t {
 //Propias
 	struct ter_ecu_status_t status;
 
@@ -59,8 +56,6 @@ struct TeR_t{
 	struct inverter_emcu_setpoint_3_right_t trqReqRight; //Pedido comanda Torque
 	struct inverter_emcu_setpoint_3_left_t trqReqLeft; //Pedido comanda Torque
 
-
-
 	//Received
 	struct inverter_emcu_state_2_right_t appStateRight; //Estado inverter
 	struct inverter_emcu_state_2_left_t appStateLeft; //Estado inverter
@@ -73,14 +68,12 @@ struct TeR_t{
 extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
 /* ---------------------------------------------------------------------- */
 
-
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
 		TIM_HandleTypeDef *hInvTIM, TIM_HandleTypeDef *hMainTIM);
-
-void canLoop(TIM_HandleTypeDef *srcTIM);
+void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan); //Configs filters
 void decodeMsg(CAN_HandleTypeDef *hcan); //Decodes message according to DBC
 void sendInvCAN(TIM_HandleTypeDef *htim); //Función Callback de envío del CAN de inverters
-void sendMainCAN(TIM_HandleTypeDef *htim);// //Función Callback de envío del CAN principal
+void sendMainCAN(TIM_HandleTypeDef *htim); // //Función Callback de envío del CAN principal
 uint8_t command(uint8_t cmd, uint8_t *args); //
 
 #endif /* INC_TER_CAN_H_ */

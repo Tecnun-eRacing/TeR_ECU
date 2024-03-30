@@ -66,24 +66,41 @@ void stateMachine(void) {
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (TeR.status.state) {
 		case WAIT_SL:
-
+			//Security
+			TeR.trqReqLeft.torque_nm_req = 0;
+			TeR.trqReqRight.torque_nm_req = 0;
+			TeR.status.r2d = 0;
 			break;
 
 		case RDY2PRECH:
-
+			//Security
+			TeR.trqReqLeft.torque_nm_req = 0;
+			TeR.trqReqRight.torque_nm_req = 0;
+			TeR.status.r2d = 0;
+			TeR.appReqLeft.app_state_req = 1;//Manda el Inverter a su estado off por si estaba en error
+			TeR.appReqRight.app_state_req = 1;
 			break;
 
 		case PRECHARGING:
-
+			//Security
+			TeR.trqReqLeft.torque_nm_req = 0;
+			TeR.trqReqRight.torque_nm_req = 0;
+			TeR.status.r2d = 0;
 			break;
 
 		case PRECHARGED:
-			TeR.appReqLeft.app_state_req = 2;
+			TeR.appReqLeft.app_state_req = 2;//Manda el inverter a ready
 			TeR.appReqRight.app_state_req = 2;
-
+			//Security
+			TeR.trqReqLeft.torque_nm_req = 0;
+			TeR.trqReqRight.torque_nm_req = 0;
+			TeR.status.r2d = 0;
 			break;
 		case DRIVING:
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+			HAL_Delay(2000);//EV 4.12.1
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+
 			break;
 		default:
 			//Handle Invalid state
@@ -123,31 +140,18 @@ void stateMachine(void) {
 /* -------------------------[Estados]---------------------------- */
 
 void waitSL(void) {
-	TeR.trqReqLeft.torque_nm_req = 0;
-	TeR.trqReqRight.torque_nm_req = 0;
-	TeR.status.r2d = 0;
+
 } // Comprueba que la safety esta cerrada
 void rdy2Prech(void) {
-	TeR.trqReqLeft.torque_nm_req = 0;
-	TeR.trqReqRight.torque_nm_req = 0;
-	TeR.status.r2d = 0;
+
 } // Espera a recibir el comando de precarga
 void precharging(void) {
-	TeR.trqReqLeft.torque_nm_req = 0;
-	TeR.trqReqRight.torque_nm_req = 0;
-	TeR.status.r2d = 0;
+
 } //Estado transitorio, monitoriza que todo va bien
 void precharged(void) {
-	TeR.trqReqLeft.torque_nm_req = 0;
-	TeR.trqReqRight.torque_nm_req = 0;
-	TeR.status.r2d = 0;
+
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
-	if(beeptim>250000){
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-	}else{
-		beeptim++;
-	}
 	TeR.trqReqLeft.torque_nm_req = 0;
 	TeR.trqReqRight.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
 

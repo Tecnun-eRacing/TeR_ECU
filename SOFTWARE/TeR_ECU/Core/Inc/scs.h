@@ -11,7 +11,7 @@
 #include <string.h>
 #include "TeR_CAN.h"
 
-#define SCS {TER_APPS_FRAME_ID,TER_BPPS_FRAME_ID} //Añadir aqui las señales critica
+#define SCS {TER_APPS_FRAME_ID,TER_BPPS_FRAME_ID} //Añadir aqui las señales criticas
 #define SCS_TIMEOUT 500  //Define el tiempo en unidades del timer (ms) que una scs puede desviarse como maximo
 
 //Publicas

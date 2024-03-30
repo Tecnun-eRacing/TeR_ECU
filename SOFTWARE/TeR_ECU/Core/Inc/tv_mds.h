@@ -5,6 +5,9 @@
  *      Author: Ozuba Telmo Martinez de Salinas
  */
 #include "TeR_CAN.h"
+#include "pid.h"
+
+
 #ifndef INC_TV_MDS_H_
 #define INC_TV_MDS_H_
 
@@ -24,28 +27,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct {
 
-	//State Variables
-	float error; //Error proporcional
-	float errorD; //Error derivativo
-	float errorI;//Error integral
-
-	//Config Varialbes
-	float Kp;  // Proportional gain
-	float Ki;   // Integral gain
-	float Kd;  // Derivative gain
-
-	float prevError;
-	float antiWindup; //Valor saturacion termino integral
-	float T; //Tiempo del lazo
-}pid_t;
 
 
 
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
-float pid(pid_t* pid, float yawRateRef, float imuYawRate);
 float mz2DeltaTorque(float alpha);
 
 float trqDistribution();

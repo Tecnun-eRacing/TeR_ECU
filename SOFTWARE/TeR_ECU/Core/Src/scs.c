@@ -13,7 +13,8 @@
 
 //Internal Id and timestamp lists
 uint32_t scsIds[] = SCS; //Las señales las añade la macro del preprocesor
-uint32_t timestamps[sizeof(scsIds)];
+const uint8_t nSCS = sizeof(scsIds)/sizeof(uint32_t);
+uint32_t timestamps[sizeof(scsIds)/sizeof(uint32_t)];
 
 uint32_t lastFailSCS; //Id de la ultima señal que falló (Debugging purposes)
 
@@ -50,9 +51,9 @@ uint8_t stopSCS(void) { //Desactiva la comprobación activa de tiempos
 //Log and check callback functions
 uint8_t logSCS(uint32_t id) {
 	uint8_t i = 0;
-	while(i < sizeof(scsIds) && scsIds[i] != id) //Ojo el orden importa el segundo no se evalua si el primero falla (Crash al reves, acceso fuera del array)
+	while(i < nSCS && scsIds[i] != id) //Ojo el orden importa el segundo no se evalua si el primero falla (Crash al reves, acceso fuera del array)
 		 i++; //Comprueba si el ID está en el la lista de señales criticas, se para cuando hay un match o se ha excedido el tamaño del array
-	if (i >= sizeof(scsIds)) { //Hemos recorrido el array entero (i no es un indice valido N-1)
+	if (i >= nSCS) { //Hemos recorrido el array entero (i no es un indice valido N-1)
 		return 0; //No era una SCS
 	} else { //Era una SCS
 		timestamps[i] = base->Instance->CNT; //Loguea el valor del counter en su slot
@@ -62,10 +63,11 @@ uint8_t logSCS(uint32_t id) {
 }
 
 void checkSCS(TIM_HandleTypeDef *tim) {
-	for (uint8_t i = 0; i < sizeof(timestamps); i++) {
+	for (uint8_t i = 0; i < nSCS; i++) {
 		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { //Hay una señal perdida
 			lastFailSCS  = scsIds[i]; //Guarda la ultima señal problematica, util a modo de debug
 			command(TER_COMMAND_CMD_DISCHARGE_CHOICE,(void*) 0); //LLama al comando de descarga
+			TeR.apps.apps_av = 0; //Porsiaka
 		}
 	}
 }

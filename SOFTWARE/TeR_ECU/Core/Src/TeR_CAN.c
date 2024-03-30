@@ -54,16 +54,17 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
 	mainTIM = hMainTIM;
 
 	//Arranque del periferico y la interrupcion
-
-	//Arranque del modulo
-	HAL_CAN_Start(invCAN); //Activamos el can
-	HAL_CAN_Start(mainCAN); //Activamos el can
-
+	configFilter(invCan, mainCan); //Configura los filtros
 	//Registramos los 2 callbacks de recepcion a la función conjunta de decodificación
 	HAL_CAN_RegisterCallback(invCAN, HAL_CAN_RX_FIFO0_MSG_PENDING_CB_ID,
 			decodeMsg);
 	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_RX_FIFO0_MSG_PENDING_CB_ID,
 			decodeMsg);
+
+	//Arranque del modulo
+	HAL_CAN_Start(invCAN); //Activamos el can
+	HAL_CAN_Start(mainCAN); //Activamos el can
+
 	//Arrancamos las interrupts
 	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
@@ -78,6 +79,41 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
 	HAL_TIM_Base_Start_IT(mainTIM); //Arranca el ciclo
 	return 1;
 }
+/*----------------------------------[Configuración de filtros]--------------------------------*/
+
+void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan){
+	CAN_FilterTypeDef filter;
+	//Inverter Filter (CAN1 MASter)
+	filter.FilterActivation = CAN_FILTER_ENABLE;
+	filter.FilterBank = 0; // which filter bank to use from the assigned ones
+	filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	filter.FilterIdHigh = 0;
+	filter.FilterIdLow = 0;
+	filter.FilterMaskIdHigh = 0;
+	filter.FilterMaskIdLow = 0;
+	filter.FilterMode = CAN_FILTERMODE_IDMASK;
+	filter.FilterScale = CAN_FILTERSCALE_32BIT;
+	filter.SlaveStartFilterBank = 14; // Los filtros son compartidos
+	HAL_CAN_ConfigFilter(invCan, &filter);
+
+	//Main Filter (Slave)
+	filter.FilterActivation = CAN_FILTER_ENABLE;
+	filter.FilterBank = 15; // which filter bank to use from the assigned ones
+	filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	filter.FilterIdHigh = 0;
+	filter.FilterIdLow = 0;
+	filter.FilterMaskIdHigh = 0;
+	filter.FilterMaskIdLow = 0;
+	filter.FilterMode = CAN_FILTERMODE_IDMASK;
+	filter.FilterScale = CAN_FILTERSCALE_32BIT;
+	filter.SlaveStartFilterBank = 14; // Cursor de división de filtros
+	HAL_CAN_ConfigFilter(mainCan, &filter);
+
+}
+
+/* ----------------------------------[Envío]---------------------------------------- */
+
+/* ---------------------------[INVERTER CAN]-------------------------- */
 
 void sendInvCAN(TIM_HandleTypeDef *htim) {
 	//Buffers volatiles para el envío
@@ -87,7 +123,6 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-	/* ---------------------------[INVERTER CAN]-------------------------- */
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 		switch (invIndex++) {
@@ -147,6 +182,7 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 		}
 	}
 }
+/* ---------------------------[MAIN CAN]-------------------------- */
 
 void sendMainCAN(TIM_HandleTypeDef *htim) {
 	//Buffers volatiles para el envío
@@ -156,7 +192,6 @@ void sendMainCAN(TIM_HandleTypeDef *htim) {
 
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-	/* ---------------------------[MAIN CAN]-------------------------- */
 
 	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 		switch (mainIndex++) {
@@ -225,6 +260,7 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 
 	}
 }
+/* ----------------------------------[Comandos]---------------------------------------- */
 
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(uint8_t cmd, uint8_t *args) {
@@ -238,7 +274,8 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 	//Preinicializamos la respuesta
 	struct ter_response_t response;
 	response.cmd = cmd;
-	response.code = TER_RESPONSE_CODE_ERROR_CHOICE; //Lo pone a error si nadie dice lo contrario
+	response.code = TER_RESPONSE_CODE_OK_CHOICE; //Lo pone a ok si nadie dice lo contrario
+
 	/*-----------------------------------------[COMANDOS]---------------------------------------*/
 	switch (cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
@@ -249,7 +286,6 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-			response.code = TER_RESPONSE_CODE_OK_CHOICE;
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -262,8 +298,7 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-			response.code = TER_RESPONSE_CODE_OK_CHOICE;
-		}else {
+		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
 		break;
@@ -280,15 +315,14 @@ uint8_t command(uint8_t cmd, uint8_t *args) {
 			inverter_emcu_setpoint_1_left_pack(TxData, &TeR.appReqLeft,
 					TxHeader.DLC);
 			HAL_CAN_AddTxMessage(invCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-			response.code = TER_RESPONSE_CODE_OK_CHOICE;
-		}else {
+		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
 		break;
 	}
 	/*Devuelve un mensaje de respuesta*/
 	TxHeader.StdId = TER_RESPONSE_FRAME_ID;
-	TxHeader.DLC = TER_RESPONSE_FRAME_ID;
+	TxHeader.DLC = TER_RESPONSE_LENGTH;
 	ter_response_pack(TxData, &response, TxHeader.DLC);
 	HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el resultado de la ejecución
 
