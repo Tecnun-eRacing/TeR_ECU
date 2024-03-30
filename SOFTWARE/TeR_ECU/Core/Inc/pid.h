@@ -9,6 +9,8 @@
 
 #ifndef INC_PID_H_
 #define INC_PID_H_
+#include <stdlib.h> //For memory allocation
+
 
 typedef struct {
 	//State Variables
@@ -22,7 +24,7 @@ typedef struct {
 	float Kd;  // Derivative gain
 
 	float prevError;
-	float antiWindup; //Valor saturacion termino integral
+	float antiWindup; //Valor saturacion termino integral (Puede entenderse en las unidades de la integral, velocidad angular máxima en el caso del yawRate)
 	float T; //Tiempo del lazo
 } pid_t;
 

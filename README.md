@@ -1,3 +1,6 @@
 # TeR_ECU
-
-La Ecu es la centralita del coche se ocupa del control del mismo, controla el PowerTrain, monitoriza distintas señales, y se ocupa de la maquina de estado de el coche.
+La versión V2 de la ECU busca implementar varias mejoras:
+- Puerto de Debugging Unificado
+- MCU integrado en PCB
+- SD para logging
+- Safety line
