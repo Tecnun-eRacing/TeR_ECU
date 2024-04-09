@@ -4,17 +4,78 @@
  *  Created on: Mar 30, 2024
  *      Author: Ozuba
  *
- *
- *  Este archivo implementa el gestor de comanda para el TeR, la gestión de comanda se basa
- *  en un limitador de potencia global y distintos modos de conducción:
- *  - Lineal
- *  - Torque Vectoring
- *  - Control de Tracción (Acceleration)
- *  - Tesis de Andoni medina
- *
- *  El esquema global del gestor de torque tiene la siguiente forma
- *
- *  Inputs ->Modo
+ */
+/*
+                                             STEER
+                                             ────────────────────┐
+                                             APPS                │
+             KWLimit                         ───────────────┐    │
+             ──────────────┐                 IMU            │    │                                                      ┌────────┐
+                           │                 ──────────┐    │    │                                              ┌──────►│RIGHT   │
+                           ▼                           ▼    ▼    ▼                                              │       │INVERTER│
+                  ┌──────────────────┐            ┌──────────────────┐ TorqueR   ┌───────────────────┐ TorqueR  │       └────────┘
+                  │                  │            │                  ├──────────►│                   ├──────────┘
+Speed(Rpm)        │     Limitador    │  Torque    │     Modos de     │           │      Control      │
+─────────────────►│        de        ├───────────►│                  │           │        de         │
+                  │     Potencia     │ Available  │    Conducción    │ TorqueL   │     Traccion      │ TorqueL
+                  │                  │            │                  ├──────────►│                   ├──────────┐
+                  └──────────────────┘            └──────────────────┘           └───────────────────┘          │
+                                                                                                                │       ┌────────┐
+                                                                                                                └──────►│LEFT    │
+                                                                                                                        │INVERTER│
+                                                                                                                        └────────┘
+
+ The torque manager is the library in charge of managing the dynamic control of the vehicle, it consists on 3 differenciated stages
+ which are modular and interchangable with the idea of creating different driving experiences according to the competition. The principal
+ interchangeable block is the driving mode
+
+
+ - Limitador de Potencia: Se establece una limitación de potencia en kw y se calcula un torque máximo desarrollable suponiendo que la potencia
+ 	 	 	 	 	 se conserva a lo largo del powertrain Pelectrica = Pmecanica*FactorEficiencia
+
+ - Modo de conducción:
+ 	 * Lineal: El torque se distribuye equitativamente a las 2 ruedas
+ 	 * BasicTorque: Distrubución del torque basada en una función del steering (Normalmente un polinomio)
+ 	 * ControlTorque: Distribución del Torque basada en un scheduled gain PID calibrado mediante un modelo bicicleta del vehículo
+ 	 * Modo Marcha atras: Self-Explainatory (Pitará en modo obra jajaj) Ilegalisimo en competi
+	 * Autonomo(Futuro): Permite el control del TeR mediante la librería de comandos TeR_COMMAND
+ - Control de tracción:
+ 	 * Feedforward
+ 	 * Feedback etc
+
+
+Para permitir la modularidad se va a utilizar un ciclo de procesado basado en switches y funciones 	que toman y retornan lo que su etapa requiere
+- Limitador de potencia void -> trq_t (La estimación es interna al modulo no entra como argumento(Puede hacer estimaciones basadas en el consumo electrico))
+- Modo de conducción torque_t -> trqMap_t
+- Control de Tracción torqueMap_t -> trqMap_t
  */
 
 
+
+
+uint8_t trqManager(void){
+
+
+
+
+
+}
+
+
+
+
+
+
+
+//UTILS
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
+		int32_t out_max) {
+	//Saturar las salidas si la entrada excede el límite de calibracion
+	if (x < in_min)
+		return out_min;
+	if (x > in_max)
+		return out_max;
+	//Mapear si estamos en rango seguro
+	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	return val;
+}

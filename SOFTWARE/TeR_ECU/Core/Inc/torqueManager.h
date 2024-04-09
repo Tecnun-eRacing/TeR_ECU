@@ -5,4 +5,73 @@
  *      Author: Ozuba
  */
 
+/*
+                                             STEER
+                                             ────────────────────┐
+                                             APPS                │
+             KWLimit                         ───────────────┐    │
+             ──────────────┐                 IMU            │    │                                                      ┌────────┐
+                           │                 ──────────┐    │    │                                              ┌──────►│RIGHT   │
+                           ▼                           ▼    ▼    ▼                                              │       │INVERTER│
+                  ┌──────────────────┐            ┌──────────────────┐ TorqueR   ┌───────────────────┐ TorqueR  │       └────────┘
+                  │                  │            │                  ├──────────►│                   ├──────────┘
+Speed(Rpm)        │     Limitador    │  Torque    │     Modos de     │           │      Control      │
+─────────────────►│        de        ├───────────►│                  │           │        de         │
+                  │     Potencia     │ Available  │    Conducción    │ TorqueL   │     Traccion      │ TorqueL
+                  │                  │            │                  ├──────────►│                   ├──────────┐
+                  └──────────────────┘            └──────────────────┘           └───────────────────┘          │
+                                                                                                                │       ┌────────┐
+                                                                                                                └──────►│LEFT    │
+                                                                                                                        │INVERTER│
+                                                                                                                        └────────┘
+
+ The torque manager is the library in charge of managing the dynamic control of the vehicle, it consists on 3 differenciated stages
+ which are modular and interchangable with the idea of creating different driving experiences according to the competition. The principal
+ interchangeable block is the driving mode
+
+
+ - Limitador de Potencia: Se establece una limitación de potencia en kw y se calcula un torque máximo desarrollable suponiendo que la potencia
+ 	 	 	 	 	 se conserva a lo largo del powertrain Pelectrica = Pmecanica*FactorEficiencia
+
+ - Modo de conducción:
+ 	 * Lineal: El torque se distribuye equitativamente a las 2 ruedas
+ 	 * BasicTorque: Distrubución del torque basada en una función del steering (Normalmente un polinomio)
+ 	 * ControlTorque: Distribución del Torque basada en un scheduled gain PID calibrado mediante un modelo bicicleta del vehículo
+ 	 * Modo Marcha atras: Self-Explainatory (Pitará en modo obra jajaj) Ilegalisimo en competi
+	 * Autonomo(Futuro): Permite el control del TeR mediante la librería de comandos TeR_COMMAND
+ - Control de tracción:
+ 	 * Feedforward
+ 	 * Feedback etc
+
+
+Para permitir la modularidad se va a utilizar un ciclo de procesado basado en function pointers lo que permite hacer prototipos básicos sobre este esquema y cambiarlos facilmente
+- Limitador de potencia void -> trq_t (La estimación es interna al modulo no entra como argumento(Puede hacer estimaciones basadas en el consumo electrico))
+- Modo de conducción torque_t -> trqMap_t
+- Control de Tracción torqueMap_t -> trqMap_t
+ */
+#include "TeR_CAN.h" //For controlling TeR vehicle
+#include "pid.h" //For torque vectoring
+
+//Dynamic value types
+typedef int32_t trq_t; //Mucho ojo va a tener signo por ahora regen/marcha atrás, tiene sentido (Se implementarán sanity checks)
+typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
+	trq_t rLeft; //Rear left wheel
+	trq_t rRight; //Rear right wheel
+} trqMap_t;
+
+//ManagerConfigs
+typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
+	trq_t (*pwrLimiter)(uint8_t trq); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
+	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
+	trqMap_t (*tractionControl);
+} trqPipeline_t;
+
+extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
+//Main functions
+
+uint8_t torqueLoop(void); //Executes all the torque pipeline
+
+// UTILS
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
+		int32_t out_max); //Función map muy util
 

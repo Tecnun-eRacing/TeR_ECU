@@ -30,7 +30,7 @@ typedef struct {
 
 
 
-pid_t* initPID(float Kp,float Ki, float Kd); //Returns a PID instance in the HEAP
+pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax); //Returns a PID instance in the HEAP
 void deInitPID(pid_t* pid); //Frees PID memory
 float pid(pid_t *pid, float ref, float feedback); //Calculates PID response
 

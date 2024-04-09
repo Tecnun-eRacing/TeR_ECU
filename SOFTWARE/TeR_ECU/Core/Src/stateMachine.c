@@ -30,10 +30,7 @@
  *
  */
 #include "stateMachine.h"
-int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
-		int32_t out_max); //kita de aki bro
 
-uint32_t beeptim;
 
 
 state_t getState(void) {
@@ -48,7 +45,7 @@ state_t getState(void) {
 			status = PRECHARGING;
 		} else if (TeR.BmsAppState.app_state_app == 4) { // Esta precargado?
 			status = PRECHARGED;
-			if (TeR.status.r2d && TeR.appStateRight.app_state_app >= 2) { //la flag de ready2drive esta activada? (can)
+			if (TeR.status.r2d && ((TeR.appStateRight.app_state_app >= 2) || (TeR.appStateLeft.app_state_app >= 2))) { //la flag de ready2drive esta activada? (can)
 				status = DRIVING;
 			}
 		}
@@ -152,7 +149,7 @@ void precharged(void) {
 
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
-	TeR.trqReqLeft.torque_nm_req = 0;
+	TeR.trqReqLeft.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
 	TeR.trqReqRight.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
 
 
@@ -161,14 +158,3 @@ void driving(void) {
 
 
 
-int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
-		int32_t out_max) {
-	//Saturar las salidas si la entrada excede el límite de calibracion
-	if (x < in_min)
-		return out_min;
-	if (x > in_max)
-		return out_max;
-	//Mapear si estamos en rango seguro
-	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-	return val;
-}
