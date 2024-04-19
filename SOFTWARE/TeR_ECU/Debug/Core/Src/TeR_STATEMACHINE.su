@@ -1,0 +1,9 @@
+../Core/Src/TeR_STATEMACHINE.c:37:9:initStateMachine	16	static
+../Core/Src/TeR_STATEMACHINE.c:47:9:getState	16	static
+../Core/Src/TeR_STATEMACHINE.c:69:6:stateMachine	24	static
+../Core/Src/TeR_STATEMACHINE.c:151:6:waitSL	4	static
+../Core/Src/TeR_STATEMACHINE.c:154:6:rdy2Prech	4	static
+../Core/Src/TeR_STATEMACHINE.c:157:6:precharging	4	static
+../Core/Src/TeR_STATEMACHINE.c:160:6:precharged	4	static
+../Core/Src/TeR_STATEMACHINE.c:163:6:driving	8	static
+../Core/Src/TeR_STATEMACHINE.c:169:6:permaTask	8	static

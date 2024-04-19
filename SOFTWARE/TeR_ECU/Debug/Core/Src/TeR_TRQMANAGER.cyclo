@@ -1,0 +1,8 @@
+../Core/Src/TeR_TRQMANAGER.c:57:9:trqManager	3
+../Core/Src/TeR_TRQMANAGER.c:80:7:limitTorque	1
+../Core/Src/TeR_TRQMANAGER.c:85:7:limitMechPWR	3
+../Core/Src/TeR_TRQMANAGER.c:97:7:limitSpeed	1
+../Core/Src/TeR_TRQMANAGER.c:106:7:limitElecPWR	1
+../Core/Src/TeR_TRQMANAGER.c:112:10:lineal	1
+../Core/Src/TeR_TRQMANAGER.c:121:10:tractionControlOFF	1
+../Core/Src/TeR_TRQMANAGER.c:127:9:map	3

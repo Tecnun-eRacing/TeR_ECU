@@ -29,7 +29,18 @@
  * de esta manera si una condición no se cumple se degrada al estado más bajo.
  *
  */
-#include "stateMachine.h"
+#include "TeR_STATEMACHINE.h"
+
+TIM_HandleTypeDef* beat;
+
+
+uint8_t initStateMachine(TIM_HandleTypeDef* htim){
+	beat = htim; //Configura el timer de la maquina de estados
+	HAL_TIM_RegisterCallback(beat, HAL_TIM_PERIOD_ELAPSED_CB_ID, stateMachine);
+	HAL_TIM_Base_Start_IT(beat);
+	return 1;
+}
+
 
 
 
@@ -45,7 +56,9 @@ state_t getState(void) {
 			status = PRECHARGING;
 		} else if (TeR.BmsAppState.app_state_app == 4) { // Esta precargado?
 			status = PRECHARGED;
-			if (TeR.status.r2d && ((TeR.appStateRight.app_state_app >= 2) || (TeR.appStateLeft.app_state_app >= 2))) { //la flag de ready2drive esta activada? (can)
+			if (TeR.status.r2d
+					&& ((TeR.appStateRight.app_state_app >= 2)
+							&& (TeR.appStateLeft.app_state_app >= 2))) { //la flag de ready2drive esta activada? (can)
 				status = DRIVING;
 			}
 		}
@@ -53,11 +66,11 @@ state_t getState(void) {
 	return status;
 }
 
-void stateMachine(void) {
+void stateMachine(TIM_HandleTypeDef* beat) {
 	uint8_t state = getState(); //Get Current State
 	uint8_t stateChanged = TeR.status.state != state ? 1 : 0; //for state setup
 	TeR.status.state = state; //getState(); //Actualiza el estado
-
+	permaTask(); //Ejecuta las tareas permanentes
 	//-----------------------------------[Setups]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
@@ -74,7 +87,7 @@ void stateMachine(void) {
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
 			TeR.status.r2d = 0;
-			TeR.appReqLeft.app_state_req = 1;//Manda el Inverter a su estado off por si estaba en error
+			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
 			TeR.appReqRight.app_state_req = 1;
 			break;
 
@@ -86,7 +99,7 @@ void stateMachine(void) {
 			break;
 
 		case PRECHARGED:
-			TeR.appReqLeft.app_state_req = 2;//Manda el inverter a ready
+			TeR.appReqLeft.app_state_req = 2; //Manda el inverter a ready
 			TeR.appReqRight.app_state_req = 2;
 			//Security
 			TeR.trqReqLeft.torque_nm_req = 0;
@@ -95,7 +108,7 @@ void stateMachine(void) {
 			break;
 		case DRIVING:
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			HAL_Delay(2000);//EV 4.12.1
+			HAL_Delay(2000); //EV 4.12.1
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 
 			break;
@@ -130,7 +143,6 @@ void stateMachine(void) {
 		//Handle Invalid state
 		break;
 	}
-	//brake light
 
 }
 
@@ -149,12 +161,25 @@ void precharged(void) {
 
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
-	TeR.trqReqLeft.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
-	TeR.trqReqRight.torque_nm_req = map(TeR.apps.apps_av,0,255,0,10);
-
-
+	trqManager(); //Ejecuta el pipeline de torque
 } //Ejecuta la comanda de par
 
+/* -------------------------[PermaTask]---------------------------- */
 
+void permaTask() {
+//BrakeLight
+	if (TeR.bpps.bpps > 10) {
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+	} else {
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+	}
+// Proccess Wheel Data
+	TeR.drivetrainState.rl_rpm = TeR.dqErpmLeft.e_machine_speed_erpm * MOTOR_POLES * RED_RATIO;
+	TeR.drivetrainState.rr_rpm = TeR.dqErpmRight.e_machine_speed_erpm *MOTOR_POLES * RED_RATIO;
+	TeR.drivetrainState.rl_trq = TeR.trqEstLeft.torque_est_nm/RED_RATIO;
+	TeR.drivetrainState.rr_trq = TeR.trqEstRight.torque_est_nm/RED_RATIO;
 
+//Check SCS
+checkSCS();
 
+}

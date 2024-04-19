@@ -49,6 +49,11 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 - Modo de conducción torque_t -> trqMap_t
 - Control de Tracción torqueMap_t -> trqMap_t
  */
+
+#ifndef TORQUE_MANAGER_H
+#define TORQUE_MANAGER_H
+
+#include <stdint.h>
 #include "TeR_CAN.h" //For controlling TeR vehicle
 #include "pid.h" //For torque vectoring
 
@@ -60,18 +65,33 @@ typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
 } trqMap_t;
 
 //ManagerConfigs
-typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
-	trq_t (*pwrLimiter)(uint8_t trq); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
+typedef struct { // Contiene configuraciones del pipeline
+	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
 	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
-	trqMap_t (*tractionControl);
+	trqMap_t (*tractionControl)();
 } trqPipeline_t;
 
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
 //Main functions
 
-uint8_t torqueLoop(void); //Executes all the torque pipeline
+uint8_t trqManager(void); //Executes all the torque pipeline
+uint8_t loadParams(trqPipeline_t* config); //
+
+//Basic limiters
+trq_t limitTorque(void);
+trq_t limitMechPWR(void);
+
+
+//Basic modes
+trqMap_t lineal(trq_t limit);
+
+//Basic traction Control
+trqMap_t tractionControlOFF(trqMap_t in);
+
+
 
 // UTILS
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max); //Función map muy util
 
+#endif

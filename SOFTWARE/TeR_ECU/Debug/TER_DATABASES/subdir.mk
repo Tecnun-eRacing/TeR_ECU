@@ -5,21 +5,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../TER_DATABASES/charger.c \
 ../TER_DATABASES/hvbms.c \
 ../TER_DATABASES/inverter.c \
-../TER_DATABASES/te_r23.c \
 ../TER_DATABASES/ter.c 
 
 OBJS += \
+./TER_DATABASES/charger.o \
 ./TER_DATABASES/hvbms.o \
 ./TER_DATABASES/inverter.o \
-./TER_DATABASES/te_r23.o \
 ./TER_DATABASES/ter.o 
 
 C_DEPS += \
+./TER_DATABASES/charger.d \
 ./TER_DATABASES/hvbms.d \
 ./TER_DATABASES/inverter.d \
-./TER_DATABASES/te_r23.d \
 ./TER_DATABASES/ter.d 
 
 
@@ -30,7 +30,7 @@ TER_DATABASES/%.o TER_DATABASES/%.su TER_DATABASES/%.cyclo: ../TER_DATABASES/%.c
 clean: clean-TER_DATABASES
 
 clean-TER_DATABASES:
-	-$(RM) ./TER_DATABASES/hvbms.cyclo ./TER_DATABASES/hvbms.d ./TER_DATABASES/hvbms.o ./TER_DATABASES/hvbms.su ./TER_DATABASES/inverter.cyclo ./TER_DATABASES/inverter.d ./TER_DATABASES/inverter.o ./TER_DATABASES/inverter.su ./TER_DATABASES/te_r23.cyclo ./TER_DATABASES/te_r23.d ./TER_DATABASES/te_r23.o ./TER_DATABASES/te_r23.su ./TER_DATABASES/ter.cyclo ./TER_DATABASES/ter.d ./TER_DATABASES/ter.o ./TER_DATABASES/ter.su
+	-$(RM) ./TER_DATABASES/charger.cyclo ./TER_DATABASES/charger.d ./TER_DATABASES/charger.o ./TER_DATABASES/charger.su ./TER_DATABASES/hvbms.cyclo ./TER_DATABASES/hvbms.d ./TER_DATABASES/hvbms.o ./TER_DATABASES/hvbms.su ./TER_DATABASES/inverter.cyclo ./TER_DATABASES/inverter.d ./TER_DATABASES/inverter.o ./TER_DATABASES/inverter.su ./TER_DATABASES/ter.cyclo ./TER_DATABASES/ter.d ./TER_DATABASES/ter.o ./TER_DATABASES/ter.su
 
 .PHONY: clean-TER_DATABASES
 
