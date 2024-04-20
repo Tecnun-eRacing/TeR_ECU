@@ -3,6 +3,6 @@
 ../Core/Src/TeR_TRQMANAGER.c:85:7:limitMechPWR	16	static
 ../Core/Src/TeR_TRQMANAGER.c:97:7:limitSpeed	4	static
 ../Core/Src/TeR_TRQMANAGER.c:106:7:limitElecPWR	4	static
-../Core/Src/TeR_TRQMANAGER.c:112:10:lineal	32	static
+../Core/Src/TeR_TRQMANAGER.c:112:10:lineal	40	static
 ../Core/Src/TeR_TRQMANAGER.c:121:10:tractionControlOFF	24	static
 ../Core/Src/TeR_TRQMANAGER.c:127:9:map	32	static

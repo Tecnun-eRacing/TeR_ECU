@@ -71,6 +71,10 @@ struct TeR_t {
 	struct inverter_emcu_state_9_right_t trqEstRight; //estimacion de torque producido
 	struct inverter_emcu_state_9_left_t trqEstLeft; ////estimacion de torque producido
 
+	struct inverter_emcu_state_7_right_t demRight; //Dem
+	struct inverter_emcu_state_7_left_t demLeft;
+
+
 
 	//HVBMS.dbc
 	//Enviados

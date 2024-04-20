@@ -63,7 +63,6 @@ void checkSCS(void) {
 	for (uint8_t i = 0; i < nSCS; i++) {
 		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { //Hay una señal perdida
 			lastFailSCS  = scsIds[i]; //Guarda la ultima señal problematica, util a modo de debug
-			//command(TER_COMMAND_CMD_DISCHARGE_CHOICE,(void*) 0); //LLama al comando de descarga
 			TeR.apps.apps_av = 0; //Porsiaka
 		}
 	}

@@ -237,7 +237,8 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 	//Attend the command
 	case TER_COMMAND_FRAME_ID: //Sistema de comandos
 		struct ter_command_t cmdMsg;
-		ter_command_unpack(&cmdMsg, data, header.DLC);
+		ter_command_init(&cmdMsg);
+		ter_command_unpack(&cmdMsg, data, TER_COMMAND_LENGTH);
 		command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 		break;
 
@@ -280,7 +281,23 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		break;
 
 	case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
-		inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, data, header.DLC);
+		inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
+		inverter_emcu_state_7_left_unpack(&TeR.demLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
+		inverter_emcu_state_7_right_unpack(&TeR.demRight, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
+		inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
+		inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, data, header.DLC);
 		break;
 
 /* ---------------------------[HVBMS]-------------------------- */

@@ -111,8 +111,8 @@ trq_t limitElecPWR(void) {
 // trq_t -> trqMap_t
 trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas
 	trqMap_t trqMap;
-	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit);
-	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit);
+	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
+	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 	return trqMap;
 }
 
