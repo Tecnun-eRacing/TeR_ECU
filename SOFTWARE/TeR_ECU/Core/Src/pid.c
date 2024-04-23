@@ -14,15 +14,17 @@
  * Implementa medidas de seguridad como la posibilidad de saturar individualmente los terminos
  * Integral Derivativo
  */
+#include "pid.h"
 
-pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float IMax) {
+
+pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
 	pid_t *pid; //temporal pointer for init
 	pid = (pid_t*) calloc(1, sizeof(pid)); //Allocates one pid instance Zeroes memory to prevent disaster
 	pid->Kp = Kp;
 	pid->Ki = Ki;
 	pid->Kd = Kd;
 	pid->T = loopTime; //Tiempo del lazo
-	pid->antiWindup = Imax; // Valor de saturación para el termino integral
+	pid->antiWindup = iMax; // Valor de saturación para el termino integral
 	return pid;
 }
 

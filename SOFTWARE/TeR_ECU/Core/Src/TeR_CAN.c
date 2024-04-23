@@ -23,9 +23,7 @@
  *  A su vez están creados aqui todas las estructuras de memoria del can
  *
  */
-
 #include "TeR_CAN.h"
-#include "stateMachine.h"
 
 /* ---------------------------[Estructuras del CAN]-------------------------- */
 //Pointer to timer and can peripheral being used
@@ -81,7 +79,7 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
 
-void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan){
+void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 	CAN_FilterTypeDef filter;
 	//Inverter Filter (CAN1 MASter)
 	filter.FilterActivation = CAN_FILTER_ENABLE;
@@ -127,6 +125,8 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 	if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 		switch (invIndex++) {
 
+/* ---------------------------[DERECHO]-------------------------- */
+
 		case 0: //Inverter Derecho
 			//SETPOINT_1
 			TxHeader.StdId = INVERTER_EMCU_SETPOINT_1_RIGHT_FRAME_ID;
@@ -151,6 +151,8 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 
 			break;
 
+/* ---------------------------[IZQUIERDO]-------------------------- */
+
 		case 1: //Torque Setpoint L
 			//SETPOINT_1
 			TxHeader.StdId = INVERTER_EMCU_SETPOINT_1_LEFT_FRAME_ID;
@@ -173,10 +175,11 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 					TxHeader.DLC);
 			HAL_CAN_AddTxMessage(invCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
 
-			invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
+			invIndex = 0; //Evita un ciclo muerto
 			break;
+/* ---------------------------[Default]-------------------------- */
 
-		default: //Esto evita tener que contar mensajes
+		default: //Por si algo wtf pasa
 			invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
 			break;
 		}
@@ -201,6 +204,18 @@ void sendMainCAN(TIM_HandleTypeDef *htim) {
 			TxHeader.DLC = TER_ECU_STATUS_LENGTH;
 			ter_ecu_status_pack(TxData, &TeR.status, TxHeader.DLC);
 			break;
+		case 1:
+			TxHeader.StdId = TER_DRIVETRAIN_STATE_FRAME_ID;
+			TxHeader.DLC = TER_DRIVETRAIN_STATE_LENGTH;
+			ter_drivetrain_state_pack(TxData, &TeR.drivetrainState,
+					TxHeader.DLC);
+			break;
+
+		case 2:
+			TxHeader.StdId = TER_DYNAMIC_CONFIG_FRAME_ID;
+			TxHeader.DLC = TER_DYNAMIC_CONFIG_LENGTH;
+			ter_dynamic_config_pack(TxData, &TeR.dynamicConfig, TxHeader.DLC);
+			break;
 
 		default: //Esto evita tener que contar mensajes
 			mainIndex = 0; //cualquier otro valor retorna al ultimo mensaje
@@ -221,12 +236,21 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 	switch (header.StdId) {
 	//Attend the command
 	case TER_COMMAND_FRAME_ID: //Sistema de comandos
-		command(data[0], &data[1]); //Llama a la interpretación del comando
+		struct ter_command_t cmdMsg;
+		ter_command_init(&cmdMsg);
+		ter_command_unpack(&cmdMsg, data, TER_COMMAND_LENGTH);
+		command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 		break;
+
+/* ---------------------------[TER]-------------------------- */
 
 		//Mesage Decoding
 	case TER_APPS_FRAME_ID:
 		ter_apps_unpack(&TeR.apps, data, header.DLC);
+		break;
+
+	case TER_BPPS_FRAME_ID:
+		ter_bpps_unpack(&TeR.bpps, data, header.DLC);
 		break;
 
 	case TER_STEER_FRAME_ID:
@@ -241,6 +265,8 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		ter_ang_rate_unpack(&TeR.angRate, data, header.DLC);
 		break;
 
+/* ---------------------------[INVERTER]-------------------------- */
+
 	case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
 		inverter_emcu_state_2_right_unpack(&TeR.appStateRight, data,
 				header.DLC);
@@ -250,9 +276,36 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		inverter_emcu_state_2_left_unpack(&TeR.appStateLeft, data, header.DLC);
 		break;
 
+	case INVERTER_EMCU_STATE_3_RIGHT_FRAME_ID:
+		inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
+		inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
+		inverter_emcu_state_7_left_unpack(&TeR.demLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
+		inverter_emcu_state_7_right_unpack(&TeR.demRight, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
+		inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, data, header.DLC);
+		break;
+
+	case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
+		inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, data, header.DLC);
+		break;
+
+/* ---------------------------[HVBMS]-------------------------- */
+
 	case HVBMS_BMS_TX_STATE_3_FRAME_ID:
 		hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, data, header.DLC);
 		break;
+/* ---------------------------[Default]-------------------------- */
 
 	default:
 		return;
@@ -260,71 +313,4 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 
 	}
 }
-/* ----------------------------------[Comandos]---------------------------------------- */
 
-//Implementa aqui los comandos que se han de ejecutar
-uint8_t command(uint8_t cmd, uint8_t *args) {
-	//Buffers volatiles para el envio de lo que toque
-	uint8_t TxData[8]; //Buffer para datos de envio
-	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
-	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.RTR = CAN_RTR_DATA;
-
-	//Preinicializamos la respuesta
-	struct ter_response_t response;
-	response.cmd = cmd;
-	response.code = TER_RESPONSE_CODE_OK_CHOICE; //Lo pone a ok si nadie dice lo contrario
-
-	/*-----------------------------------------[COMANDOS]---------------------------------------*/
-	switch (cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
-
-	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
-		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
-			TeR.BmsAppReq.app_state_req = 3;
-			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
-			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
-			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-		} else {
-			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
-		}
-		break;
-
-	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
-		if (TeR.status.state >= PRECHARGED) { //Si estamos cargados
-			TeR.BmsAppReq.app_state_req = 6; //Ask for HV_Shutwdow
-			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
-			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
-			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-		} else {
-			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
-		}
-		break;
-
-	case TER_COMMAND_CMD_READY2DRIVE_CHOICE: //Ready2Drive
-		if (TeR.status.state == PRECHARGED) { //Pone el coche en modo driving y añadir freno
-
-			//Permite el paso al estado drive
-			TeR.status.r2d = 1;
-			TeR.appReqRight.app_state_req = 4;
-			TeR.appReqLeft.app_state_req = 4;
-			TxHeader.StdId = INVERTER_EMCU_SETPOINT_1_LEFT_FRAME_ID;
-			TxHeader.DLC = INVERTER_EMCU_SETPOINT_1_LEFT_LENGTH;
-			inverter_emcu_setpoint_1_left_pack(TxData, &TeR.appReqLeft,
-					TxHeader.DLC);
-			HAL_CAN_AddTxMessage(invCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-		} else {
-			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
-		}
-		break;
-	}
-	/*Devuelve un mensaje de respuesta*/
-	TxHeader.StdId = TER_RESPONSE_FRAME_ID;
-	TxHeader.DLC = TER_RESPONSE_LENGTH;
-	ter_response_pack(TxData, &response, TxHeader.DLC);
-	HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el resultado de la ejecución
-
-	return 1;
-}

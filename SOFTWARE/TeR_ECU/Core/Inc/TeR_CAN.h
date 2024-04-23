@@ -25,17 +25,21 @@
 
 #ifndef INC_TER_CAN_H_
 #define INC_TER_CAN_H_
+#include "stm32f4xx_hal.h"
+//DBCS
 #include "ter.h"
 #include "inverter.h"
 #include "hvbms.h"
-#include "stm32f4xx_hal.h"
-#include "can.h"
-#include "scs.h" //para el logging de scs
+//UTILIDADES
+#include "TeR_SCS.h" //para el logging de scs
+#include "TeR_COMMAND.h"//Para las llamadas de comando
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
 struct TeR_t {
 //Propias
 	struct ter_ecu_status_t status;
+	struct ter_dynamic_config_t dynamicConfig;
+	struct ter_drivetrain_state_t drivetrainState;
 
 	//Externas
 	//TER.dbc
@@ -60,12 +64,31 @@ struct TeR_t {
 	struct inverter_emcu_state_2_right_t appStateRight; //Estado inverter
 	struct inverter_emcu_state_2_left_t appStateLeft; //Estado inverter
 
+	struct inverter_emcu_state_3_right_t dqErpmRight; //Corriente D,Q y erpm
+	struct inverter_emcu_state_3_left_t dqErpmLeft; //Corriente D,Q y erpm
+
+
+	struct inverter_emcu_state_9_right_t trqEstRight; //estimacion de torque producido
+	struct inverter_emcu_state_9_left_t trqEstLeft; ////estimacion de torque producido
+
+	struct inverter_emcu_state_7_right_t demRight; //Dem
+	struct inverter_emcu_state_7_left_t demLeft;
+
+
+
 	//HVBMS.dbc
+	//Enviados
 	struct hvbms_bms_rx_ctrl_1_t BmsAppReq; //Comanda estado BMS
+	//Recibidos
 	struct hvbms_bms_tx_state_3_t BmsAppState; //Estado BMS
 
 };
+//Struct General de Trabajo
 extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
+//Permite a otros modulos acceder a los CAN
+extern CAN_HandleTypeDef *mainCAN;
+extern CAN_HandleTypeDef *invCAN;
+
 /* ---------------------------------------------------------------------- */
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
@@ -74,6 +97,5 @@ void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan); //Conf
 void decodeMsg(CAN_HandleTypeDef *hcan); //Decodes message according to DBC
 void sendInvCAN(TIM_HandleTypeDef *htim); //Función Callback de envío del CAN de inverters
 void sendMainCAN(TIM_HandleTypeDef *htim); // //Función Callback de envío del CAN principal
-uint8_t command(uint8_t cmd, uint8_t *args); //
 
 #endif /* INC_TER_CAN_H_ */

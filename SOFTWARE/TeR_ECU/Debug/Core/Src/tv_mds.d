@@ -1,8 +1,5 @@
 Core/Src/tv_mds.o: ../Core/Src/tv_mds.c ../Core/Inc/tv_mds.h \
  ../Core/Inc/TeR_CAN.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -31,12 +28,14 @@ Core/Src/tv_mds.o: ../Core/Src/tv_mds.c ../Core/Inc/tv_mds.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Core/Inc/can.h ../Core/Inc/main.h ../Core/Inc/scs.h
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
+ /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
+ ../Core/Inc/TeR_SCS.h ../Core/Inc/TeR_COMMAND.h \
+ ../Core/Inc/TeR_TRQMANAGER.h ../Core/Inc/pid.h \
+ ../Core/Inc/TeR_STATEMACHINE.h ../Core/Inc/TeR_CONSTANTS.h
 ../Core/Inc/tv_mds.h:
 ../Core/Inc/TeR_CAN.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -65,6 +64,12 @@ Core/Src/tv_mds.o: ../Core/Src/tv_mds.c ../Core/Inc/tv_mds.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
-../Core/Inc/can.h:
-../Core/Inc/main.h:
-../Core/Inc/scs.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
+/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
+../Core/Inc/TeR_SCS.h:
+../Core/Inc/TeR_COMMAND.h:
+../Core/Inc/TeR_TRQMANAGER.h:
+../Core/Inc/pid.h:
+../Core/Inc/TeR_STATEMACHINE.h:
+../Core/Inc/TeR_CONSTANTS.h:
