@@ -4,4 +4,5 @@
   (lib (name "NucleoF446")(type "KiCad")(uri "${KIPRJMOD}/Libraries/NUCLEO-F446RE.kicad_sym")(options "")(descr ""))
   (lib (name "NUCLEO-F446RE")(type "KiCad")(uri "${KIPRJMOD}/Libraries/Nucleo-F446RE/NUCLEO-F446RE.kicad_sym")(options "")(descr ""))
   (lib (name "2024-04-21_17-21-18")(type "KiCad")(uri "${KIPRJMOD}/Libraries/FTSH_105_01_L_DV_K_TR/2024-04-21_17-21-18.kicad_sym")(options "")(descr ""))
+  (lib (name "BTT62004ESAXUMA1")(type "KiCad")(uri "${KIPRJMOD}/Libraries/BTT62004ESAXUMA1/BTT62004ESAXUMA1.kicad_sym")(options "")(descr ""))
 )
