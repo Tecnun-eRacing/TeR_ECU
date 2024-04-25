@@ -1051,6 +1051,12 @@
     (uuid fd5830c7-f217-4afe-8314-d603992525d0)
   )
 
+  (rectangle (start 129.54 53.34) (end 274.32 156.21)
+    (stroke (width 0) (type dot))
+    (fill (type none))
+    (uuid 7310297d-293a-4c15-b2b9-4ab8b39ba6c9)
+  )
+
   (text "IMU" (at 33.655 97.155 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 27a46798-47de-4526-8049-d4e71169bea2)
@@ -1070,6 +1076,11 @@
   (text "NOTAS" (at 243.84 19.05 0)
     (effects (font (size 2.5 2.5) (thickness 0.5) bold) (justify left bottom))
     (uuid e918e359-5c4f-43b2-8002-77e8ba0abeb7)
+  )
+  (text "esta es la idea, conseguir shiftear la señal 3.3 a 24v\nde momento usaremos este ic, pero lo que\nrealmente importa es la idea"
+    (at 135.89 50.8 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid feb5e19f-0ee1-4594-8fe8-2b7b461ae76c)
   )
 
   (label "signal_3_24v" (at 156.21 119.38 0) (fields_autoplaced)
