@@ -1061,6 +1061,11 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 27a46798-47de-4526-8049-d4e71169bea2)
   )
+  (text "tambien se puede hacer uso de un fet array (veremos)"
+    (at 203.2 57.15 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 8b7b22df-e7bc-4ec9-884f-ecb4b16a1610)
+  )
   (text "Caution! Fused to 500mah@24v\n\n" (at 27.305 130.175 90)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid bd76f579-3646-4b2e-8135-dedd4e41c1d0)

@@ -495,15 +495,11 @@
     ],
     [
       "89fa6b65-e09d-462b-a9d8-e2037e38fa73",
-      "LV_BMS"
+      "LV_CAN"
     ],
     [
       "277954e6-e504-4754-bfff-78bccbfcfb29",
       "CAN_POWERTRAIN"
-    ],
-    [
-      "c9231e89-0d66-4ea8-9e74-d5a61fdabf8a",
-      "LV_CAN"
     ],
     [
       "b3d71585-a15b-4975-adfa-12ed469b60dd",
@@ -532,6 +528,10 @@
     [
       "6cf54a6a-28e2-462f-b0c6-d7147ca367a6",
       "microf405"
+    ],
+    [
+      "3e95f185-9df1-42f9-aa76-21fb32ee8ccb",
+      "SD"
     ]
   ],
   "text_variables": {}

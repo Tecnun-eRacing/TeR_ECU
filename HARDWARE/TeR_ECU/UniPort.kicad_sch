@@ -317,9 +317,6 @@
     (pin "1" (uuid 4c98713c-80ba-477e-b89a-69fb4083f36f))
     (instances
       (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "#PWR035") (unit 1)
-        )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
           (reference "#PWR028") (unit 1)
         )
@@ -348,9 +345,6 @@
     (pin "1" (uuid 602fa247-63f6-4681-ac84-7ed347152ecb))
     (instances
       (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "#PWR036") (unit 1)
-        )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
           (reference "#PWR029") (unit 1)
         )
@@ -387,9 +381,6 @@
     (pin "SH" (uuid e24fa19b-4ac6-4d62-b8e8-ddd2d6358024))
     (instances
       (project "TeR_ECU"
-        (path "/84413845-c4f3-4743-bcd2-a67649c90902/c9231e89-0d66-4ea8-9e74-d5a61fdabf8a"
-          (reference "J3") (unit 1)
-        )
         (path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
           (reference "J2") (unit 1)
         )
