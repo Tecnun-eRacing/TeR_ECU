@@ -25,8 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "TeR_CAN.h"
-#include "tv_mds.h"
-#include "stateMachine.h"
+#include "TeR_STATEMACHINE.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,16 +96,16 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+	initSCS(&htim5); //Arranca las systemCritical signals
+	stopSCS();
 	initCAN(&hcan1, &hcan2, &htim3, &htim2); //Arranca los can de inverters y main con sus respectivos temporizadores
-	initSCS(&htim5, &htim4);
-	startSCS(); //Activa el checking de SCS
+	initStateMachine(&htim4); //Maquina de estados conectada al timer4
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		stateMachine();
 		;
     /* USER CODE END WHILE */
 

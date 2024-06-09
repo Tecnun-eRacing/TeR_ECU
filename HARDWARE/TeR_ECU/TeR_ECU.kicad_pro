@@ -490,24 +490,16 @@
       ""
     ],
     [
-      "c1b7b6cf-4e14-47f9-86b4-701be991c781",
-      "Micro"
-    ],
-    [
       "5e77d980-0e17-4264-b0d2-78c6bd2786ec",
       "CAN_MAIN"
     ],
     [
       "89fa6b65-e09d-462b-a9d8-e2037e38fa73",
-      "LV_BMS"
+      "LV_CAN"
     ],
     [
       "277954e6-e504-4754-bfff-78bccbfcfb29",
       "CAN_POWERTRAIN"
-    ],
-    [
-      "c9231e89-0d66-4ea8-9e74-d5a61fdabf8a",
-      "LV_CAN"
     ],
     [
       "b3d71585-a15b-4975-adfa-12ed469b60dd",
@@ -528,6 +520,18 @@
     [
       "e25d0f8a-65a3-47e2-987f-518da8891580",
       "Conector"
+    ],
+    [
+      "4a0d39ca-a5fa-48c3-a49e-16bd18466583",
+      "safety_circuit"
+    ],
+    [
+      "6cf54a6a-28e2-462f-b0c6-d7147ca367a6",
+      "microf405"
+    ],
+    [
+      "3e95f185-9df1-42f9-aa76-21fb32ee8ccb",
+      "SD"
     ]
   ],
   "text_variables": {}
