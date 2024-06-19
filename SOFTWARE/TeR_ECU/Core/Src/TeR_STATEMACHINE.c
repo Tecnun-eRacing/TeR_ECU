@@ -63,13 +63,13 @@ state_t getState(void) {
 
 	if (TeR.status.sl_status) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
-		if (TeR.BmsAppState.app_state_app == 3) { // Se está haciendo precarga?
+		if (TeR.BmsAppState.app_state_app == HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__PRECHARGE_CHOICE) { // Se está haciendo precarga?
 			status = PRECHARGING;
-		} else if (TeR.BmsAppState.app_state_app == 4) { // Esta precargado?
+		} else if (TeR.BmsAppState.app_state_app == HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__READY_CHOICE) { // Esta precargado?
 			status = PRECHARGED;
 			if (TeR.status.r2d
 					&& ((TeR.appStateRight.app_state_app == 4)
-							|| (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada? (can)
+							&& (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y los dos inversores operativos
 				status = DRIVING;
 			}
 		}
@@ -192,19 +192,20 @@ void driving(void) {
 /* -------------------------[PermaTask]---------------------------- */
 
 void permaTask() {
+
 //BrakeLight
 	if (TeR.bpps.bpps > 10) {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
 	}
 // Proccess Wheel Data
-	TeR.drivetrainState.rl_rpm = abs(TeR.dqErpmLeft.e_machine_speed_erpm)
+	TeR.wheelInfo.rl_rpm = abs(TeR.dqErpmLeft.e_machine_speed_erpm)
 			* MOTOR_POLES * RED_RATIO;
-	TeR.drivetrainState.rr_rpm = abs(TeR.dqErpmRight.e_machine_speed_erpm)
+	TeR.wheelInfo.rr_rpm = abs(TeR.dqErpmRight.e_machine_speed_erpm)
 			* MOTOR_POLES * RED_RATIO;
-	TeR.drivetrainState.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
-	TeR.drivetrainState.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
+	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
+	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
 
 //Check SCS
 	checkSCS();

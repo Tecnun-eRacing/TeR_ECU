@@ -13,3 +13,4 @@
 
 
 uint8_t command(struct ter_command_t command); //Función comando
+uint8_t easyCommand(uint8_t cmd); //Wrapper para el uso rápido de comandos sin argumentos (Usan solo el campo cmd)

@@ -61,8 +61,9 @@ uint8_t logSCS(uint32_t id) {
 
 void checkSCS(void) {
 	for (uint8_t i = 0; i < nSCS; i++) {
-		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { //Hay una señal perdida
-			lastFailSCS  = scsIds[i]; //Guarda la ultima señal problematica, util a modo de debug
+		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { // SCS Fault
+			lastFailSCS  = scsIds[i]; //Guarda la id de la ultima señal problematica, util a modo de debug
+			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
 			TeR.apps.apps_av = 0; //Porsiaka
 		}
 	}

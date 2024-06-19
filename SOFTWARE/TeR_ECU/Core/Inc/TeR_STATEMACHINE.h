@@ -11,6 +11,7 @@
 #define INC_TER_STATEMACHINE_H_
 
 #include "stm32f4xx_hal.h"
+#include "main.h"
 #include "TeR_CAN.h"
 #include "TeR_TRQMANAGER.h"
 #include "TeR_CONSTANTS.h"

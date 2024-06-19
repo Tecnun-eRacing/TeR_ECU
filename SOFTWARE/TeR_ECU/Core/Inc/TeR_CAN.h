@@ -37,9 +37,9 @@
 //TER.dbc
 struct TeR_t {
 //Propias
-	struct ter_ecu_status_t status;
+	struct ter_ter_status_t status;
 	struct ter_dynamic_config_t dynamicConfig;
-	struct ter_drivetrain_state_t drivetrainState;
+	struct ter_wheel_info_t wheelInfo;
 
 	//Externas
 	//TER.dbc

@@ -25,7 +25,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
 		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
-			TeR.BmsAppReq.app_state_req = 3;
+			TeR.BmsAppReq.app_state_req = HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -37,7 +37,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
 		if (TeR.status.state >= PRECHARGED) { //Si estamos cargados
-			TeR.BmsAppReq.app_state_req = 6; //Ask for HV_Shutwdow
+			TeR.BmsAppReq.app_state_req = HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -141,3 +141,19 @@ uint8_t command(struct ter_command_t command) {
 	HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el resultado de la ejecución
 	return 1;
 }
+
+
+
+uint8_t easyCommand(uint8_t cmd){
+	struct ter_command_t cmdMsg;
+	ter_command_init(&cmdMsg);
+	cmdMsg.cmd = cmd;
+return command(cmdMsg);
+}
+
+
+
+
+
+
+
