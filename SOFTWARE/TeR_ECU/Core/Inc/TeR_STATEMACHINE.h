@@ -15,6 +15,7 @@
 #include "TeR_CAN.h"
 #include "TeR_TRQMANAGER.h"
 #include "TeR_CONSTANTS.h"
+#include "TeR_UTILS.h"
 
 typedef enum {
 	WAIT_SL, RDY2PRECH, PRECHARGING, PRECHARGED, DRIVING

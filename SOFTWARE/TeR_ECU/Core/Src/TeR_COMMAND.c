@@ -51,7 +51,7 @@ uint8_t command(struct ter_command_t command) {
 		if (TeR.status.state == PRECHARGED) { //Pone el coche en modo driving y añadir freno
 
 			//Permite el paso al estado drive
-			TeR.status.r2d = 1;
+			TeR.status.r2_d = 1;
 			TeR.appReqRight.app_state_req = 4;
 			TeR.appReqLeft.app_state_req = 4;
 			TxHeader.StdId = INVERTER_EMCU_SETPOINT_1_LEFT_FRAME_ID;
@@ -132,6 +132,8 @@ uint8_t command(struct ter_command_t command) {
 		TeR.dynamicConfig.speed_limit = command.speed_limit;
 		}
 		break;
+
+	case TER_COMMAND_
 
 	}
 /*Devuelve un mensaje de respuesta*/

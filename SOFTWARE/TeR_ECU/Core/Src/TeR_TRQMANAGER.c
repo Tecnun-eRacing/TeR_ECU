@@ -83,7 +83,7 @@ trq_t limitTorque(void) {
 
 //Potencia mecanica constante
 trq_t limitMechPWR(void) {
-	int32_t meanRPM = (TeR.drivetrainState.rl_rpm + TeR.drivetrainState.rl_rpm)
+	int32_t meanRPM = (TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rl_rpm)
 			/ 2; //RPMs medias
 	if (meanRPM > 0) { //Estamos moviendonos se estima el torque desarrollable
 		return (trq_t) (TeR.dynamicConfig.kw_limit * ELEC2MECH_EFF) / meanRPM; //Devolvemos la potencia desarrollable limitada en potencia
@@ -122,16 +122,5 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 return in;
 }
 
-//------------------------------------------------[UTILS]------------------------------------------------//
 
-int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
-		int32_t out_max) {
-//Saturar las salidas si la entrada excede el límite de calibracion
-	if (x < in_min)
-		return out_min;
-	if (x > in_max)
-		return out_max;
-//Mapear si estamos en rango seguro
-	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-	return val;
-}
+

@@ -34,10 +34,13 @@
 TIM_HandleTypeDef *beat;
 
 
-uint16_t cnt;
+persist_t SL;
+
 
 uint8_t initStateMachine(TIM_HandleTypeDef *htim) {
 	beat = htim; //Configura el timer de la maquina de estados
+
+
 	HAL_TIM_RegisterCallback(beat, HAL_TIM_PERIOD_ELAPSED_CB_ID, stateMachine);
 	HAL_TIM_Base_Start_IT(beat);
 	return 1;
@@ -47,27 +50,18 @@ state_t getState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
 
-	if(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13)){
-		cnt++;
-	}else{
-		cnt = 0;
-		TeR.status.sl_status = 1;
-	}
 
-	if(cnt > 1000){
-		TeR.status.sl_status = 0;
-	}
 
-	//TeR.status.sl_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);// Leemos el estado de la safety
-	TeR.status.bspd_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);// Leemos el estado del BSPD
+	TeR.status.sl = !checkPersistance(SL,!HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin),500);// Leemos el estado de la safety
+	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);// Leemos el estado del BSPD
 
-	if (TeR.status.sl_status) { //Si esta ok la safety
+	if (TeR.status.sl) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
 		if (TeR.BmsAppState.app_state_app == HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__PRECHARGE_CHOICE) { // Se está haciendo precarga?
 			status = PRECHARGING;
 		} else if (TeR.BmsAppState.app_state_app == HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__READY_CHOICE) { // Esta precargado?
 			status = PRECHARGED;
-			if (TeR.status.r2d
+			if (TeR.status.r2_d
 					&& ((TeR.appStateRight.app_state_app == 4)
 							&& (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y los dos inversores operativos
 				status = DRIVING;

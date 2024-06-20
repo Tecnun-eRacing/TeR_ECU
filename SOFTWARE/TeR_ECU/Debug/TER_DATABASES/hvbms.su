@@ -1865,9 +1865,9 @@
 ../TER_DATABASES/hvbms.c:13494:10:hvbms_bms_tx_state_4_volt_synth_x10_v_encode	16	static
 ../TER_DATABASES/hvbms.c:13499:7:hvbms_bms_tx_state_4_volt_synth_x10_v_decode	16	static
 ../TER_DATABASES/hvbms.c:13504:6:hvbms_bms_tx_state_4_volt_synth_x10_v_is_in_range	16	static
-../TER_DATABASES/hvbms.c:13511:9:hvbms_bms_tx_state_4_power_encode	16	static
-../TER_DATABASES/hvbms.c:13516:7:hvbms_bms_tx_state_4_power_decode	16	static
-../TER_DATABASES/hvbms.c:13521:6:hvbms_bms_tx_state_4_power_is_in_range	16	static
+../TER_DATABASES/hvbms.c:13511:9:hvbms_bms_tx_state_4_power_w_encode	16	static
+../TER_DATABASES/hvbms.c:13516:7:hvbms_bms_tx_state_4_power_w_decode	16	static
+../TER_DATABASES/hvbms.c:13521:6:hvbms_bms_tx_state_4_power_w_is_in_range	16	static
 ../TER_DATABASES/hvbms.c:13528:5:hvbms_bms_tx_state_5_pack	32	static
 ../TER_DATABASES/hvbms.c:13558:5:hvbms_bms_tx_state_5_unpack	32	static
 ../TER_DATABASES/hvbms.c:13586:5:hvbms_bms_tx_state_5_init	16	static

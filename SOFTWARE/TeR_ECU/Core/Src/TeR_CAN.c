@@ -125,7 +125,7 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 	if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 		switch (invIndex++) {
 
-/* ---------------------------[DERECHO]-------------------------- */
+		/* ---------------------------[DERECHO]-------------------------- */
 
 		case 0: //Inverter Derecho
 			//SETPOINT_1
@@ -151,7 +151,7 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 
 			break;
 
-/* ---------------------------[IZQUIERDO]-------------------------- */
+			/* ---------------------------[IZQUIERDO]-------------------------- */
 
 		case 1: //Torque Setpoint L
 			//SETPOINT_1
@@ -177,7 +177,7 @@ void sendInvCAN(TIM_HandleTypeDef *htim) {
 
 			invIndex = 0; //Evita un ciclo muerto
 			break;
-/* ---------------------------[Default]-------------------------- */
+			/* ---------------------------[Default]-------------------------- */
 
 		default: //Por si algo wtf pasa
 			invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
@@ -200,15 +200,14 @@ void sendMainCAN(TIM_HandleTypeDef *htim) {
 		switch (mainIndex++) {
 
 		case 0:
-			TxHeader.StdId = TER_ECU_STATUS_FRAME_ID;
-			TxHeader.DLC = TER_ECU_STATUS_LENGTH;
-			ter_ecu_status_pack(TxData, &TeR.status, TxHeader.DLC);
+			TxHeader.StdId = TER_TER_STATUS_FRAME_ID;
+			TxHeader.DLC = TER_TER_STATUS_LENGTH;
+			ter_ter_status_pack(TxData, &TeR.status, TxHeader.DLC);
 			break;
 		case 1:
-			TxHeader.StdId = TER_DRIVETRAIN_STATE_FRAME_ID;
-			TxHeader.DLC = TER_DRIVETRAIN_STATE_LENGTH;
-			ter_drivetrain_state_pack(TxData, &TeR.drivetrainState,
-					TxHeader.DLC);
+			TxHeader.StdId = TER_WHEEL_INFO_FRAME_ID;
+			TxHeader.DLC = TER_WHEEL_INFO_LENGTH;
+			ter_wheel_info_pack(TxData, &TeR.wheelInfo, TxHeader.DLC);
 			break;
 
 		case 2:
@@ -242,7 +241,7 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 		break;
 
-/* ---------------------------[TER]-------------------------- */
+		/* ---------------------------[TER]-------------------------- */
 
 		//Mesage Decoding
 	case TER_APPS_FRAME_ID:
@@ -265,7 +264,7 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		ter_ang_rate_unpack(&TeR.angRate, data, header.DLC);
 		break;
 
-/* ---------------------------[INVERTER]-------------------------- */
+		/* ---------------------------[INVERTER]-------------------------- */
 
 	case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
 		inverter_emcu_state_2_right_unpack(&TeR.appStateRight, data,
@@ -300,12 +299,12 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, data, header.DLC);
 		break;
 
-/* ---------------------------[HVBMS]-------------------------- */
+		/* ---------------------------[HVBMS]-------------------------- */
 
 	case HVBMS_BMS_TX_STATE_3_FRAME_ID:
 		hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, data, header.DLC);
 		break;
-/* ---------------------------[Default]-------------------------- */
+		/* ---------------------------[Default]-------------------------- */
 
 	default:
 		return;

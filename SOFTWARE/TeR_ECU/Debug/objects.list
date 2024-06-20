@@ -3,6 +3,7 @@
 "./Core/Src/TeR_SCS.o"
 "./Core/Src/TeR_STATEMACHINE.o"
 "./Core/Src/TeR_TRQMANAGER.o"
+"./Core/Src/TeR_UTILS.o"
 "./Core/Src/can.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"
