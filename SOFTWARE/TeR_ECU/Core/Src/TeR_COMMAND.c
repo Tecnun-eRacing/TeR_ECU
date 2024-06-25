@@ -133,7 +133,14 @@ uint8_t command(struct ter_command_t command) {
 		}
 		break;
 
-	case TER_COMMAND_
+	/*Sends messages not implemented in this board to the main can if the source is internal*/
+	default: //Handles commands not implemented here
+		if(!HAL_NVIC_GetActive(CAN2_RX0_IRQn)){ //Checks if command is being attended from an external source (CAN2)
+			ter_command_pack(TxData, &command, TER_COMMAND_LENGTH);
+			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
+			return 0; //Exit function, no result
+		}
+		break;
 
 	}
 /*Devuelve un mensaje de respuesta*/
