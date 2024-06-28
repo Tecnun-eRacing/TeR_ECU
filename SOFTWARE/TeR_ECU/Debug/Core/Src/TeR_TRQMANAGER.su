@@ -5,4 +5,3 @@
 ../Core/Src/TeR_TRQMANAGER.c:106:7:limitElecPWR	4	static
 ../Core/Src/TeR_TRQMANAGER.c:112:10:lineal	40	static
 ../Core/Src/TeR_TRQMANAGER.c:121:10:tractionControlOFF	24	static
-../Core/Src/TeR_TRQMANAGER.c:127:9:map	32	static

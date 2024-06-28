@@ -7,7 +7,7 @@
 #include "TeR_UTILS.h"
 
 //Comprueba que un error sucede durante más de tMax
-uint8_t checkPersistance(persist_t *instance, uint8_t error, uint8_t tMax) {
+uint8_t checkPersistance(persist_t *instance, uint8_t error, uint32_t tMax) {
 
 	if (*instance > 0) { //Estabamos en error
 		if (!error) { //No tenemos error

@@ -52,7 +52,7 @@ state_t getState(void) {
 
 
 
-	TeR.status.sl = !checkPersistance(SL,!HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin),500);// Leemos el estado de la safety
+	TeR.status.sl = !checkPersistance(&SL,!HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin),500);// Leemos el estado de la safety
 	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
@@ -201,7 +201,13 @@ void permaTask() {
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
 
+//Fill in Status Message
+	TeR.status.ams = TeR.BmsAppState.dio1_state; //1 OK
+	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
+	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
+	TeR.status.right_inv = (TeR.appStateRight.app_state_app  != 6);//Distinto de fault state
+
 //Check SCS
-	checkSCS();
+	//checkSCS();
 
 }

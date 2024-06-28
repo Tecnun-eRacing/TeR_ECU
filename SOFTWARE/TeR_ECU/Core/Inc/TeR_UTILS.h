@@ -14,7 +14,7 @@
 
 typedef uint32_t persist_t; // Almacena el timestamp de el flanco de subida
 
-uint8_t checkPersistance(persist_t *instance, uint8_t error, uint8_t tMax);
+uint8_t checkPersistance(persist_t *instance, uint8_t error, uint32_t tMax);
 
 //MAP
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,

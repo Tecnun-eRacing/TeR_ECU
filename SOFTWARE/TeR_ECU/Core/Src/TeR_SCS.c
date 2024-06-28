@@ -37,11 +37,13 @@ uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
 	base->Instance->CNT  = 0;
 	//Arranca los timers
 	HAL_TIM_Base_Start(base); //arranca nuestra base de tiempo (Ojo hará overflow en 52 días jajaj)
+	TeR.status.scs = 1;
 	return 1;
 }
 
 uint8_t stopSCS(void) { //Desactiva la comprobación activa de tiempos
 	HAL_TIM_Base_Stop(base); //Congela el timer haciendo que los checks difieran 0 a partir de ahora
+	TeR.status.scs = 0;
 	return 1;
 }
 
@@ -63,7 +65,7 @@ void checkSCS(void) {
 	for (uint8_t i = 0; i < nSCS; i++) {
 		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { // SCS Fault
 			lastFailSCS  = scsIds[i]; //Guarda la id de la ultima señal problematica, util a modo de debug
-			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
+			//easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
 			TeR.apps.apps_av = 0; //Porsiaka
 		}
 	}

@@ -1,5 +1,5 @@
 ../Core/Src/TeR_STATEMACHINE.c:40:9:initStateMachine	16	static
-../Core/Src/TeR_STATEMACHINE.c:49:9:getState	24	static
+../Core/Src/TeR_STATEMACHINE.c:49:9:getState	16	static
 ../Core/Src/TeR_STATEMACHINE.c:74:6:stateMachine	32	static
 ../Core/Src/TeR_STATEMACHINE.c:170:6:waitSL	4	static
 ../Core/Src/TeR_STATEMACHINE.c:173:6:rdy2Prech	4	static

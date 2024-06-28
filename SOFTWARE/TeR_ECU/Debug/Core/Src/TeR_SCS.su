@@ -1,5 +1,5 @@
 ../Core/Src/TeR_SCS.c:27:9:initSCS	16	static
 ../Core/Src/TeR_SCS.c:34:9:startSCS	8	static
-../Core/Src/TeR_SCS.c:43:9:stopSCS	8	static
-../Core/Src/TeR_SCS.c:49:9:logSCS	24	static
-../Core/Src/TeR_SCS.c:62:6:checkSCS	16	static
+../Core/Src/TeR_SCS.c:44:9:stopSCS	8	static
+../Core/Src/TeR_SCS.c:51:9:logSCS	24	static
+../Core/Src/TeR_SCS.c:64:6:checkSCS	16	static
