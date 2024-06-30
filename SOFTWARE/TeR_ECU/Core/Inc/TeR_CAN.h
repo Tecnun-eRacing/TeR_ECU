@@ -67,6 +67,9 @@ struct TeR_t {
 	struct inverter_emcu_state_3_right_t dqErpmRight; //Corriente D,Q y erpm
 	struct inverter_emcu_state_3_left_t dqErpmLeft; //Corriente D,Q y erpm
 
+	struct inverter_emcu_state_4_right_t tempsRight; //Temperaturas inverter
+	struct inverter_emcu_state_4_left_t tempsLeft; //Temperaturas inverter
+
 
 	struct inverter_emcu_state_9_right_t trqEstRight; //estimacion de torque producido
 	struct inverter_emcu_state_9_left_t trqEstLeft; ////estimacion de torque producido

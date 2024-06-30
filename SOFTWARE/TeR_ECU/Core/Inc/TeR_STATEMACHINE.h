@@ -14,6 +14,7 @@
 #include "main.h"
 #include "TeR_CAN.h"
 #include "TeR_TRQMANAGER.h"
+#include "TeR_REFRI.h"
 #include "TeR_CONSTANTS.h"
 #include "TeR_UTILS.h"
 

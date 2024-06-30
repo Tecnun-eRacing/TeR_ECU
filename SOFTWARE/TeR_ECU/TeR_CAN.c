@@ -283,15 +283,6 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, data, header.DLC);
 		break;
 
-	case INVERTER_EMCU_STATE_4_RIGHT_FRAME_ID:
-		inverter_emcu_state_4_right_unpack(&TeR.tempsRight, data, header.DLC);
-		break;
-
-	case INVERTER_EMCU_STATE_4_LEFT_FRAME_ID:
-		inverter_emcu_state_4_left_unpack(&TeR.tempsLeft, data, header.DLC);
-		break;
-
-
 	case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
 		inverter_emcu_state_7_left_unpack(&TeR.demLeft, data, header.DLC);
 		break;

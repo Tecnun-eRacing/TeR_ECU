@@ -1,5 +1,6 @@
 "./Core/Src/TeR_CAN.o"
 "./Core/Src/TeR_COMMAND.o"
+"./Core/Src/TeR_REFRI.o"
 "./Core/Src/TeR_SCS.o"
 "./Core/Src/TeR_STATEMACHINE.o"
 "./Core/Src/TeR_TRQMANAGER.o"
