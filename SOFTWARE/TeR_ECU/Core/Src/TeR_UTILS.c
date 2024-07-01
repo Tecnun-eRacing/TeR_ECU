@@ -7,19 +7,19 @@
 #include "TeR_UTILS.h"
 
 //Comprueba que un error sucede durante más de tMax
-uint8_t checkPersistance(persist_t *instance, uint8_t error, uint32_t tMax) {
+uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax) {
 
 	if (*instance > 0) { //Estabamos en error
-		if (!error) { //No tenemos error
+		if (ok) { //No tenemos error
 			*instance = 0; //Ponemos el timestamp a 0, ya no hay error
-		} else if (HAL_GetTick() - *instance >= *instance) { //El error supera maxtime
-			return 1; //Damos el error
+		} else if (HAL_GetTick() - *instance >= tMax) { //El error supera maxtime
+			return 0; //Damos el error
 		}
-	} else if (error) { // no estabamos en error y ahora si
+	} else if (!ok) { // no estabamos en error y ahora si
 		*instance = HAL_GetTick();
 	}
 
-	return 0; //Tenemos Error pero no hemos superado maxTime
+	return 1; //Tenemos Error pero no hemos superado maxTime
 }
 
 

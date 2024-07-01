@@ -52,7 +52,7 @@ state_t getState(void) {
 
 
 
-	TeR.status.sl = checkPersistance(&SL,!HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin),500);// Leemos el estado de la safety
+	TeR.status.sl = checkPersistance(&SL,HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin),500);// Leemos el estado de la safety
 	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
