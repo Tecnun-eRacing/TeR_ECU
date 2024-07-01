@@ -264,6 +264,10 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 		ter_ang_rate_unpack(&TeR.angRate, data, header.DLC);
 		break;
 
+	case TER_LV_STATUS_FRAME_ID:
+		ter_lv_status_unpack(&TeR.lvbms, data, header.DLC);
+		break;
+
 		/* ---------------------------[INVERTER]-------------------------- */
 
 	case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
