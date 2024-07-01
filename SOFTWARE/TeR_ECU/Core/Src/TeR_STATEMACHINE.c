@@ -206,11 +206,12 @@ void permaTask() {
 	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app  != 6);//Distinto de fault state
+	TeR.status.refri = TeR.lvbms.refri_on;// Relay del estado de refri
 
 //Check SCS
 	//checkSCS();
 
 // Refri Management
-	refriManager();
+	//refriManager();
 
 }
