@@ -212,6 +212,6 @@ void permaTask() {
 	//checkSCS();
 
 // Refri Management
-	//refriManager();
+	refriManager();
 
 }

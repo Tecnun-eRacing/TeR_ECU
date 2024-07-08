@@ -36,29 +36,21 @@ uint8_t command(struct ter_command_t command) {
 		break;
 
 	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
-		if (TeR.status.state >= PRECHARGED) { //Si estamos cargados
 			TeR.BmsAppReq.app_state_req = HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-		} else {
-			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
-		}
+
 		break;
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
-		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps >= 30) { //Pone el coche en modo driving y añadir freno
+		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps > 10) { //Pone el coche en modo driving y añadir freno
 
 			//Permite el paso al estado drive
 			TeR.status.r2_d = 1;
 			TeR.appReqRight.app_state_req = 4;
 			TeR.appReqLeft.app_state_req = 4;
-			TxHeader.StdId = INVERTER_EMCU_SETPOINT_1_LEFT_FRAME_ID;
-			TxHeader.DLC = INVERTER_EMCU_SETPOINT_1_LEFT_LENGTH;
-			inverter_emcu_setpoint_1_left_pack(TxData, &TeR.appReqLeft,
-					TxHeader.DLC);
-			HAL_CAN_AddTxMessage(invCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
