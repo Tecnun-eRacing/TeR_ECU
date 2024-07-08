@@ -7,10 +7,12 @@
 
 #include "TeR_REFRI.h"
 
+persist_t REFRI;
+
 void refriManager() {
 
 	if(TeR.status.state >= PRECHARGED){
-	if (TeR.status.refri) { //Si la refri está encendida decidimos si apagarla
+	if (checkPersistance(REFRI,TeR.status.refri,1000)) { //Si la refri está encendida decidimos si apagarla
 		if(TeR.tempsRight.pwr_stg_temp_deg_c < OFF_THRESHOLD){
 			easyCommand(TER_COMMAND_CMD_TOGGLE_REFRI_CHOICE);
 		}

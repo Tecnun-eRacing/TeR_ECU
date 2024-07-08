@@ -84,7 +84,7 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			//Security
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
-
+			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE);
 			break;
 
 		case RDY2PRECH:

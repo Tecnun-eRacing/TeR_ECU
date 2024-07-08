@@ -9,6 +9,7 @@
 #ifndef INC_TER_REFRI_H_
 #define INC_TER_REFRI_H_
 
+#include "TeR_UTILS.h"
 #include "TeR_CAN.h"
 #include "TeR_COMMAND.h"
 

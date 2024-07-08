@@ -35,7 +35,7 @@ Core/Src/TeR_STATEMACHINE.o: ../Core/Src/TeR_STATEMACHINE.c \
  ../Core/Inc/TeR_SCS.h ../Core/Inc/TeR_COMMAND.h \
  ../Core/Inc/TeR_TRQMANAGER.h ../Core/Inc/pid.h \
  ../Core/Inc/TeR_STATEMACHINE.h ../Core/Inc/TeR_REFRI.h \
- ../Core/Inc/TeR_CONSTANTS.h ../Core/Inc/TeR_UTILS.h
+ ../Core/Inc/TeR_UTILS.h ../Core/Inc/TeR_CONSTANTS.h
 ../Core/Inc/TeR_STATEMACHINE.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -76,5 +76,5 @@ Core/Src/TeR_STATEMACHINE.o: ../Core/Src/TeR_STATEMACHINE.c \
 ../Core/Inc/pid.h:
 ../Core/Inc/TeR_STATEMACHINE.h:
 ../Core/Inc/TeR_REFRI.h:
-../Core/Inc/TeR_CONSTANTS.h:
 ../Core/Inc/TeR_UTILS.h:
+../Core/Inc/TeR_CONSTANTS.h:
