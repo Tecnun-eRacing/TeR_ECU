@@ -20,12 +20,13 @@ uint8_t command(struct ter_command_t command) {
 	response.cmd = command.cmd;
 	response.code = TER_RESPONSE_CODE_OK_CHOICE; //Lo pone a ok si nadie dice lo contrario
 
-/*-----------------------------------------[COMANDOS]---------------------------------------*/
+	/*-----------------------------------------[COMANDOS]---------------------------------------*/
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
 		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
-			TeR.BmsAppReq.app_state_req = HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+			TeR.BmsAppReq.app_state_req =
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -36,18 +37,19 @@ uint8_t command(struct ter_command_t command) {
 		break;
 
 	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
-			TeR.BmsAppReq.app_state_req = HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
-			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
-			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
-			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
+		TeR.BmsAppReq.app_state_req =
+		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
+		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
+		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
+		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
 
 		break;
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
 		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps > 10) { //Pone el coche en modo driving y añadir freno
 
-			//Permite el paso al estado drive
+		//Permite el paso al estado drive
 			TeR.status.r2_d = 1;
 			TeR.appReqRight.app_state_req = 4;
 			TeR.appReqLeft.app_state_req = 4;
@@ -114,29 +116,28 @@ uint8_t command(struct ter_command_t command) {
 		break;
 
 	case TER_COMMAND_CMD_SET_LIMITS_CHOICE:
-		if(ter_command_trq_limit_is_in_range(command.trq_limit)){
-		TeR.dynamicConfig.trq_limit = command.trq_limit;
+		if (ter_command_trq_limit_is_in_range(command.trq_limit)) {
+			TeR.dynamicConfig.trq_limit = command.trq_limit;
 		}
-		if(ter_command_kw_limit_is_in_range(command.kw_limit)){
-		TeR.dynamicConfig.kw_limit = command.kw_limit;
+		if (ter_command_kw_limit_is_in_range(command.kw_limit)) {
+			TeR.dynamicConfig.kw_limit = command.kw_limit;
 		}
-		if(ter_command_speed_limit_is_in_range(command.speed_limit)){
-		TeR.dynamicConfig.speed_limit = command.speed_limit;
+		if (ter_command_speed_limit_is_in_range(command.speed_limit)) {
+			TeR.dynamicConfig.speed_limit = command.speed_limit;
 		}
 		break;
 
-
-	case TER_COMMAND_CMD_TOGGLE_SCS_CHOICE:
-		if(TeR.status.scs){ //if enabled disable
-			stopSCS();
-		}else{ //if disabled enable
+	case TER_COMMAND_CMD_SWITCH_SCS_CHOICE:
+		if (command.onoff) {
 			startSCS();
+		} else { //if disabled enable
+			stopSCS();
 		}
 		break;
 
-	/*Sends messages not implemented in this board to the main can if the source is internal*/
+		/*Sends messages not implemented in this board to the main can if the source is internal*/
 	default: //Handles commands not implemented here
-		if(!HAL_NVIC_GetActive(CAN2_RX0_IRQn)){ //Checks if command is being attended from an external source (CAN2)
+		if (!HAL_NVIC_GetActive(CAN2_RX0_IRQn)) { //Checks if command is being attended from an external source (CAN2)
 			ter_command_pack(TxData, &command, TER_COMMAND_LENGTH);
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
 			return 0; //Exit function, no result
@@ -144,7 +145,7 @@ uint8_t command(struct ter_command_t command) {
 		break;
 
 	}
-/*Devuelve un mensaje de respuesta*/
+	/*Devuelve un mensaje de respuesta*/
 	TxHeader.StdId = TER_RESPONSE_FRAME_ID;
 	TxHeader.DLC = TER_RESPONSE_LENGTH;
 	ter_response_pack(TxData, &response, TxHeader.DLC);
@@ -152,18 +153,18 @@ uint8_t command(struct ter_command_t command) {
 	return 1;
 }
 
-
-
-uint8_t easyCommand(uint8_t cmd){
+uint8_t easyCommand(uint8_t cmd) {
 	struct ter_command_t cmdMsg;
 	ter_command_init(&cmdMsg);
 	cmdMsg.cmd = cmd;
-return command(cmdMsg);
+	return command(cmdMsg);
 }
 
-
-
-
-
-
+uint8_t switchCommand(uint8_t cmd, uint8_t onOff) {
+	struct ter_command_t cmdMsg;
+	ter_command_init(&cmdMsg);
+	cmdMsg.cmd = cmd;
+	cmdMsg.onoff = onOff;
+	return command(cmdMsg);
+}
 

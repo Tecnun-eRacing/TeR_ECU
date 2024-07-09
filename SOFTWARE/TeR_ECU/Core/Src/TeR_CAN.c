@@ -236,7 +236,7 @@ void decodeMsg(CAN_HandleTypeDef *hcan) {
 	//Attend the command
 	case TER_COMMAND_FRAME_ID: //Sistema de comandos
 		struct ter_command_t cmdMsg;
-		ter_command_init(&cmdMsg);
+		ter_command_init(&cmdMsg); //Por si se usan variables indebidamente inicializadas
 		ter_command_unpack(&cmdMsg, data, TER_COMMAND_LENGTH);
 		command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 		break;
