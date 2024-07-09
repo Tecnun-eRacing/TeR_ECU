@@ -6,4 +6,4 @@
 ../Core/Src/TeR_STATEMACHINE.c:176:6:precharging	4	static
 ../Core/Src/TeR_STATEMACHINE.c:179:6:precharged	4	static
 ../Core/Src/TeR_STATEMACHINE.c:182:6:driving	8	static
-../Core/Src/TeR_STATEMACHINE.c:188:6:permaTask	8	static
+../Core/Src/TeR_STATEMACHINE.c:190:6:permaTask	8	static

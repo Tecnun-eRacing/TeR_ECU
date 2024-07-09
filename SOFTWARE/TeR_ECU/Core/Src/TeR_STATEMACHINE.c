@@ -112,7 +112,7 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			struct ter_command_t cmdMsg;
 			ter_command_init(&cmdMsg);
 			cmdMsg.cmd = TER_COMMAND_CMD_SET_LIMITS_CHOICE;
-			cmdMsg.trq_limit = 40;
+			cmdMsg.trq_limit = 100;
 			cmdMsg.kw_limit = 40;
 			cmdMsg.speed_limit = 50;
 			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
@@ -181,6 +181,8 @@ void precharged(void) {
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
 	trqManager(); //Ejecuta el pipeline de torque
+	// Refri Management
+	refriManager();
 } //Ejecuta la comanda de par
 
 /* -------------------------[PermaTask]---------------------------- */
@@ -211,7 +213,6 @@ void permaTask() {
 //Check SCS
 	//checkSCS();
 
-// Refri Management
-	//refriManager();
+
 
 }
