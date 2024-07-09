@@ -211,7 +211,7 @@ void permaTask() {
 	TeR.status.refri = TeR.lvbms.refri_on;// Relay del estado de refri
 
 //Check SCS
-	//checkSCS();
+	checkSCS();
 
 
 

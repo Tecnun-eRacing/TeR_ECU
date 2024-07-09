@@ -46,6 +46,17 @@ uint8_t command(struct ter_command_t command) {
 
 		break;
 
+
+	case TER_COMMAND_CMD_RESET_BMS_CHOICE: //Descarga
+		TeR.BmsAppReq.app_state_req =
+		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_RESET_CHOICE; //Ask for HV_Reset
+		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
+		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
+		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
+		break;
+
+
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
 		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps > 10) { //Pone el coche en modo driving y añadir freno
 
