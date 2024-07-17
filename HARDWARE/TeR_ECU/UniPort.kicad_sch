@@ -647,7 +647,7 @@
 		)
 		(uuid "5b643ab1-aaca-439d-8f65-d7f2be7df7c8")
 	)
-	(hierarchical_label "24V_Port"
+	(global_label "24_VIN"
 		(shape input)
 		(at 153.67 85.09 0)
 		(fields_autoplaced yes)
@@ -657,7 +657,17 @@
 			)
 			(justify left)
 		)
-		(uuid "26aa60b4-c42b-49d3-b6f3-a44629b0f0c7")
+		(uuid "136b3771-a75f-4894-afb8-c8d50c75aba5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.0657 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 	)
 	(hierarchical_label "CAN+"
 		(shape bidirectional)

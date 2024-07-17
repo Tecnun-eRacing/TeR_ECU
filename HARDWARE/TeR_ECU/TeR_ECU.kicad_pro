@@ -462,6 +462,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -547,7 +548,7 @@
       "version": 1
     },
     "net_format_name": "",
-    "page_layout_descr_file": "",
+    "page_layout_descr_file": "eRacing_Template.kicad_wks",
     "plot_directory": "",
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
@@ -597,7 +598,7 @@
     ],
     [
       "4a0d39ca-a5fa-48c3-a49e-16bd18466583",
-      "safety_circuit"
+      "ShutdownCircuit"
     ],
     [
       "6cf54a6a-28e2-462f-b0c6-d7147ca367a6",
@@ -606,6 +607,10 @@
     [
       "3e95f185-9df1-42f9-aa76-21fb32ee8ccb",
       "SD"
+    ],
+    [
+      "f4983e62-bb86-4f44-906d-788ec401c377",
+      "USB"
     ]
   ],
   "text_variables": {}
