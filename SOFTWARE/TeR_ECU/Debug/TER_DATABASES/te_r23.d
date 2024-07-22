@@ -1,3 +1,0 @@
-TER_DATABASES/te_r23.o: ../TER_DATABASES/te_r23.c \
- ../TER_DATABASES/te_r23.h
-../TER_DATABASES/te_r23.h:

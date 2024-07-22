@@ -1,7 +1,0 @@
-../Core/Src/stateMachine.c:36:9:getState	16	static
-../Core/Src/stateMachine.c:56:6:stateMachine	16	static
-../Core/Src/stateMachine.c:139:6:waitSL	4	static
-../Core/Src/stateMachine.c:142:6:rdy2Prech	4	static
-../Core/Src/stateMachine.c:145:6:precharging	4	static
-../Core/Src/stateMachine.c:148:6:precharged	4	static
-../Core/Src/stateMachine.c:151:6:driving	16	static

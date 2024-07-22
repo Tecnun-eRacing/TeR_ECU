@@ -1,5 +1,0 @@
-../Core/Src/scs.c:27:9:initSCS	1
-../Core/Src/scs.c:35:9:startSCS	1
-../Core/Src/scs.c:45:9:stopSCS	1
-../Core/Src/scs.c:52:9:logSCS	4
-../Core/Src/scs.c:65:6:checkSCS	3
