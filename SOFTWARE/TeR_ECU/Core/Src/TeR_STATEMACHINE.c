@@ -82,6 +82,8 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			//Security
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
+			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
+					TER_COMMAND_ONOFF_OFF_CHOICE);
 			break;
 
 		case RDY2PRECH:
@@ -199,12 +201,28 @@ void permaTask() {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
 	}
 // Proccess Wheel Data
-	TeR.wheelInfo.rl_rpm = (TeR.dqErpmLeft.e_machine_speed_erpm / MOTOR_POLES)
+	TeR.wheelInfo.rl_rpm = ((-TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES)
 			* RED_RATIO;
 	TeR.wheelInfo.rr_rpm = (TeR.dqErpmRight.e_machine_speed_erpm / MOTOR_POLES)
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
+	TeR.wheelInfo.speed = 3.6*(TeR.wheelInfo.rr_rpm * PI * WHEEL_RADIUS) / 180; //Linear velocity of vehicle
+
+// Bypass Inverter data
+	TeR.invInfo.left_dem = TeR.demLeft.dem; //Dem
+	TeR.invInfo.right_dem = TeR.demRight.dem; //Dem
+
+	TeR.invInfo.left_motor_temp = (uint8_t)inverter_emcu_state_4_left_e_machine_temp_2_deg_c_decode(
+			TeR.tempsLeft.e_machine_temp_2_deg_c);
+	TeR.invInfo.right_motor_temp = (uint8_t)inverter_emcu_state_4_right_e_machine_temp_2_deg_c_decode(
+			TeR.tempsRight.e_machine_temp_2_deg_c);
+
+	TeR.invInfo.left_power_stage_temp = (uint8_t)inverter_emcu_state_4_left_pwr_stg_temp_deg_c_decode(
+			TeR.tempsLeft.pwr_stg_temp_deg_c);
+
+	TeR.invInfo.right_power_stage_temp = (uint8_t)inverter_emcu_state_4_right_pwr_stg_temp_deg_c_decode(
+			TeR.tempsRight.pwr_stg_temp_deg_c);
 
 //Fill in Status Message
 	TeR.status.ams = TeR.BmsAppState.dio1_state; //1 OK

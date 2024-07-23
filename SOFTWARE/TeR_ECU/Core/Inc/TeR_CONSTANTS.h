@@ -9,6 +9,10 @@
 #define INC_TER_CONSTANTS_H_
 
 
+//GENERAL
+#define PI 3.14159265358979323846
+
+
 //INVERTER RELATED
 #define MOTOR_POLES 10 //For erpm to rpm or speed calculation
 

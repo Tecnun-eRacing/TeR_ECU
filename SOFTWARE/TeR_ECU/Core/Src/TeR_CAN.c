@@ -216,6 +216,13 @@ void sendMainCAN(TIM_HandleTypeDef *htim) {
 			ter_dynamic_config_pack(TxData, &TeR.dynamicConfig, TxHeader.DLC);
 			break;
 
+		case 3:
+			TxHeader.StdId = TER_INVERTER_INFO_FRAME_ID;
+			TxHeader.DLC = TER_INVERTER_INFO_LENGTH;
+			ter_inverter_info_pack(TxData, &TeR.invInfo, TxHeader.DLC);
+			break;
+
+
 		default: //Esto evita tener que contar mensajes
 			mainIndex = 0; //cualquier otro valor retorna al ultimo mensaje
 			return; //Evita que se envíe un mensaje doble terminando la funcion

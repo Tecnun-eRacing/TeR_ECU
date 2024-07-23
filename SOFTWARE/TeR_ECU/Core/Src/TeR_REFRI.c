@@ -23,8 +23,8 @@ void refriManager() {
 	int16_t lMotorTemp =
 			inverter_emcu_state_4_left_e_machine_temp_2_deg_c_decode(
 					TeR.tempsLeft.e_machine_temp_2_deg_c);
-	if ((rInvTemp > ON_THRESHOLD || lInvTemp > ON_THRESHOLD)
-			|| (rMotorTemp > ON_THRESHOLD || lMotorTemp > ON_THRESHOLD)
+	if (((rInvTemp > ON_THRESHOLD || lInvTemp > ON_THRESHOLD)
+			|| (rMotorTemp > ON_THRESHOLD || lMotorTemp > ON_THRESHOLD))
 					&& !TeR.status.refri) {
 		switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
 		TER_COMMAND_ONOFF_ON_CHOICE);

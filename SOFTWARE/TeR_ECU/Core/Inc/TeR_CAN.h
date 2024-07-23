@@ -40,7 +40,7 @@ struct TeR_t {
 	struct ter_ter_status_t status;
 	struct ter_dynamic_config_t dynamicConfig;
 	struct ter_wheel_info_t wheelInfo;
-
+	struct ter_inverter_info_t invInfo;
 	//Externas
 	//TER.dbc
 	struct ter_apps_t apps; //Sensor de acelerador
