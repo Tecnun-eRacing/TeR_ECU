@@ -61,7 +61,7 @@ state_t getState(void) {
 			status = PRECHARGED;
 			if (TeR.status.r2_d
 					&& ((TeR.appStateRight.app_state_app == 4)
-							&& (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y los dos inversores operativos
+							|| (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y los dos inversores operativos
 				status = DRIVING;
 			}
 		}
@@ -104,6 +104,10 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			//Security
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
+
+			//Arranca la refri
+			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
+					TER_COMMAND_ONOFF_ON_CHOICE);
 
 			//Configura el driving mode
 			struct ter_command_t cmdMsg;
@@ -186,7 +190,7 @@ void driving(void) {
 
 void permaTask() {
 	// Refri Management
-	refriManager();
+	//refriManager();
 
 //BrakeLight
 	if (TeR.bpps.bpps > 10) {
