@@ -28,9 +28,9 @@ Core/Src/tv_mds.o: ../Core/Src/tv_mds.c ../Core/Inc/tv_mds.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
- /home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h \
+ C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h \
  ../Core/Inc/TeR_SCS.h ../Core/Inc/TeR_COMMAND.h \
  ../Core/Inc/TeR_TRQMANAGER.h ../Core/Inc/pid.h \
  ../Core/Inc/TeR_STATEMACHINE.h ../Core/Inc/main.h \
@@ -66,9 +66,9 @@ Core/Src/tv_mds.o: ../Core/Src/tv_mds.c ../Core/Inc/tv_mds.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
-/home/ozuba/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/ter.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/inverter.h:
+C:/Users/eracing/Documents/GitHub/TeR_ECU/SOFTWARE/TeR_ECU/TER_DATABASES/hvbms.h:
 ../Core/Inc/TeR_SCS.h:
 ../Core/Inc/TeR_COMMAND.h:
 ../Core/Inc/TeR_TRQMANAGER.h:

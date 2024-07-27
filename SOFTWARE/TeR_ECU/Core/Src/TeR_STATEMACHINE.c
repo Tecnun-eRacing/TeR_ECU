@@ -195,7 +195,7 @@ void permaTask() {
 	//refriManager();
 
 //BrakeLight
-	if (TeR.bpps.bpps > 10) {
+	if (TeR.bpps.bpps > 4) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
