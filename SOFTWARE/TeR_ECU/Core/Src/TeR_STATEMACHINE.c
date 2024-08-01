@@ -37,7 +37,6 @@ persist_t SL;
 
 uint8_t initStateMachine(TIM_HandleTypeDef *htim) {
 	beat = htim; //Configura el timer de la maquina de estados
-
 	HAL_TIM_RegisterCallback(beat, HAL_TIM_PERIOD_ELAPSED_CB_ID, stateMachine);
 	HAL_TIM_Base_Start_IT(beat);
 	return 1;
@@ -84,6 +83,7 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			TeR.trqReqRight.torque_nm_req = 0;
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
 					TER_COMMAND_ONOFF_OFF_CHOICE);
+			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
 		case RDY2PRECH:
@@ -132,7 +132,7 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 			HAL_Delay(2000); //EV 4.12.1
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-			startSCS();
+			startSCS(); //Arranca las señales críticas
 
 			break;
 		default:
@@ -207,7 +207,7 @@ void permaTask() {
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
-	TeR.wheelInfo.speed = 3.6*(TeR.wheelInfo.rr_rpm * PI * WHEEL_RADIUS) / 180; //Linear velocity of vehicle
+	TeR.wheelInfo.speed = 3.6*(TeR.wheelInfo.rl_rpm * 2 * PI * WHEEL_RADIUS) / 60; //Linear velocity of vehicle
 
 // Bypass Inverter data
 	TeR.invInfo.left_dem = TeR.demLeft.dem; //Dem

@@ -1,3 +1,0 @@
-../Core/Src/tv_mds.c:16:7:yawRef	24	static
-../Core/Src/tv_mds.c:20:7:mz2DeltaTorque	16	static
-../Core/Src/tv_mds.c:25:7:trqDistribution	32	static

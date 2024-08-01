@@ -1,5 +1,0 @@
-../Core/Src/TeR_CAN.c:45:9:initCAN	1
-../Core/Src/TeR_CAN.c:82:6:configFilter	1
-../Core/Src/TeR_CAN.c:116:6:sendInvCAN	4
-../Core/Src/TeR_CAN.c:190:6:sendMainCAN	6
-../Core/Src/TeR_CAN.c:237:6:decodeMsg	25

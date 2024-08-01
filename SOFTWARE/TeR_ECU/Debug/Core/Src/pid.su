@@ -1,3 +1,0 @@
-../Core/Src/pid.c:20:8:initPID	40	static
-../Core/Src/pid.c:31:6:deInitPID	16	static
-../Core/Src/pid.c:35:7:pid	24	static
