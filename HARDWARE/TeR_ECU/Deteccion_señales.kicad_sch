@@ -424,7 +424,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0a142bc4-3b90-4213-9e2c-badc2baf84c4")
-		(property "Reference" "R12"
+		(property "Reference" "R7"
 			(at 124.46 71.12 0)
 			(effects
 				(font
@@ -478,7 +478,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "R12")
+					(reference "R7")
 					(unit 1)
 				)
 			)
@@ -494,7 +494,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1a9a2157-64d9-408a-a192-6c6d17bb45df")
-		(property "Reference" "R15"
+		(property "Reference" "R10"
 			(at 167.64 86.36 0)
 			(effects
 				(font
@@ -548,7 +548,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "R15")
+					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -564,7 +564,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3144910b-db50-4e98-b289-0687afd0a478")
-		(property "Reference" "#PWR054"
+		(property "Reference" "#PWR039"
 			(at 165.1 104.14 0)
 			(effects
 				(font
@@ -614,7 +614,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "#PWR054")
+					(reference "#PWR039")
 					(unit 1)
 				)
 			)
@@ -630,7 +630,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3f34cd7d-d6be-4cb4-b1cc-4e35f88af201")
-		(property "Reference" "#PWR053"
+		(property "Reference" "#PWR038"
 			(at 121.92 104.14 0)
 			(effects
 				(font
@@ -680,7 +680,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "#PWR053")
+					(reference "#PWR038")
 					(unit 1)
 				)
 			)
@@ -696,7 +696,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d2526f92-c4c2-4032-b848-96ecc5a0bd0d")
-		(property "Reference" "R13"
+		(property "Reference" "R8"
 			(at 167.64 71.12 0)
 			(effects
 				(font
@@ -750,7 +750,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "R13")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -766,7 +766,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f6b3939f-e197-40e0-ac41-70b4d4aa776d")
-		(property "Reference" "R14"
+		(property "Reference" "R9"
 			(at 124.46 86.36 0)
 			(effects
 				(font
@@ -820,7 +820,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "R14")
+					(reference "R9")
 					(unit 1)
 				)
 			)

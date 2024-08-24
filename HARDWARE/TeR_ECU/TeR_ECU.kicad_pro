@@ -598,15 +598,23 @@
     ],
     [
       "6cf54a6a-28e2-462f-b0c6-d7147ca367a6",
-      "microf405"
+      "MICRO_F4"
     ],
     [
       "3e95f185-9df1-42f9-aa76-21fb32ee8ccb",
       "SD"
     ],
     [
+      "8b9caf06-a922-47e0-a594-89ed95d0f438",
+      "IMU"
+    ],
+    [
       "f4983e62-bb86-4f44-906d-788ec401c377",
       "USB"
+    ],
+    [
+      "7ff49dfd-e79b-4d4a-bad4-beb43905c8a0",
+      "GPS"
     ]
   ],
   "text_variables": {}

@@ -1106,12 +1106,6 @@
 		(uuid "52385761-cbe6-44f6-83db-959569f22c91")
 	)
 	(junction
-		(at 124.46 115.57)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "6a331fe8-1a35-4c00-af12-2a5cf44f9f0e")
-	)
-	(junction
 		(at 158.75 74.93)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1165,16 +1159,6 @@
 	)
 	(wire
 		(pts
-			(xy 113.03 110.49) (xy 130.81 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0a18bf5a-809e-459d-9a09-34f33a459dce")
-	)
-	(wire
-		(pts
 			(xy 127 97.79) (xy 130.81 97.79)
 		)
 		(stroke
@@ -1182,16 +1166,6 @@
 			(type default)
 		)
 		(uuid "0c3df244-a062-4657-97a1-6799a7acb619")
-	)
-	(wire
-		(pts
-			(xy 113.03 107.95) (xy 130.81 107.95)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0ce615b7-a51c-42de-a2ed-93501106bdd6")
 	)
 	(wire
 		(pts
@@ -1285,16 +1259,6 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 115.57) (xy 124.46 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "56e2b090-bc39-4b99-ab77-a1125b613a22")
-	)
-	(wire
-		(pts
 			(xy 158.115 110.49) (xy 153.67 110.49)
 		)
 		(stroke
@@ -1332,16 +1296,6 @@
 			(type default)
 		)
 		(uuid "72a2dddf-ef4e-460f-91df-2b48ba33a440")
-	)
-	(wire
-		(pts
-			(xy 113.03 102.87) (xy 130.81 102.87)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "79383941-3385-43fd-b4c6-2520a608d229")
 	)
 	(wire
 		(pts
@@ -1475,16 +1429,6 @@
 	)
 	(wire
 		(pts
-			(xy 113.03 105.41) (xy 130.81 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cc21316a-1d96-475c-8cb2-515bd4f0d676")
-	)
-	(wire
-		(pts
 			(xy 120.65 120.65) (xy 124.46 120.65)
 		)
 		(stroke
@@ -1543,20 +1487,9 @@
 		)
 		(uuid "f91ba088-ddaf-482e-bd50-4fc421c4a298")
 	)
-	(text "IMU"
-		(exclude_from_sim no)
-		(at 117.475 84.455 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "27a46798-47de-4526-8049-d4e71169bea2")
-	)
 	(text "Caution! Fused to 500mah@24v\n\n"
 		(exclude_from_sim no)
-		(at 111.125 117.475 90)
+		(at 102.108 120.396 90)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1586,116 +1519,6 @@
 			(justify left bottom)
 		)
 		(uuid "cc6e5133-6c32-41f7-965c-550eaee52286")
-	)
-	(label "signal_1_24v"
-		(at 113.03 110.49 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "2ad92b4e-0c71-48e3-88a8-0e4d683267b0")
-	)
-	(label "signal_10"
-		(at 127 87.63 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3f6d9b92-ad9c-43b6-a292-938a19537840")
-	)
-	(label "signal_2_24v"
-		(at 113.03 107.95 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "51e7af3d-fc6b-40ab-b824-44e4ae227f5b")
-	)
-	(label "signal_6"
-		(at 127 97.79 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6b1a68d5-dbee-416d-b951-3f8d84686fe0")
-	)
-	(label "signal_5"
-		(at 127 100.33 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "925bf04d-6d2a-4ed7-8ac5-ccd10e7e6c15")
-	)
-	(label "signal_9"
-		(at 127 90.17 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9d599cfb-c693-456b-8118-d35759e39c63")
-	)
-	(label "signal_8"
-		(at 127 92.71 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9de08f67-f4ea-4937-bb3a-c2f709ac0c40")
-	)
-	(label "signal_4_24v"
-		(at 113.03 102.87 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c3bf2e19-2b15-4d41-8759-ec88823563cb")
-	)
-	(label "signal_7"
-		(at 127 95.25 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "d91058e4-8845-437e-8082-b5d43cd3a890")
-	)
-	(label "signal_3_24v"
-		(at 113.03 105.41 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ecd26092-c240-43bc-8ffe-e1c1fc3a67f9")
 	)
 	(hierarchical_label "BSPD_5V"
 		(shape output)
@@ -1745,30 +1568,6 @@
 		)
 		(uuid "25c32c20-769e-4949-a5f3-5fcb2168f40f")
 	)
-	(hierarchical_label "UART_RX"
-		(shape input)
-		(at 130.81 85.09 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "4fcc36e0-36ca-43fa-ae89-9886ad7ee500")
-	)
-	(hierarchical_label "UART_TX"
-		(shape output)
-		(at 130.81 82.55 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "58e3755f-50b3-4984-bd13-8c4842e73af1")
-	)
 	(hierarchical_label "safety_in"
 		(shape input)
 		(at 156.21 80.01 0)
@@ -1815,7 +1614,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "43c30ba0-5b8c-4354-810a-6ffbd03d1a73")
-		(property "Reference" "#PWR09"
+		(property "Reference" "#PWR045"
 			(at 167.64 69.85 0)
 			(effects
 				(font
@@ -1866,7 +1665,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-					(reference "#PWR09")
+					(reference "#PWR045")
 					(unit 1)
 				)
 			)
@@ -2121,7 +1920,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "537d1587-6b82-4e71-967f-49c750b60a00")
-		(property "Reference" "#PWR010"
+		(property "Reference" "#PWR046"
 			(at 124.46 120.65 0)
 			(effects
 				(font
@@ -2172,7 +1971,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-					(reference "#PWR010")
+					(reference "#PWR046")
 					(unit 1)
 				)
 			)
@@ -2188,7 +1987,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6790d7b3-941c-4e15-a0b6-8f6279602568")
-		(property "Reference" "#PWR02"
+		(property "Reference" "#PWR047"
 			(at 157.48 127 0)
 			(effects
 				(font
@@ -2238,7 +2037,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/e25d0f8a-65a3-47e2-987f-518da8891580"
-					(reference "#PWR02")
+					(reference "#PWR047")
 					(unit 1)
 				)
 			)
