@@ -115,7 +115,7 @@ void stateMachine(TIM_HandleTypeDef *beat) {
 			struct ter_command_t cmdMsg;
 			ter_command_init(&cmdMsg);
 			cmdMsg.cmd = TER_COMMAND_CMD_SET_LIMITS_CHOICE;
-			cmdMsg.trq_limit = 80;
+			cmdMsg.trq_limit = 150;
 			cmdMsg.kw_limit = 40;
 			cmdMsg.speed_limit = 50;
 			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
