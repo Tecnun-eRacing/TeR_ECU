@@ -22,9 +22,8 @@ typedef enum {
 	WAIT_SL, RDY2PRECH, PRECHARGING, PRECHARGED, DRIVING
 } state_t; //Estados
 
-uint8_t initStateMachine(TIM_HandleTypeDef* htim); //Arranca la maquina con un timer
 state_t getState(void); //Determina el estado en función de las lecturas y el can
-void stateMachine(TIM_HandleTypeDef* beat); //ejecuta el estado actual
+void stateMachine(void); //ejecuta el estado actual
 
 //Estados
 void waitSL(void); // Comprueba SL esta bien
@@ -32,7 +31,7 @@ void rdy2Prech(void); // Espera a recibir el comando de precarga
 void precharging(void); //Estado transitorio, monitoriza que todo va bien
 void precharged(void); //Espera a que se reciba el comando de r2d
 void driving(void); //Ejecuta la comanda de par
-
+void stateMachineTask(void *argument);
 //Permanent Task
 void permaTask(); //Se ejecuta en todos los estados (conversiones/brakelight...)
 

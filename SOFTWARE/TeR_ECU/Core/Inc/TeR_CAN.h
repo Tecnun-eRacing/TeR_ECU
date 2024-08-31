@@ -33,8 +33,16 @@
 //UTILIDADES
 #include "TeR_SCS.h" //para el logging de scs
 #include "TeR_COMMAND.h"//Para las llamadas de comando
+#include "cmsis_os.h"
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
+
+typedef struct  {
+	uint32_t id;
+	uint8_t DLC;
+	uint8_t data[8];
+}canMsg_t;
+
 struct TeR_t {
 //Propias
 	struct ter_ter_status_t status;
@@ -77,9 +85,6 @@ struct TeR_t {
 
 	struct inverter_emcu_state_7_right_t demRight; //Dem
 	struct inverter_emcu_state_7_left_t demLeft;
-
-
-
 	//HVBMS.dbc
 	//Enviados
 	struct hvbms_bms_rx_ctrl_1_t BmsAppReq; //Comanda estado BMS
@@ -87,19 +92,23 @@ struct TeR_t {
 	struct hvbms_bms_tx_state_3_t BmsAppState; //Estado BMS
 
 };
+
 //Struct General de Trabajo
 extern struct TeR_t TeR; //Expone los datos del TeR a otros archivos
+
+
 //Permite a otros modulos acceder a los CAN
 extern CAN_HandleTypeDef *mainCAN;
 extern CAN_HandleTypeDef *invCAN;
 
 /* ---------------------------------------------------------------------- */
 
-uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan,
-		TIM_HandleTypeDef *hInvTIM, TIM_HandleTypeDef *hMainTIM);
+uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan);
 void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan); //Configs filters
-void decodeMsg(CAN_HandleTypeDef *hcan); //Decodes message according to DBC
-void sendInvCAN(TIM_HandleTypeDef *htim); //Función Callback de envío del CAN de inverters
-void sendMainCAN(TIM_HandleTypeDef *htim); // //Función Callback de envío del CAN principal
-
+void canRx(void *argument); //Decodes message according to DBC
+void mainCanTx(void *argument); //main can sender task
+void invCanTx(void *argument); // inv can sender task
+void sendInvCAN(); //Función Callback de envío del CAN de inverters
+void sendMainCAN(); // //Función Callback de envío del CAN principal
+void canRxCallback(CAN_HandleTypeDef *hcan);
 #endif /* INC_TER_CAN_H_ */

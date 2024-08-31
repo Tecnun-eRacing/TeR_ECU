@@ -31,23 +31,28 @@
  */
 #include "TeR_STATEMACHINE.h"
 
-TIM_HandleTypeDef *beat;
 
+//Persistance checker
 persist_t SL;
 
-uint8_t initStateMachine(TIM_HandleTypeDef *htim) {
-	beat = htim; //Configura el timer de la maquina de estados
-	HAL_TIM_RegisterCallback(beat, HAL_TIM_PERIOD_ELAPSED_CB_ID, stateMachine);
-	HAL_TIM_Base_Start_IT(beat);
-	return 1;
+//stateMachine Task
+void stateMachineTask(void *argument){
+	uint32_t currentTick;
+	currentTick=osKernelGetTickCount();
+	for(;;){
+		currentTick+=2;
+		osDelayUntil(currentTick);
+		stateMachine();
+	}
 }
+
+
+
 
 state_t getState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
-
-	TeR.status.sl = checkPersistance(&SL,
-			HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin), 500);// Leemos el estado de la safety
+	TeR.status.sl =  checkPersistance(&SL, HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin), 500);// Leemos el estado de la safety
 	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);	// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
@@ -68,7 +73,7 @@ state_t getState(void) {
 	return status;
 }
 
-void stateMachine(TIM_HandleTypeDef *beat) {
+void stateMachine(void) {
 	uint8_t prevState = TeR.status.state; //Guarda el estado previo
 	TeR.status.state = getState(); //Get Current State
 	uint8_t stateChanged = TeR.status.state != prevState ? 1 : 0; //for state setup
