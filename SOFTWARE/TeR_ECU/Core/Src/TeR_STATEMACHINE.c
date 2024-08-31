@@ -38,29 +38,27 @@ persist_t SL;
 extern osMutexId_t preventRaceHandle;
 
 //FreeRTOS Task
-void stateMachineTask(void *argument){
+void stateMachineTask(void *argument) {
 	uint32_t currentTick;
-	currentTick=osKernelGetTickCount();
-	for(;;){ // problema, si no se ejecuta esta tarea, no se ejecuta SCSs, solucion mover scs a otra tarea
-		currentTick+=2; //ejecutamos la maquina de estados cada 2 milisegundos
+	currentTick = osKernelGetTickCount();
+	osStatus_t mutexStatus;
+	for (;;) { // problema, si no se ejecuta esta tarea, no se ejecuta SCSs, solucion mover scs a otra tarea
+		currentTick += 2; //ejecutamos la maquina de estados cada 2 milisegundos
 		osDelayUntil(currentTick);
-		if(osMutexAcquire(preventRaceHandle, 4)==osOK){ // adquirimos el mutex, esperamos como máximo 4 millis (garantia de que la tarea se ejecutara)
+		mutexStatus = osMutexAcquire(preventRaceHandle, 4); // adquirimos el mutex, esperamos, sino continuamos
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo
+		if (mutexStatus != osOK) { //Handle de la no obtencion del mutex
+			// todo: incrementar error counter en variable TeR, informar, hacer lo necesario
+		}
 		osMutexRelease(preventRaceHandle); // release del mutex
-		}
-		else{
-			//todo implementar handle, contador de errores... lo que sea
-		}
 	}
 }
-
-
-
 
 state_t getState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
-	TeR.status.sl =  checkPersistance(&SL, HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin), 500);// Leemos el estado de la safety
+	TeR.status.sl = checkPersistance(&SL,
+			HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin), 500);// Leemos el estado de la safety
 	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);	// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
@@ -95,7 +93,7 @@ void stateMachine(void) {
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-					TER_COMMAND_ONOFF_OFF_CHOICE);
+			TER_COMMAND_ONOFF_OFF_CHOICE);
 			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
@@ -122,7 +120,7 @@ void stateMachine(void) {
 
 			//Arranca la refri
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-					TER_COMMAND_ONOFF_ON_CHOICE);
+			TER_COMMAND_ONOFF_ON_CHOICE);
 
 			//Configura el driving mode
 			struct ter_command_t cmdMsg;
@@ -214,28 +212,33 @@ void permaTask() {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
 	}
 // Proccess Wheel Data
-	TeR.wheelInfo.rl_rpm = ((-TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES)
-			* RED_RATIO;
+	TeR.wheelInfo.rl_rpm =
+			((-TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES) * RED_RATIO;
 	TeR.wheelInfo.rr_rpm = (TeR.dqErpmRight.e_machine_speed_erpm / MOTOR_POLES)
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
-	TeR.wheelInfo.speed = 3.6*(TeR.wheelInfo.rl_rpm * 2 * PI * WHEEL_RADIUS) / 60; //Linear velocity of vehicle
+	TeR.wheelInfo.speed = 3.6 * (TeR.wheelInfo.rl_rpm * 2 * PI * WHEEL_RADIUS)
+			/ 60; //Linear velocity of vehicle
 
 // Bypass Inverter data
 	TeR.invInfo.left_dem = TeR.demLeft.dem; //Dem
 	TeR.invInfo.right_dem = TeR.demRight.dem; //Dem
 
-	TeR.invInfo.left_motor_temp = (uint8_t)inverter_emcu_state_4_left_e_machine_temp_2_deg_c_decode(
-			TeR.tempsLeft.e_machine_temp_2_deg_c);
-	TeR.invInfo.right_motor_temp = (uint8_t)inverter_emcu_state_4_right_e_machine_temp_2_deg_c_decode(
-			TeR.tempsRight.e_machine_temp_2_deg_c);
+	TeR.invInfo.left_motor_temp =
+			(uint8_t) inverter_emcu_state_4_left_e_machine_temp_2_deg_c_decode(
+					TeR.tempsLeft.e_machine_temp_2_deg_c);
+	TeR.invInfo.right_motor_temp =
+			(uint8_t) inverter_emcu_state_4_right_e_machine_temp_2_deg_c_decode(
+					TeR.tempsRight.e_machine_temp_2_deg_c);
 
-	TeR.invInfo.left_power_stage_temp = (uint8_t)inverter_emcu_state_4_left_pwr_stg_temp_deg_c_decode(
-			TeR.tempsLeft.pwr_stg_temp_deg_c);
+	TeR.invInfo.left_power_stage_temp =
+			(uint8_t) inverter_emcu_state_4_left_pwr_stg_temp_deg_c_decode(
+					TeR.tempsLeft.pwr_stg_temp_deg_c);
 
-	TeR.invInfo.right_power_stage_temp = (uint8_t)inverter_emcu_state_4_right_pwr_stg_temp_deg_c_decode(
-			TeR.tempsRight.pwr_stg_temp_deg_c);
+	TeR.invInfo.right_power_stage_temp =
+			(uint8_t) inverter_emcu_state_4_right_pwr_stg_temp_deg_c_decode(
+					TeR.tempsRight.pwr_stg_temp_deg_c);
 
 //Fill in Status Message
 	TeR.status.ams = TeR.BmsAppState.dio1_state; //1 OK
