@@ -1,0 +1,4 @@
+../Core/Src/freertos.c:204:6:osRunning	1
+../Core/Src/freertos.c:124:13:configureTimerForRunTimeStats	1
+../Core/Src/freertos.c:129:22:getRunTimeCounterValue	1
+../Core/Src/freertos.c:140:6:MX_FREERTOS_Init	1

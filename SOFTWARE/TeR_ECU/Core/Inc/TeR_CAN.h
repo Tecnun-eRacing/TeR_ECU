@@ -33,7 +33,7 @@
 //UTILIDADES
 #include "TeR_SCS.h" //para el logging de scs
 #include "TeR_COMMAND.h"//Para las llamadas de comando
-#include "cmsis_os.h"
+#include "cmsis_os.h" //funciones del Kernel
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
 

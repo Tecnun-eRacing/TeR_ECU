@@ -1,0 +1,3 @@
+../Core/Src/TeR_COMMAND.c:9:9:command	25
+../Core/Src/TeR_COMMAND.c:168:9:easyCommand	1
+../Core/Src/TeR_COMMAND.c:175:9:switchCommand	1

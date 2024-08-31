@@ -60,26 +60,33 @@ osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
   .name = "canRxTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for mainCanTxTask */
 osThreadId_t mainCanTxTaskHandle;
 const osThreadAttr_t mainCanTxTask_attributes = {
   .name = "mainCanTxTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for invCanTxTask */
 osThreadId_t invCanTxTaskHandle;
 const osThreadAttr_t invCanTxTask_attributes = {
   .name = "invCanTxTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for stateMachineTsk */
 osThreadId_t stateMachineTskHandle;
 const osThreadAttr_t stateMachineTsk_attributes = {
   .name = "stateMachineTsk",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for systemCryticalT */
+osThreadId_t systemCryticalTHandle;
+const osThreadAttr_t systemCryticalT_attributes = {
+  .name = "systemCryticalT",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -104,6 +111,7 @@ extern void canRx(void *argument);
 extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
+extern void systemCrytical(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -172,6 +180,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of stateMachineTsk */
   stateMachineTskHandle = osThreadNew(stateMachineTask, NULL, &stateMachineTsk_attributes);
+
+  /* creation of systemCryticalT */
+  systemCryticalTHandle = osThreadNew(systemCrytical, NULL, &systemCryticalT_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -31,18 +31,26 @@
  */
 #include "TeR_STATEMACHINE.h"
 
-
 //Persistance checker
 persist_t SL;
 
-//stateMachine Task
+// FreeRTOS dependencies
+extern osMutexId_t preventRaceHandle;
+
+//FreeRTOS Task
 void stateMachineTask(void *argument){
 	uint32_t currentTick;
 	currentTick=osKernelGetTickCount();
-	for(;;){
-		currentTick+=2;
+	for(;;){ // problema, si no se ejecuta esta tarea, no se ejecuta SCSs, solucion mover scs a otra tarea
+		currentTick+=2; //ejecutamos la maquina de estados cada 2 milisegundos
 		osDelayUntil(currentTick);
-		stateMachine();
+		if(osMutexAcquire(preventRaceHandle, 4)==osOK){ // adquirimos el mutex, esperamos como máximo 4 millis (garantia de que la tarea se ejecutara)
+		stateMachine(); //ejecutamos la maquina de estados del vehiculo
+		osMutexRelease(preventRaceHandle); // release del mutex
+		}
+		else{
+			//todo implementar handle, contador de errores... lo que sea
+		}
 	}
 }
 
@@ -137,7 +145,7 @@ void stateMachine(void) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 			HAL_Delay(2000); //EV 4.12.1
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-			startSCS(); //Arranca las señales críticas
+			//startSCS(); //innecesario ya que se auto-activan en init
 
 			break;
 		default:

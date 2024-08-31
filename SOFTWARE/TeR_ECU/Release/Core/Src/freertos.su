@@ -1,0 +1,4 @@
+../Core/Src/freertos.c:204:6:osRunning	8	static
+../Core/Src/freertos.c:124:13:configureTimerForRunTimeStats	0	static
+../Core/Src/freertos.c:129:22:getRunTimeCounterValue	0	static
+../Core/Src/freertos.c:140:6:MX_FREERTOS_Init	8	static

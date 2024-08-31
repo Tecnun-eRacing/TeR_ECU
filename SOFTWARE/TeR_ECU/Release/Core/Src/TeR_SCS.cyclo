@@ -1,0 +1,6 @@
+../Core/Src/TeR_SCS.c:43:9:startSCS	1
+../Core/Src/TeR_SCS.c:36:9:initSCS	1
+../Core/Src/TeR_SCS.c:53:9:stopSCS	1
+../Core/Src/TeR_SCS.c:60:9:logSCS	2
+../Core/Src/TeR_SCS.c:73:6:checkSCS	2
+../Core/Src/TeR_SCS.c:15:6:systemCrytical	1

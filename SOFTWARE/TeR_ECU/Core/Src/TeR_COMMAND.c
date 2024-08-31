@@ -5,7 +5,6 @@
  *      Author: ozuba
  */
 #include "TeR_COMMAND.h"
-
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
 	//Buffers volatiles para el envio de lo que toque

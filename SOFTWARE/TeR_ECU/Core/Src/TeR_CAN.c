@@ -35,8 +35,8 @@ uint8_t invIndex;
 uint8_t mainIndex;
 
 //FreeRTOS
-extern osMessageQueueId_t rxMsgHandle;
-
+extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
+extern osMutexId_t preventRaceHandle; //handle del mutex de protección contra escritura
 /* -------------------------------------------------------------------------- */
 struct TeR_t TeR;
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
@@ -72,7 +72,6 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	msg.DLC = rxHeader.DLC;
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U);
 }
-
 /*----------------------------------[Configuración de filtros]--------------------------------*/
 
 void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
@@ -119,9 +118,9 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	uint32_t currentTick;
-	currentTick=osKernelGetTickCount();
+	currentTick = osKernelGetTickCount();
 	for (;;) {
-		currentTick += 2; // mandar inverter cada 5 milis
+		currentTick += 2; // mandar inverter cada 2 milis
 		osDelayUntil(currentTick);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
@@ -188,7 +187,6 @@ void invCanTx(void *argument) {
 	}
 }
 /* ---------------------------[MAIN CAN]-------------------------- */
-
 void mainCanTx(void *argument) {
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
@@ -199,7 +197,7 @@ void mainCanTx(void *argument) {
 	uint32_t currentTick;
 	currentTick = osKernelGetTickCount();
 	for (;;) {
-		currentTick += 5; //mandar MAIN can cada X tiempo
+		currentTick += 10; //mandar MAIN can cada X tiempo
 		osDelayUntil(currentTick);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
@@ -241,105 +239,113 @@ void mainCanTx(void *argument) {
 void canRx(void *argument) {
 	canMsg_t msg;
 	for (;;) {
-		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever);
-		logSCS(msg.id); //System Critical signal timestamping
-		switch (msg.id) {
-		//Attend the command
-		case TER_COMMAND_FRAME_ID: //Sistema de comandos
-			struct ter_command_t cmdMsg;
-			ter_command_init(&cmdMsg); //Por si se usan variables indebidamente inicializadas
-			ter_command_unpack(&cmdMsg, msg.data, TER_COMMAND_LENGTH);
-			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
-			break;
+		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
+		if (osMutexAcquire(preventRaceHandle, 5) == osOK) { // esperamos MUTEX, como maximo 5 millis, caso contrario, continuamos (equilibrio seguridad y real-time)
+			logSCS(msg.id); //System Critical signal Timestamp
+			switch (msg.id) {
+			//Attend the command
+			case TER_COMMAND_FRAME_ID: //Sistema de comandos
+				struct ter_command_t cmdMsg;
+				ter_command_init(&cmdMsg); //Por si se usan variables indebidamente inicializadas
+				ter_command_unpack(&cmdMsg, msg.data, TER_COMMAND_LENGTH);
+				command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
+				break;
 
-			/* ---------------------------[TER]-------------------------- */
+				/* ---------------------------[TER]-------------------------- */
 
-			//Mesage Decoding
-		case TER_APPS_FRAME_ID:
-			ter_apps_unpack(&TeR.apps, msg.data, msg.DLC);
-			break;
+				//Mesage Decoding
+			case TER_APPS_FRAME_ID:
+				ter_apps_unpack(&TeR.apps, msg.data, msg.DLC);
+				break;
 
-		case TER_BPPS_FRAME_ID:
-			ter_bpps_unpack(&TeR.bpps, msg.data, msg.DLC);
-			break;
+			case TER_BPPS_FRAME_ID:
+				ter_bpps_unpack(&TeR.bpps, msg.data, msg.DLC);
+				break;
 
-		case TER_STEER_FRAME_ID:
-			ter_steer_unpack(&TeR.steer, msg.data, msg.DLC);
-			break;
+			case TER_STEER_FRAME_ID:
+				ter_steer_unpack(&TeR.steer, msg.data, msg.DLC);
+				break;
 
-		case TER_FRONT_V_FRAME_ID:
-			ter_front_v_unpack(&TeR.speed, msg.data, msg.DLC);
-			break;
+			case TER_FRONT_V_FRAME_ID:
+				ter_front_v_unpack(&TeR.speed, msg.data, msg.DLC);
+				break;
 
-		case TER_ANG_RATE_FRAME_ID:
-			ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
-			break;
+			case TER_ANG_RATE_FRAME_ID:
+				ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
+				break;
 
-		case TER_LV_STATUS_FRAME_ID:
-			ter_lv_status_unpack(&TeR.lvbms, msg.data, msg.DLC);
-			break;
+			case TER_LV_STATUS_FRAME_ID:
+				ter_lv_status_unpack(&TeR.lvbms, msg.data, msg.DLC);
+				break;
 
-			/* ---------------------------[INVERTER]-------------------------- */
+				/* ---------------------------[INVERTER]-------------------------- */
 
-		case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
-			inverter_emcu_state_2_right_unpack(&TeR.appStateRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
+				inverter_emcu_state_2_right_unpack(&TeR.appStateRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_2_LEFT_FRAME_ID:
-			inverter_emcu_state_2_left_unpack(&TeR.appStateLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_2_LEFT_FRAME_ID:
+				inverter_emcu_state_2_left_unpack(&TeR.appStateLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_3_RIGHT_FRAME_ID:
-			inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_3_RIGHT_FRAME_ID:
+				inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
-			inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
+				inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_4_RIGHT_FRAME_ID:
-			inverter_emcu_state_4_right_unpack(&TeR.tempsRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_4_RIGHT_FRAME_ID:
+				inverter_emcu_state_4_right_unpack(&TeR.tempsRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_4_LEFT_FRAME_ID:
-			inverter_emcu_state_4_left_unpack(&TeR.tempsLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_4_LEFT_FRAME_ID:
+				inverter_emcu_state_4_left_unpack(&TeR.tempsLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
-			inverter_emcu_state_7_left_unpack(&TeR.demLeft, msg.data, msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
+				inverter_emcu_state_7_left_unpack(&TeR.demLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
-			inverter_emcu_state_7_right_unpack(&TeR.demRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
+				inverter_emcu_state_7_right_unpack(&TeR.demRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
-			inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
+				inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
-			inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
+				inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, msg.data,
+						msg.DLC);
+				break;
 
-			/* ---------------------------[HVBMS]-------------------------- */
+				/* ---------------------------[HVBMS]-------------------------- */
 
-		case HVBMS_BMS_TX_STATE_3_FRAME_ID:
-			hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, msg.data, msg.DLC);
-			break;
-			/* ---------------------------[Default]-------------------------- */
+			case HVBMS_BMS_TX_STATE_3_FRAME_ID:
+				hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, msg.data,
+						msg.DLC);
+				break;
+				/* ---------------------------[Default]-------------------------- */
 
-		default:
-			break;
+			default:
+				break;
 
+			}
+			osMutexRelease(preventRaceHandle); // liberamos el MUTEX (hemos terminado la recepcion)
+		}
+		else{
+			//todo implementar handle, contador de errores... lo que sea
 		}
 	}
 }

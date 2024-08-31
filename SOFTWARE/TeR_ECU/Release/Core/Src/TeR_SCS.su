@@ -1,0 +1,6 @@
+../Core/Src/TeR_SCS.c:43:9:startSCS	8	static
+../Core/Src/TeR_SCS.c:36:9:initSCS	8	static
+../Core/Src/TeR_SCS.c:53:9:stopSCS	8	static
+../Core/Src/TeR_SCS.c:60:9:logSCS	0	static
+../Core/Src/TeR_SCS.c:73:6:checkSCS	0	static
+../Core/Src/TeR_SCS.c:15:6:systemCrytical	8	static

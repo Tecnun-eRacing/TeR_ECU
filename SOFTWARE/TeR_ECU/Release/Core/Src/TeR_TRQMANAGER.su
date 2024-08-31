@@ -1,0 +1,7 @@
+../Core/Src/TeR_TRQMANAGER.c:57:9:trqManager	32	static
+../Core/Src/TeR_TRQMANAGER.c:80:7:limitTorque	0	static
+../Core/Src/TeR_TRQMANAGER.c:85:7:limitMechPWR	8	static
+../Core/Src/TeR_TRQMANAGER.c:97:7:limitSpeed	0	static
+../Core/Src/TeR_TRQMANAGER.c:106:7:limitElecPWR	0	static
+../Core/Src/TeR_TRQMANAGER.c:112:10:lineal	32	static
+../Core/Src/TeR_TRQMANAGER.c:121:10:tractionControlOFF	8	static

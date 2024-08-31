@@ -101,7 +101,7 @@ int main(void)
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
 	initSCS(&htim5); //Arranca las systemCritical signals
-	initCAN(&hcan1, &hcan2); //Arranca los can de inverters y main con sus respectivos temporizadores
+	initCAN(&hcan1, &hcan2); //Arranca los can de inverters y main
   /* USER CODE END 2 */
 
   /* Init scheduler */
