@@ -70,7 +70,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-		HAL_Delay(500);
+		osDelay(500);
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 		break;
 

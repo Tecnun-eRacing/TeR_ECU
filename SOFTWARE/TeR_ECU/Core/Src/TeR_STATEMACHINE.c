@@ -141,7 +141,7 @@ void stateMachine(void) {
 			break;
 		case DRIVING:
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			HAL_Delay(2000); //EV 4.12.1
+			osDelay(2000); //EV 4.12.1
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 			//startSCS(); //innecesario ya que se auto-activan en init
 
