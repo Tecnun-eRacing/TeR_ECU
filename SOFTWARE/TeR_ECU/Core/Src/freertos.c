@@ -60,7 +60,7 @@ osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
   .name = "canRxTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityHigh5,
 };
 /* Definitions for mainCanTxTask */
 osThreadId_t mainCanTxTaskHandle;
@@ -159,7 +159,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of rxMsg */
-  rxMsgHandle = osMessageQueueNew (16, sizeof(canMsg_t), &rxMsg_attributes);
+  rxMsgHandle = osMessageQueueNew (128, sizeof(canMsg_t), &rxMsg_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */

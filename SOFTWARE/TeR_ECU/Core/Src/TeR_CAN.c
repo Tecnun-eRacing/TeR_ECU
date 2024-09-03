@@ -118,10 +118,11 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	uint32_t currentTick;
-	currentTick = osKernelGetTickCount();
+	currentTick = osKernelGetTickCount(); // kernel tick sync
 	for (;;) {
 		currentTick += 2; // mandar inverter cada 2 milis
 		osDelayUntil(currentTick);
+		currentTick = osKernelGetTickCount();
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -198,7 +199,8 @@ void mainCanTx(void *argument) {
 	currentTick = osKernelGetTickCount();
 	for (;;) {
 		currentTick += 10; //mandar MAIN can cada X tiempo
-		osDelayUntil(currentTick);
+		osDelayUntil(currentTick); // kernel tick sync
+		currentTick = osKernelGetTickCount();
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -241,7 +243,7 @@ void canRx(void *argument) {
 	osStatus_t mutexStatus;
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 5); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
+		mutexStatus = osMutexAcquire(preventRaceHandle, 10); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
 		logSCS(msg.id); //System Critical signal Timestamp
 		switch (msg.id) {
 		//Attend the command
