@@ -243,7 +243,7 @@ void canRx(void *argument) {
 	osStatus_t mutexStatus;
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 10); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
+		mutexStatus = osMutexAcquire(preventRaceHandle, osWaitForever); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
 		logSCS(msg.id); //System Critical signal Timestamp
 		switch (msg.id) {
 		//Attend the command

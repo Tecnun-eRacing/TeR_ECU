@@ -42,11 +42,12 @@ void stateMachineTask(void *argument) {
 	uint32_t currentTick;
 	currentTick = osKernelGetTickCount();
 	osStatus_t mutexStatus;
-	for (;;) { // problema, si no se ejecuta esta tarea, no se ejecuta SCSs, solucion mover scs a otra tarea
+	for (;;) {
+		// problema, si no se ejecuta esta tarea, no se ejecuta SCSs, solucion mover scs a otra tarea
 		currentTick += 2; //ejecutamos la maquina de estados cada 2 milisegundos
 		osDelayUntil(currentTick);
 		currentTick = osKernelGetTickCount(); // kernel tick sync
-		mutexStatus = osMutexAcquire(preventRaceHandle, 10); // adquirimos el mutex, esperamos, sino continuamos
+		mutexStatus = osMutexAcquire(preventRaceHandle, osWaitForever); // adquirimos el mutex, esperamos, sino continuamos
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo
 		if (mutexStatus != osOK) { //Handle de la no obtencion del mutex
 			// todo: incrementar error counter en variable TeR, informar, hacer lo necesario
