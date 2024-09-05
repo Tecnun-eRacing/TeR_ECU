@@ -117,12 +117,12 @@ void invCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
-	uint32_t currentTick;
-	currentTick = osKernelGetTickCount(); // kernel tick sync
+	uint32_t currentTick;  // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
+	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kernel en currentTick
 	for (;;) {
-		currentTick += 2; // mandar inverter cada 2 milis
-		osDelayUntil(currentTick);
-		currentTick = osKernelGetTickCount();
+		currentTick += 2; // sumamos 2 ticks al valor de currentick
+		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
+		currentTick = osKernelGetTickCount(); //resincronizamos currentTick con kernel por si acaso nos quedamos permanentemente menores que el kerneltick
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -195,12 +195,12 @@ void mainCanTx(void *argument) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-	uint32_t currentTick;
-	currentTick = osKernelGetTickCount();
+	uint32_t currentTick;  // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
+	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kerneltick
 	for (;;) {
-		currentTick += 10; //mandar MAIN can cada X tiempo
-		osDelayUntil(currentTick); // kernel tick sync
-		currentTick = osKernelGetTickCount();
+		currentTick += 10; //añadimos 10 ticks mas al valor del currentTick
+		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
+		currentTick = osKernelGetTickCount(); //actualizamos el valor del kerneltick en la variable para evitar descincronizaciones, por si acaso nos quedamos permantentemente debajo de kerneltick
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -239,12 +239,12 @@ void mainCanTx(void *argument) {
 
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
-	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random
+	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random, mira abajo
 	canMsg_t msg;
-	osStatus_t mutexStatus;
+	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 200); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
+		mutexStatus = osMutexAcquire(preventRaceHandle, 200); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time, asi aseguramos que como mucho esta tarea no se ejecuta durante 200 millis)
 		logSCS(msg.id); //System Critical signal Timestamp
 		switch (msg.id) {
 		//Attend the command
@@ -344,11 +344,12 @@ void canRx(void *argument) {
 			break;
 
 		}
-		if (mutexStatus == osOK) { //si hemos obtenido el mutex, lo liberamos
+		if (mutexStatus == osOK) { //Unicamente si hemos obtenido el mutex, lo liberamos (no puedes liberar algo que no es tuyo)
 			osMutexRelease(preventRaceHandle);
 		}
 		else{
-			errorCounter++;
+			errorCounter++; // en caso de haber realizado una ejecucion insegura, incrementa el valor del errorCounter (debugging purposes)
+			// 1h de testing con CAN saturado al 95 %, 26 errores (nada), bastante bien
 		}
 	}
 }
