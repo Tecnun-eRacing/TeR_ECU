@@ -39,6 +39,7 @@ extern osMutexId_t preventRaceHandle;
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
+	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random
 	uint32_t currentTick;
 	currentTick = osKernelGetTickCount();
 	osStatus_t mutexStatus;
@@ -47,12 +48,14 @@ void stateMachineTask(void *argument) {
 		currentTick += 2; //ejecutamos la maquina de estados cada 2 milisegundos
 		osDelayUntil(currentTick);
 		currentTick = osKernelGetTickCount(); // kernel tick sync
-		mutexStatus = osMutexAcquire(preventRaceHandle, osWaitForever); // adquirimos el mutex, esperamos, sino continuamos
+		mutexStatus = osMutexAcquire(preventRaceHandle, 200); //intentamos adquirir mutex hasta tmax, sino continuamos(prevencion de bloqueo de la maquina de estados)
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo
-		if (mutexStatus != osOK) { //Handle de la no obtencion del mutex
-			// todo: incrementar error counter en variable TeR, informar, hacer lo necesario
+		if (mutexStatus == osOK) { //Handle de la no obtencion del mutex
+			osMutexRelease(preventRaceHandle); // release del mutex SOLO si lo tienes
 		}
-		osMutexRelease(preventRaceHandle); // release del mutex
+		else{
+			errorCounter++;
+		}
 	}
 }
 

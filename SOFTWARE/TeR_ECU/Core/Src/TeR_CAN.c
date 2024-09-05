@@ -239,11 +239,12 @@ void mainCanTx(void *argument) {
 
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
+	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random
 	canMsg_t msg;
 	osStatus_t mutexStatus;
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, osWaitForever); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
+		mutexStatus = osMutexAcquire(preventRaceHandle, 200); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time)
 		logSCS(msg.id); //System Critical signal Timestamp
 		switch (msg.id) {
 		//Attend the command
@@ -343,10 +344,12 @@ void canRx(void *argument) {
 			break;
 
 		}
-		if (mutexStatus != osOK) { //handle de la no obtencion del mutex
-			// todo: incrementar error counter, tomar accion, liberar mutex forzadamente...
+		if (mutexStatus == osOK) { //si hemos obtenido el mutex, lo liberamos
+			osMutexRelease(preventRaceHandle);
 		}
-		osMutexRelease(preventRaceHandle); // liberamos el MUTEX (hemos terminado la recepcion)
+		else{
+			errorCounter++;
+		}
 	}
 }
 
