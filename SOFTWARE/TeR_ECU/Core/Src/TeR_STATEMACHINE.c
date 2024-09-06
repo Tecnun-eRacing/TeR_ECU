@@ -39,22 +39,20 @@ extern osMutexId_t preventRaceHandle;
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
-	uint32_t errorCounter = 0; // debemos inicializar! toma valor random, mira debajo
-	uint32_t currentTick; // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
-	currentTick = osKernelGetTickCount(); //guardamos el valor actual del kernel en currentTick
-	osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
+	uint32_t errorCounter = 0; // debemos inicializar! (porque se declara en el stack)
+	uint32_t currentTick = osKernelGetTickCount(); // declaramos la variable que nos indicará el setpoint de tiempo
+    osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
 	for (;;) {
 		currentTick += 2; // añadimos 2 ticks al valor de currentTick
 		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
 		currentTick = osKernelGetTickCount(); // kernel tick sync, por si acaso perdemos sincronizacion con el kernel (nos quedamos permanentemente menores que el kerneltick)
-		mutexStatus = osMutexAcquire(preventRaceHandle, 200); //intentamos adquirir mutex de forma segura hasta tMax, sino continuamos(prevencion de bloqueo de la maquina de estados, asi aseguramos que un error en la liberacion de un mutex no destruye la maquina de estados)
-		stateMachine(); //ejecutamos la maquina de estados del vehiculo
-		if (mutexStatus == osOK) { //Handle de la no obtencion del mutex
-			osMutexRelease(preventRaceHandle); // release del mutex SOLO si lo tienes
+		mutexStatus = osMutexAcquire(preventRaceHandle, 600); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
+		if(mutexStatus==osOK){
+		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente
+		osMutexRelease(preventRaceHandle); // y una vez terminada la ejecucion, liberamos el mutex, si y solo si lo teniamos antes
 		}
 		else{
-			errorCounter++; //Contamos las veces que realizamos ejecuciones no seguras
-			//testing de 1h con el CAN saturado al 95 % 19 errores (muy bien)
+			errorCounter++; // haremos un handle bien
 		}
 	}
 }

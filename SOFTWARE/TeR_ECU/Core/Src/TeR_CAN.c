@@ -117,7 +117,7 @@ void invCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
-	uint32_t currentTick;  // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
+	uint32_t currentTick; // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
 	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kernel en currentTick
 	for (;;) {
 		currentTick += 2; // sumamos 2 ticks al valor de currentick
@@ -195,7 +195,7 @@ void mainCanTx(void *argument) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-	uint32_t currentTick;  // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
+	uint32_t currentTick; // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
 	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kerneltick
 	for (;;) {
 		currentTick += 10; //añadimos 10 ticks mas al valor del currentTick
@@ -244,112 +244,116 @@ void canRx(void *argument) {
 	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 200); // esperamos MUTEX, si timeout, continuamos (equilibrio seguridad y real-time, asi aseguramos que como mucho esta tarea no se ejecuta durante 200 millis)
-		logSCS(msg.id); //System Critical signal Timestamp
-		switch (msg.id) {
-		//Attend the command
-		case TER_COMMAND_FRAME_ID: //Sistema de comandos
-			struct ter_command_t cmdMsg;
-			ter_command_init(&cmdMsg); //Por si se usan variables indebidamente inicializadas
-			ter_command_unpack(&cmdMsg, msg.data, TER_COMMAND_LENGTH);
-			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
-			break;
+		mutexStatus = osMutexAcquire(preventRaceHandle, 300); // esperamos MUTEX, si hay timeout, nos iremos al handle sin ejecutar decodificacion
+		if (mutexStatus == osOK) { // solo ejecutamos la recepcion si y solo si tenemos el mutex
+			logSCS(msg.id); //System Critical signal Timestamp
+			switch (msg.id) {
+			//Attend the command
+			case TER_COMMAND_FRAME_ID: //Sistema de comandos
+				struct ter_command_t cmdMsg;
+				ter_command_init(&cmdMsg); //Por si se usan variables indebidamente inicializadas
+				ter_command_unpack(&cmdMsg, msg.data, TER_COMMAND_LENGTH);
+				command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
+				break;
 
-			/* ---------------------------[TER]-------------------------- */
+				/* ---------------------------[TER]-------------------------- */
 
-			//Mesage Decoding
-		case TER_APPS_FRAME_ID:
-			ter_apps_unpack(&TeR.apps, msg.data, msg.DLC);
-			break;
+				//Mesage Decoding
+			case TER_APPS_FRAME_ID:
+				ter_apps_unpack(&TeR.apps, msg.data, msg.DLC);
+				break;
 
-		case TER_BPPS_FRAME_ID:
-			ter_bpps_unpack(&TeR.bpps, msg.data, msg.DLC);
-			break;
+			case TER_BPPS_FRAME_ID:
+				ter_bpps_unpack(&TeR.bpps, msg.data, msg.DLC);
+				break;
 
-		case TER_STEER_FRAME_ID:
-			ter_steer_unpack(&TeR.steer, msg.data, msg.DLC);
-			break;
+			case TER_STEER_FRAME_ID:
+				ter_steer_unpack(&TeR.steer, msg.data, msg.DLC);
+				break;
 
-		case TER_FRONT_V_FRAME_ID:
-			ter_front_v_unpack(&TeR.speed, msg.data, msg.DLC);
-			break;
+			case TER_FRONT_V_FRAME_ID:
+				ter_front_v_unpack(&TeR.speed, msg.data, msg.DLC);
+				break;
 
-		case TER_ANG_RATE_FRAME_ID:
-			ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
-			break;
+			case TER_ANG_RATE_FRAME_ID:
+				ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
+				break;
 
-		case TER_LV_STATUS_FRAME_ID:
-			ter_lv_status_unpack(&TeR.lvbms, msg.data, msg.DLC);
-			break;
+			case TER_LV_STATUS_FRAME_ID:
+				ter_lv_status_unpack(&TeR.lvbms, msg.data, msg.DLC);
+				break;
 
-			/* ---------------------------[INVERTER]-------------------------- */
+				/* ---------------------------[INVERTER]-------------------------- */
 
-		case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
-			inverter_emcu_state_2_right_unpack(&TeR.appStateRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
+				inverter_emcu_state_2_right_unpack(&TeR.appStateRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_2_LEFT_FRAME_ID:
-			inverter_emcu_state_2_left_unpack(&TeR.appStateLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_2_LEFT_FRAME_ID:
+				inverter_emcu_state_2_left_unpack(&TeR.appStateLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_3_RIGHT_FRAME_ID:
-			inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_3_RIGHT_FRAME_ID:
+				inverter_emcu_state_3_right_unpack(&TeR.dqErpmRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
-			inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_3_LEFT_FRAME_ID:
+				inverter_emcu_state_3_left_unpack(&TeR.dqErpmLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_4_RIGHT_FRAME_ID:
-			inverter_emcu_state_4_right_unpack(&TeR.tempsRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_4_RIGHT_FRAME_ID:
+				inverter_emcu_state_4_right_unpack(&TeR.tempsRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_4_LEFT_FRAME_ID:
-			inverter_emcu_state_4_left_unpack(&TeR.tempsLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_4_LEFT_FRAME_ID:
+				inverter_emcu_state_4_left_unpack(&TeR.tempsLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
-			inverter_emcu_state_7_left_unpack(&TeR.demLeft, msg.data, msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_7_LEFT_FRAME_ID:
+				inverter_emcu_state_7_left_unpack(&TeR.demLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
-			inverter_emcu_state_7_right_unpack(&TeR.demRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_7_RIGHT_FRAME_ID:
+				inverter_emcu_state_7_right_unpack(&TeR.demRight, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
-			inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_9_LEFT_FRAME_ID:
+				inverter_emcu_state_9_left_unpack(&TeR.trqEstLeft, msg.data,
+						msg.DLC);
+				break;
 
-		case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
-			inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, msg.data,
-					msg.DLC);
-			break;
+			case INVERTER_EMCU_STATE_9_RIGHT_FRAME_ID:
+				inverter_emcu_state_9_right_unpack(&TeR.trqEstRight, msg.data,
+						msg.DLC);
+				break;
 
-			/* ---------------------------[HVBMS]-------------------------- */
+				/* ---------------------------[HVBMS]-------------------------- */
 
-		case HVBMS_BMS_TX_STATE_3_FRAME_ID:
-			hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, msg.data, msg.DLC);
-			break;
-			/* ---------------------------[Default]-------------------------- */
+			case HVBMS_BMS_TX_STATE_3_FRAME_ID:
+				hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, msg.data,
+						msg.DLC);
+				break;
+				/* ---------------------------[Default]-------------------------- */
 
-		default:
-			break;
+			default:
+				break;
 
-		}
-		if (mutexStatus == osOK) { //Unicamente si hemos obtenido el mutex, lo liberamos (no puedes liberar algo que no es tuyo)
-			osMutexRelease(preventRaceHandle);
+			}
+		osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
 		}
 		else{
-			errorCounter++; // en caso de haber realizado una ejecucion insegura, incrementa el valor del errorCounter (debugging purposes)
-			// 1h de testing con CAN saturado al 95 %, 26 errores (nada), bastante bien
+			errorCounter++;
+			//if(algo)
+			//osThreadSetPriority(thread_id, priority); podriamos poner en prioridad alta a la tarea de envio, para asegurar que mandaremos el coche a off
+			//osEventFlagsSet(ef_id, flags); podriamos despertar a una tarea de shutdown de emergencia del vehiculo
 		}
 	}
 }
