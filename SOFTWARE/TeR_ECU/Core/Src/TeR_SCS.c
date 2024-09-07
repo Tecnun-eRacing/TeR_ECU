@@ -13,11 +13,8 @@
 
 //FreeRTOS TASK
 void systemCrytical(void *argument) {
-	uint32_t currentTick;
-	currentTick = osKernelGetTickCount();
 	for (;;) {
-		currentTick += 10;
-		osDelayUntil(currentTick); // cada 10 millis checkeamos SCS
+		osDelay(10); // desbloqueamos la tarea cada 10 ticks
 		checkSCS();
 	}
 }

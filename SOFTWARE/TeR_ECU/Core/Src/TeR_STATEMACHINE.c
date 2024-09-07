@@ -35,23 +35,20 @@
 persist_t SL;
 
 // FreeRTOS dependencies
-extern osMutexId_t preventRaceHandle;
+extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de recepción de CAN (para tener exclusión mutua sobre la modificacion de la variable TeR)
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
 	uint32_t errorCounter = 0; // debemos inicializar! (porque se declara en el stack)
-	uint32_t currentTick = osKernelGetTickCount(); // declaramos la variable que nos indicará el setpoint de tiempo
     osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
 	for (;;) {
-		currentTick += 2; // añadimos 2 ticks al valor de currentTick
-		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
-		currentTick = osKernelGetTickCount(); // kernel tick sync, por si acaso perdemos sincronizacion con el kernel (nos quedamos permanentemente menores que el kerneltick)
-		mutexStatus = osMutexAcquire(preventRaceHandle, 600); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
-		if(mutexStatus==osOK){
+		osDelay(2); //cuando el bucle llegue aquí esperaremos 2 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
+		mutexStatus = osMutexAcquire(preventRaceHandle, 300); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
+		if(mutexStatus==osOK){ //SI hemos obtenido acceso al Mutex
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente
 		osMutexRelease(preventRaceHandle); // y una vez terminada la ejecucion, liberamos el mutex, si y solo si lo teniamos antes
 		}
-		else{
+		else{ // NO hemos obtenido acceso al mutex
 			errorCounter++; // haremos un handle bien
 		}
 	}
@@ -144,7 +141,9 @@ void stateMachine(void) {
 			break;
 		case DRIVING:
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			osDelay(2000); //EV 4.12.1
+			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay
+			osDelay(2000); //EV 4.12.1, delay para el sonido y ADEMAS para que el coche NO acelere mientras pite, (la maquina de estados se para aqui 2 segs)
+			osMutexAcquire(preventRaceHandle, osWaitForever); //volvemos a obtenerlo para ejecutar el torque manager
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 			//startSCS(); //innecesario ya que se auto-activan en init
 

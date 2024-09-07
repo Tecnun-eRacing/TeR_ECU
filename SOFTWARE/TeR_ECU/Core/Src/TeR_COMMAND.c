@@ -5,9 +5,13 @@
  *      Author: ozuba
  */
 #include "TeR_COMMAND.h"
-//FreeRTOS
-extern osMutexId_t preventRaceHandle;
 
+//FreeRTOS dependencies
+void beepCallback(void *argument) { // esto es el callback del software timer del beep, usamos un timer para no bloquear tareas debido al delay del timer
+    // Reset the GPIO pin to turn off the beep
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+}
+extern osTimerId_t beepTimerHandle; // Handle del software timer
 
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
@@ -74,8 +78,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-		osDelay(500);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+		osTimerStart(beepTimerHandle, 500); //el timer va a llamar su callback en 500 ticks
 		break;
 
 	case TER_COMMAND_CMD_SET_DYNAMIC_CONFIG_CHOICE:

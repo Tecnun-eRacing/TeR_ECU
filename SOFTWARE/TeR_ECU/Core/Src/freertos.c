@@ -95,6 +95,11 @@ osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
 };
+/* Definitions for beepTimer */
+osTimerId_t beepTimerHandle;
+const osTimerAttr_t beepTimer_attributes = {
+  .name = "beepTimer"
+};
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
 const osMutexAttr_t preventRace_attributes = {
@@ -112,6 +117,7 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCrytical(void *argument);
+extern void beepCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -152,6 +158,10 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
+
+  /* Create the timer(s) */
+  /* creation of beepTimer */
+  beepTimerHandle = osTimerNew(beepCallback, osTimerOnce, NULL, &beepTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
@@ -207,7 +217,7 @@ void osRunning(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END osRunning */
 }

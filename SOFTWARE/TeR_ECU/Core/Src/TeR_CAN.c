@@ -36,7 +36,7 @@ uint8_t mainIndex;
 
 //FreeRTOS
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
-extern osMutexId_t preventRaceHandle; //handle del mutex de protección contra escritura
+extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de la maquina de Estados del coche (para tener exclusión mutua sobre la modificacion de la variable TeR)
 /* -------------------------------------------------------------------------- */
 struct TeR_t TeR;
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
@@ -113,16 +113,11 @@ void invCanTx(void *argument) {
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
-
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
-	uint32_t currentTick; // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
-	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kernel en currentTick
 	for (;;) {
-		currentTick += 2; // sumamos 2 ticks al valor de currentick
-		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
-		currentTick = osKernelGetTickCount(); //resincronizamos currentTick con kernel por si acaso nos quedamos permanentemente menores que el kerneltick
+		osDelay(2); //cuando el bucle llegue aquí esperaremos 2 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -195,12 +190,8 @@ void mainCanTx(void *argument) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-	uint32_t currentTick; // declaramos la variable que nos indicará el setpoint de tiempo (hasta que momento esperar para desbloquear)
-	currentTick = osKernelGetTickCount(); // guardamos el valor actual del kerneltick
 	for (;;) {
-		currentTick += 10; //añadimos 10 ticks mas al valor del currentTick
-		osDelayUntil(currentTick); // la tarea se va a desbloquear cuando el kernel llegue al valor de currentTick, si se pasa se desbloquea automaticamente (documentacion FreeRTOS vTaskDelayUntil())
-		currentTick = osKernelGetTickCount(); //actualizamos el valor del kerneltick en la variable para evitar descincronizaciones, por si acaso nos quedamos permantentemente debajo de kerneltick
+		osDelay(10); //cuando el bucle llegue aquí esperaremos 10 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -240,13 +231,13 @@ void mainCanTx(void *argument) {
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
 	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random, mira abajo
-	canMsg_t msg;
+	canMsg_t msg; // tipo de variable que almacena id, datos y DLC del mensaje recibido en la interrupcion
 	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
 		mutexStatus = osMutexAcquire(preventRaceHandle, 300); // esperamos MUTEX, si hay timeout, nos iremos al handle sin ejecutar decodificacion
 		if (mutexStatus == osOK) { // solo ejecutamos la recepcion si y solo si tenemos el mutex
-			logSCS(msg.id); //System Critical signal Timestamp
+			logSCS(msg.id); //System Critical signal Timestamp, solo cuando podamos ejecutar recepcion
 			switch (msg.id) {
 			//Attend the command
 			case TER_COMMAND_FRAME_ID: //Sistema de comandos
