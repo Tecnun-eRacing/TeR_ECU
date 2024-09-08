@@ -34,11 +34,28 @@ CAN_HandleTypeDef *mainCAN;
 uint8_t invIndex;
 uint8_t mainIndex;
 
-//FreeRTOS
-extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
-extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de la maquina de Estados del coche (para tener exclusión mutua sobre la modificacion de la variable TeR)
 /* -------------------------------------------------------------------------- */
 struct TeR_t TeR;
+
+//FreeRTOS Dependencies
+extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
+extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de la maquina de Estados del coche (para tener exclusión mutua sobre la modificacion de la variable TeR)
+extern osTimerId_t invCanTimerHandle; //timer for inverter can
+extern osThreadId_t invCanTxTaskHandle; // handle for invCanTxTask
+extern osTimerId_t mainCanTimerHandle; // timer for main can
+extern osThreadId_t mainCanTxTaskHandle; // handle for mainCanTxTask
+
+/* ---------------------------[FREERTOS timer callbacks]-------------------------- */
+
+void invCanCallback(void *argument){
+	osThreadFlagsSet(invCanTxTaskHandle,0x01);
+}
+
+void mainCanCallback(void *argument){
+	osThreadFlagsSet(mainCanTxTaskHandle,0x01);
+}
+
+
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
@@ -109,6 +126,7 @@ void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 /* ---------------------------[INVERTER CAN]-------------------------- */
 
 void invCanTx(void *argument) {
+	osTimerStart(invCanTimerHandle, 2);
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -117,7 +135,7 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	for (;;) {
-		osDelay(2); //cuando el bucle llegue aquí esperaremos 2 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
+		osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -184,6 +202,7 @@ void invCanTx(void *argument) {
 }
 /* ---------------------------[MAIN CAN]-------------------------- */
 void mainCanTx(void *argument) {
+	osTimerStart(mainCanTimerHandle, 10);
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -191,7 +210,7 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		osDelay(10); //cuando el bucle llegue aquí esperaremos 10 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
+		osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 

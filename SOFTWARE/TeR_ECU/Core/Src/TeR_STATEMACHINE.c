@@ -36,13 +36,24 @@ persist_t SL;
 
 // FreeRTOS dependencies
 extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de recepción de CAN (para tener exclusión mutua sobre la modificacion de la variable TeR)
+extern osTimerId_t stateMachineTimerHandle;
+extern osThreadId_t stateMachineTskHandle;
+
+//FreeRTOS Timer Callback for periodic execution
+
+void stateMachineCallback(void *argument){
+	osThreadFlagsSet(stateMachineTskHandle, 0x01);
+}
+
+
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
+	osTimerStart(stateMachineTimerHandle, 2);
 	uint32_t errorCounter = 0; // debemos inicializar! (porque se declara en el stack)
     osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
 	for (;;) {
-		osDelay(2); //cuando el bucle llegue aquí esperaremos 2 ticks, de forma que obtenemos ejecución periodica cada vez que la tarea termine
+		osThreadFlagsWait(0x01,osFlagsWaitAny, osWaitForever); // esperamos la flag del callback del timer
 		mutexStatus = osMutexAcquire(preventRaceHandle, 300); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
 		if(mutexStatus==osOK){ //SI hemos obtenido acceso al Mutex
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente

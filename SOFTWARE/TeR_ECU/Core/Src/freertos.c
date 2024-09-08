@@ -83,10 +83,10 @@ const osThreadAttr_t stateMachineTsk_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for systemCryticalT */
-osThreadId_t systemCryticalTHandle;
-const osThreadAttr_t systemCryticalT_attributes = {
-  .name = "systemCryticalT",
+/* Definitions for systemCriticalTask */
+osThreadId_t systemCriticalTaskHandle;
+const osThreadAttr_t systemCriticalTask_attributes = {
+  .name = "systemCriticalTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -99,6 +99,26 @@ const osMessageQueueAttr_t rxMsg_attributes = {
 osTimerId_t beepTimerHandle;
 const osTimerAttr_t beepTimer_attributes = {
   .name = "beepTimer"
+};
+/* Definitions for invCanTimer */
+osTimerId_t invCanTimerHandle;
+const osTimerAttr_t invCanTimer_attributes = {
+  .name = "invCanTimer"
+};
+/* Definitions for mainCanTimer */
+osTimerId_t mainCanTimerHandle;
+const osTimerAttr_t mainCanTimer_attributes = {
+  .name = "mainCanTimer"
+};
+/* Definitions for stateMachineTimer */
+osTimerId_t stateMachineTimerHandle;
+const osTimerAttr_t stateMachineTimer_attributes = {
+  .name = "stateMachineTimer"
+};
+/* Definitions for scsTimer */
+osTimerId_t scsTimerHandle;
+const osTimerAttr_t scsTimer_attributes = {
+  .name = "scsTimer"
 };
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
@@ -116,8 +136,12 @@ extern void canRx(void *argument);
 extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
-extern void systemCrytical(void *argument);
+extern void systemCritical(void *argument);
 extern void beepCallback(void *argument);
+extern void invCanCallback(void *argument);
+extern void mainCanCallback(void *argument);
+extern void stateMachineCallback(void *argument);
+extern void scsCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -163,6 +187,18 @@ void MX_FREERTOS_Init(void) {
   /* creation of beepTimer */
   beepTimerHandle = osTimerNew(beepCallback, osTimerOnce, NULL, &beepTimer_attributes);
 
+  /* creation of invCanTimer */
+  invCanTimerHandle = osTimerNew(invCanCallback, osTimerPeriodic, NULL, &invCanTimer_attributes);
+
+  /* creation of mainCanTimer */
+  mainCanTimerHandle = osTimerNew(mainCanCallback, osTimerPeriodic, NULL, &mainCanTimer_attributes);
+
+  /* creation of stateMachineTimer */
+  stateMachineTimerHandle = osTimerNew(stateMachineCallback, osTimerPeriodic, NULL, &stateMachineTimer_attributes);
+
+  /* creation of scsTimer */
+  scsTimerHandle = osTimerNew(scsCallback, osTimerPeriodic, NULL, &scsTimer_attributes);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
@@ -191,8 +227,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of stateMachineTsk */
   stateMachineTskHandle = osThreadNew(stateMachineTask, NULL, &stateMachineTsk_attributes);
 
-  /* creation of systemCryticalT */
-  systemCryticalTHandle = osThreadNew(systemCrytical, NULL, &systemCryticalT_attributes);
+  /* creation of systemCriticalTask */
+  systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

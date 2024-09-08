@@ -10,11 +10,22 @@
  * Hay que añadir a tu gestor de interrupciones favorito el callback de checkeo
  *
  */
+//FreeRTOS dependencies
+extern osTimerId_t scsTimerHandle;
+extern osThreadId_t systemCriticalTaskHandle;
+
+//FreeRTOS Timer Callback for periodic execution
+void scsCallback(void *argument){
+	osThreadFlagsSet(systemCriticalTaskHandle, 0x01);
+}
+
+
 
 //FreeRTOS TASK
-void systemCrytical(void *argument) {
+void systemCritical(void *argument) {
+	osTimerStart(scsTimerHandle, 10);
 	for (;;) {
-		osDelay(10); // desbloqueamos la tarea cada 10 ticks
+		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 		checkSCS();
 	}
 }
