@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * File Name          : freertos.c
+ * Description        : Code for freertos applications
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -91,6 +91,13 @@ const osThreadAttr_t systemCriticalTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for watchdogTask */
+osThreadId_t watchdogTaskHandle;
+const osThreadAttr_t watchdogTask_attributes = {
+  .name = "watchdogTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -126,6 +133,26 @@ osMutexId_t preventRaceHandle;
 const osMutexAttr_t preventRace_attributes = {
   .name = "preventRace"
 };
+/* Definitions for invCanTxTaskEvent */
+osEventFlagsId_t invCanTxTaskEventHandle;
+const osEventFlagsAttr_t invCanTxTaskEvent_attributes = {
+  .name = "invCanTxTaskEvent"
+};
+/* Definitions for mainCanTxTaskEvent */
+osEventFlagsId_t mainCanTxTaskEventHandle;
+const osEventFlagsAttr_t mainCanTxTaskEvent_attributes = {
+  .name = "mainCanTxTaskEvent"
+};
+/* Definitions for rxTaskEvent */
+osEventFlagsId_t rxTaskEventHandle;
+const osEventFlagsAttr_t rxTaskEvent_attributes = {
+  .name = "rxTaskEvent"
+};
+/* Definitions for stateMachineTaskEvent */
+osEventFlagsId_t stateMachineTaskEventHandle;
+const osEventFlagsAttr_t stateMachineTaskEvent_attributes = {
+  .name = "stateMachineTaskEvent"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -138,6 +165,7 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
+void watchdog(void *argument);
 extern void beepCallback(void *argument);
 extern void invCanCallback(void *argument);
 extern void mainCanCallback(void *argument);
@@ -153,30 +181,27 @@ void vApplicationIdleHook(void);
 
 /* USER CODE BEGIN 1 */
 /* Functions needed when configGENERATE_RUN_TIME_STATS is on */
-__weak void configureTimerForRunTimeStats(void)
-{
-HAL_TIM_Base_Start_IT(&htim13);
+__weak void configureTimerForRunTimeStats(void) {
+	HAL_TIM_Base_Start_IT(&htim13);
 }
 extern volatile unsigned long ulHighFrequencyTimerTicks;
-__weak unsigned long getRunTimeCounterValue(void)
-{
-return ulHighFrequencyTimerTicks;
+__weak unsigned long getRunTimeCounterValue(void) {
+	return ulHighFrequencyTimerTicks;
 }
 /* USER CODE END 1 */
 
 /* USER CODE BEGIN 2 */
-void vApplicationIdleHook( void )
-{
-   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-   to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
-   task. It is essential that code added to this hook function never attempts
-   to block in any way (for example, call xQueueReceive() with a block time
-   specified, or call vTaskDelay()). If the application makes use of the
-   vTaskDelete() API function (as this demo application does) then it is also
-   important that vApplicationIdleHook() is permitted to return to its calling
-   function, because it is the responsibility of the idle task to clean up
-   memory allocated by the kernel to any task that has since been deleted. */
-	HAL_IWDG_Refresh(&hiwdg);
+void vApplicationIdleHook(void) {
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	 to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
+	 task. It is essential that code added to this hook function never attempts
+	 to block in any way (for example, call xQueueReceive() with a block time
+	 specified, or call vTaskDelay()). If the application makes use of the
+	 vTaskDelete() API function (as this demo application does) then it is also
+	 important that vApplicationIdleHook() is permitted to return to its calling
+	 function, because it is the responsibility of the idle task to clean up
+	 memory allocated by the kernel to any task that has since been deleted. */
+	//HAL_IWDG_Refresh(&hiwdg);
 }
 /* USER CODE END 2 */
 
@@ -194,11 +219,11 @@ void MX_FREERTOS_Init(void) {
   preventRaceHandle = osMutexNew(&preventRace_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
+	/* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
@@ -218,7 +243,7 @@ void MX_FREERTOS_Init(void) {
   scsTimerHandle = osTimerNew(scsCallback, osTimerPeriodic, NULL, &scsTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
+	/* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
@@ -226,7 +251,7 @@ void MX_FREERTOS_Init(void) {
   rxMsgHandle = osMessageQueueNew (128, sizeof(canMsg_t), &rxMsg_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -248,32 +273,80 @@ void MX_FREERTOS_Init(void) {
   /* creation of systemCriticalTask */
   systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
 
+  /* creation of watchdogTask */
+  watchdogTaskHandle = osThreadNew(watchdog, NULL, &watchdogTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
+  /* creation of invCanTxTaskEvent */
+  invCanTxTaskEventHandle = osEventFlagsNew(&invCanTxTaskEvent_attributes);
+
+  /* creation of mainCanTxTaskEvent */
+  mainCanTxTaskEventHandle = osEventFlagsNew(&mainCanTxTaskEvent_attributes);
+
+  /* creation of rxTaskEvent */
+  rxTaskEventHandle = osEventFlagsNew(&rxTaskEvent_attributes);
+
+  /* creation of stateMachineTaskEvent */
+  stateMachineTaskEventHandle = osEventFlagsNew(&stateMachineTaskEvent_attributes);
+
   /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
+	/* add events, ... */
   /* USER CODE END RTOS_EVENTS */
 
 }
 
 /* USER CODE BEGIN Header_osRunning */
 /**
-  * @brief  Function implementing the osRunningTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
+ * @brief  Function implementing the osRunningTask thread.
+ * @param  argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_osRunning */
 void osRunning(void *argument)
 {
   /* USER CODE BEGIN osRunning */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1000);
-  }
+	/* Infinite loop */
+	for (;;) {
+		osDelay(1000);
+	}
   /* USER CODE END osRunning */
+}
+
+/* USER CODE BEGIN Header_watchdog */
+/**
+ * @brief Function implementing the watchdogTask thread.
+ * @param argument: Not used
+ * @retval None
+ */
+/* USER CODE END Header_watchdog */
+void watchdog(void *argument)
+{
+  /* USER CODE BEGIN watchdog */
+	uint16_t stateMachineTaskFlag;
+	uint16_t rxTaskFlag;
+	uint16_t mainCanTxTaskFlag;
+	uint16_t invCanTxTaskFlag;
+	/* Infinite loop */
+	for (;;) {
+		stateMachineTaskFlag = osEventFlagsGet(stateMachineTaskEventHandle);
+		rxTaskFlag = osEventFlagsGet(rxTaskEventHandle);
+		mainCanTxTaskFlag = osEventFlagsGet(mainCanTxTaskEventHandle);
+		invCanTxTaskFlag = osEventFlagsGet(invCanTxTaskEventHandle);
+		if ((stateMachineTaskFlag & rxTaskFlag & mainCanTxTaskFlag
+				& invCanTxTaskFlag) == 0x01) {
+			osEventFlagsClear(stateMachineTaskEventHandle, 0x01);
+			osEventFlagsClear(rxTaskEventHandle, 0x01);
+			osEventFlagsClear(mainCanTxTaskEventHandle, 0x01);
+			osEventFlagsClear(invCanTxTaskEventHandle, 0x01);
+			HAL_IWDG_Refresh(&hiwdg); // must be refreshed every +-500ms, else trip to reset handler
+		}
+		osDelay(50);
+
+	}
+  /* USER CODE END watchdog */
 }
 
 /* Private application code --------------------------------------------------*/

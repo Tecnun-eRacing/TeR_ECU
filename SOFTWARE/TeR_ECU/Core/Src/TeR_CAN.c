@@ -44,17 +44,18 @@ extern osTimerId_t invCanTimerHandle; //timer for inverter can
 extern osThreadId_t invCanTxTaskHandle; // handle for invCanTxTask
 extern osTimerId_t mainCanTimerHandle; // timer for main can
 extern osThreadId_t mainCanTxTaskHandle; // handle for mainCanTxTask
-
+extern osEventFlagsId_t invCanTxTaskEventHandle;
+extern osEventFlagsId_t mainCanTxTaskEventHandle;
+extern osEventFlagsId_t rxTaskEventHandle;
 /* ---------------------------[FREERTOS timer callbacks]-------------------------- */
 
-void invCanCallback(void *argument){
-	osThreadFlagsSet(invCanTxTaskHandle,0x01);
+void invCanCallback(void *argument) {
+	osThreadFlagsSet(invCanTxTaskHandle, 0x01);
 }
 
-void mainCanCallback(void *argument){
-	osThreadFlagsSet(mainCanTxTaskHandle,0x01);
+void mainCanCallback(void *argument) {
+	osThreadFlagsSet(mainCanTxTaskHandle, 0x01);
 }
-
 
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
@@ -135,7 +136,7 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	for (;;) {
-		osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
+		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -197,6 +198,7 @@ void invCanTx(void *argument) {
 				invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
 				break;
 			}
+			osThreadFlagsSet(invCanTxTaskEventHandle, 0x01);
 		}
 	}
 }
@@ -210,7 +212,7 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
+		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -243,6 +245,7 @@ void mainCanTx(void *argument) {
 				break;
 			}
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
+			osThreadFlagsSet(mainCanTxTaskEventHandle, 0x01);
 		}
 	}
 }
@@ -357,9 +360,9 @@ void canRx(void *argument) {
 				break;
 
 			}
-		osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
-		}
-		else{
+			osThreadFlagsSet(rxTaskEventHandle, 0x01);
+			osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
+		} else {
 			errorCounter++;
 			//if(algo)
 			//osThreadSetPriority(thread_id, priority); podriamos poner en prioridad alta a la tarea de envio, para asegurar que mandaremos el coche a off
