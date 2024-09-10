@@ -91,13 +91,6 @@ const osThreadAttr_t systemCriticalTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for watchdogTask */
-osThreadId_t watchdogTaskHandle;
-const osThreadAttr_t watchdogTask_attributes = {
-  .name = "watchdogTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -108,21 +101,6 @@ osTimerId_t beepTimerHandle;
 const osTimerAttr_t beepTimer_attributes = {
   .name = "beepTimer"
 };
-/* Definitions for invCanTimer */
-osTimerId_t invCanTimerHandle;
-const osTimerAttr_t invCanTimer_attributes = {
-  .name = "invCanTimer"
-};
-/* Definitions for mainCanTimer */
-osTimerId_t mainCanTimerHandle;
-const osTimerAttr_t mainCanTimer_attributes = {
-  .name = "mainCanTimer"
-};
-/* Definitions for stateMachineTimer */
-osTimerId_t stateMachineTimerHandle;
-const osTimerAttr_t stateMachineTimer_attributes = {
-  .name = "stateMachineTimer"
-};
 /* Definitions for scsTimer */
 osTimerId_t scsTimerHandle;
 const osTimerAttr_t scsTimer_attributes = {
@@ -132,26 +110,6 @@ const osTimerAttr_t scsTimer_attributes = {
 osMutexId_t preventRaceHandle;
 const osMutexAttr_t preventRace_attributes = {
   .name = "preventRace"
-};
-/* Definitions for invCanTxTaskEvent */
-osEventFlagsId_t invCanTxTaskEventHandle;
-const osEventFlagsAttr_t invCanTxTaskEvent_attributes = {
-  .name = "invCanTxTaskEvent"
-};
-/* Definitions for mainCanTxTaskEvent */
-osEventFlagsId_t mainCanTxTaskEventHandle;
-const osEventFlagsAttr_t mainCanTxTaskEvent_attributes = {
-  .name = "mainCanTxTaskEvent"
-};
-/* Definitions for rxTaskEvent */
-osEventFlagsId_t rxTaskEventHandle;
-const osEventFlagsAttr_t rxTaskEvent_attributes = {
-  .name = "rxTaskEvent"
-};
-/* Definitions for stateMachineTaskEvent */
-osEventFlagsId_t stateMachineTaskEventHandle;
-const osEventFlagsAttr_t stateMachineTaskEvent_attributes = {
-  .name = "stateMachineTaskEvent"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -165,11 +123,7 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
-void watchdog(void *argument);
 extern void beepCallback(void *argument);
-extern void invCanCallback(void *argument);
-extern void mainCanCallback(void *argument);
-extern void stateMachineCallback(void *argument);
 extern void scsCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -201,7 +155,7 @@ void vApplicationIdleHook(void) {
 	 important that vApplicationIdleHook() is permitted to return to its calling
 	 function, because it is the responsibility of the idle task to clean up
 	 memory allocated by the kernel to any task that has since been deleted. */
-	//HAL_IWDG_Refresh(&hiwdg);
+	HAL_IWDG_Refresh(&hiwdg);
 }
 /* USER CODE END 2 */
 
@@ -229,15 +183,6 @@ void MX_FREERTOS_Init(void) {
   /* Create the timer(s) */
   /* creation of beepTimer */
   beepTimerHandle = osTimerNew(beepCallback, osTimerOnce, NULL, &beepTimer_attributes);
-
-  /* creation of invCanTimer */
-  invCanTimerHandle = osTimerNew(invCanCallback, osTimerPeriodic, NULL, &invCanTimer_attributes);
-
-  /* creation of mainCanTimer */
-  mainCanTimerHandle = osTimerNew(mainCanCallback, osTimerPeriodic, NULL, &mainCanTimer_attributes);
-
-  /* creation of stateMachineTimer */
-  stateMachineTimerHandle = osTimerNew(stateMachineCallback, osTimerPeriodic, NULL, &stateMachineTimer_attributes);
 
   /* creation of scsTimer */
   scsTimerHandle = osTimerNew(scsCallback, osTimerPeriodic, NULL, &scsTimer_attributes);
@@ -273,24 +218,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of systemCriticalTask */
   systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
 
-  /* creation of watchdogTask */
-  watchdogTaskHandle = osThreadNew(watchdog, NULL, &watchdogTask_attributes);
-
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
-
-  /* creation of invCanTxTaskEvent */
-  invCanTxTaskEventHandle = osEventFlagsNew(&invCanTxTaskEvent_attributes);
-
-  /* creation of mainCanTxTaskEvent */
-  mainCanTxTaskEventHandle = osEventFlagsNew(&mainCanTxTaskEvent_attributes);
-
-  /* creation of rxTaskEvent */
-  rxTaskEventHandle = osEventFlagsNew(&rxTaskEvent_attributes);
-
-  /* creation of stateMachineTaskEvent */
-  stateMachineTaskEventHandle = osEventFlagsNew(&stateMachineTaskEvent_attributes);
 
   /* USER CODE BEGIN RTOS_EVENTS */
 	/* add events, ... */
@@ -313,40 +243,6 @@ void osRunning(void *argument)
 		osDelay(1000);
 	}
   /* USER CODE END osRunning */
-}
-
-/* USER CODE BEGIN Header_watchdog */
-/**
- * @brief Function implementing the watchdogTask thread.
- * @param argument: Not used
- * @retval None
- */
-/* USER CODE END Header_watchdog */
-void watchdog(void *argument)
-{
-  /* USER CODE BEGIN watchdog */
-	uint16_t stateMachineTaskFlag;
-	uint16_t rxTaskFlag;
-	uint16_t mainCanTxTaskFlag;
-	uint16_t invCanTxTaskFlag;
-	/* Infinite loop */
-	for (;;) {
-		stateMachineTaskFlag = osEventFlagsGet(stateMachineTaskEventHandle);
-		rxTaskFlag = osEventFlagsGet(rxTaskEventHandle);
-		mainCanTxTaskFlag = osEventFlagsGet(mainCanTxTaskEventHandle);
-		invCanTxTaskFlag = osEventFlagsGet(invCanTxTaskEventHandle);
-		if ((stateMachineTaskFlag & rxTaskFlag & mainCanTxTaskFlag
-				& invCanTxTaskFlag) == 0x01) {
-			osEventFlagsClear(stateMachineTaskEventHandle, 0x01);
-			osEventFlagsClear(rxTaskEventHandle, 0x01);
-			osEventFlagsClear(mainCanTxTaskEventHandle, 0x01);
-			osEventFlagsClear(invCanTxTaskEventHandle, 0x01);
-			HAL_IWDG_Refresh(&hiwdg); // must be refreshed every +-500ms, else trip to reset handler
-		}
-		osDelay(50);
-
-	}
-  /* USER CODE END watchdog */
 }
 
 /* Private application code --------------------------------------------------*/

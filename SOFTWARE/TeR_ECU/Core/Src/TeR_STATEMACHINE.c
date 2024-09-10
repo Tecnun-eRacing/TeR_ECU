@@ -36,27 +36,16 @@ persist_t SL;
 
 // FreeRTOS dependencies
 extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de recepción de CAN (para tener exclusión mutua sobre la modificacion de la variable TeR)
-extern osTimerId_t stateMachineTimerHandle;
-extern osThreadId_t stateMachineTskHandle;
-extern osEventFlagsId_t stateMachineTaskEventHandle; // event for logging task execution
-//FreeRTOS Timer Callback for periodic execution
-
-void stateMachineCallback(void *argument){
-	osThreadFlagsSet(stateMachineTskHandle, 0x01); // inicializamos el callback
-}
-
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
-	osTimerStart(stateMachineTimerHandle, 2); // timer que se llama cada 2 ticks
 	uint32_t errorCounter = 0; // debemos inicializar! (porque se declara en el stack)
     osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
 	for (;;) {
-		osThreadFlagsWait(0x01,osFlagsWaitAny, osWaitForever); // esperamos la flag del callback del timer
-		mutexStatus = osMutexAcquire(preventRaceHandle, osWaitForever); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
+		osDelay(2); //ejecucion temporizada cada 2 ticks
+		mutexStatus = osMutexAcquire(preventRaceHandle,500); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
 		if(mutexStatus==osOK){ //SI hemos obtenido acceso al Mutex
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente
-		osEventFlagsSet(stateMachineTaskEventHandle, 0x01); // activamos la flag de tarea ejecutada
 		osMutexRelease(preventRaceHandle); // y una vez terminada la ejecucion, liberamos el mutex, si y solo si lo teniamos antes
 		}
 		else{ // NO hemos obtenido acceso al mutex
@@ -155,8 +144,8 @@ void stateMachine(void) {
 			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay
 			osDelay(2000); //EV 4.12.1, delay para el sonido y ADEMAS para que el coche NO acelere mientras pite, (la maquina de estados se para aqui 2 segs)
 			osMutexAcquire(preventRaceHandle, osWaitForever); //volvemos a obtenerlo para ejecutar el torque manager
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-			//startSCS(); //innecesario ya que se auto-activan en init
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // apagamos la bocina y el coche ya puede acelerar
+			startSCS(); //activamos el sistema de señales críticas del vehículo
 
 			break;
 		default:

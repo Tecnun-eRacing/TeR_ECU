@@ -15,15 +15,12 @@ extern osTimerId_t scsTimerHandle;
 extern osThreadId_t systemCriticalTaskHandle;
 
 //FreeRTOS Timer Callback for periodic execution
-void scsCallback(void *argument){
+void scsCallback(void *argument) {
 	osThreadFlagsSet(systemCriticalTaskHandle, 0x01);
 }
 
-
-
 //FreeRTOS TASK
 void systemCritical(void *argument) {
-	osTimerStart(scsTimerHandle, 10);
 	for (;;) {
 		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 		checkSCS();
@@ -49,6 +46,7 @@ uint8_t initSCS(TIM_HandleTypeDef *timBase) {
 }
 
 uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
+	osTimerStart(scsTimerHandle, 10);
 	//Resetea a 0 el timer y los timestamps para evitar errores al volver a arrancar
 	memset(&timestamps, 0, sizeof(timestamps));
 	base->Instance->CNT = 0;
@@ -59,6 +57,7 @@ uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
 }
 
 uint8_t stopSCS(void) { //Desactiva la comprobación activa de tiempos
+	osTimerStop(scsTimerHandle);
 	HAL_TIM_Base_Stop(base); //Congela el timer haciendo que los checks difieran 0 a partir de ahora
 	TeR.status.scs = 0;
 	return 1;

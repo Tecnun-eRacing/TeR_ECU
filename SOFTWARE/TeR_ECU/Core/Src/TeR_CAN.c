@@ -40,22 +40,6 @@ struct TeR_t TeR;
 //FreeRTOS Dependencies
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
 extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de la maquina de Estados del coche (para tener exclusión mutua sobre la modificacion de la variable TeR)
-extern osTimerId_t invCanTimerHandle; //timer for inverter can
-extern osThreadId_t invCanTxTaskHandle; // handle for invCanTxTask
-extern osTimerId_t mainCanTimerHandle; // timer for main can
-extern osThreadId_t mainCanTxTaskHandle; // handle for mainCanTxTask
-extern osEventFlagsId_t invCanTxTaskEventHandle;
-extern osEventFlagsId_t mainCanTxTaskEventHandle;
-extern osEventFlagsId_t rxTaskEventHandle;
-/* ---------------------------[FREERTOS timer callbacks]-------------------------- */
-
-void invCanCallback(void *argument) {
-	osThreadFlagsSet(invCanTxTaskHandle, 0x01);
-}
-
-void mainCanCallback(void *argument) {
-	osThreadFlagsSet(mainCanTxTaskHandle, 0x01);
-}
 
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
@@ -127,7 +111,6 @@ void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 /* ---------------------------[INVERTER CAN]-------------------------- */
 
 void invCanTx(void *argument) {
-	osTimerStart(invCanTimerHandle, 2);
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -136,7 +119,7 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	for (;;) {
-		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
+		osDelay(2);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -198,13 +181,11 @@ void invCanTx(void *argument) {
 				invIndex = 0; //cualquier otro valor retorna al ultimo mensaje
 				break;
 			}
-			osThreadFlagsSet(invCanTxTaskEventHandle, 0x01);
 		}
 	}
 }
 /* ---------------------------[MAIN CAN]-------------------------- */
 void mainCanTx(void *argument) {
-	osTimerStart(mainCanTimerHandle, 10);
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -212,7 +193,7 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
+		osDelay(10);
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -245,7 +226,6 @@ void mainCanTx(void *argument) {
 				break;
 			}
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-			osThreadFlagsSet(mainCanTxTaskEventHandle, 0x01);
 		}
 	}
 }
@@ -257,7 +237,7 @@ void canRx(void *argument) {
 	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 300); // esperamos MUTEX, si hay timeout, nos iremos al handle sin ejecutar decodificacion
+		mutexStatus = osMutexAcquire(preventRaceHandle, 500); // esperamos MUTEX, si hay timeout, nos iremos al handle sin ejecutar decodificacion
 		if (mutexStatus == osOK) { // solo ejecutamos la recepcion si y solo si tenemos el mutex
 			logSCS(msg.id); //System Critical signal Timestamp, solo cuando podamos ejecutar recepcion
 			switch (msg.id) {
@@ -360,7 +340,6 @@ void canRx(void *argument) {
 				break;
 
 			}
-			osThreadFlagsSet(rxTaskEventHandle, 0x01);
 			osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
 		} else {
 			errorCounter++;
