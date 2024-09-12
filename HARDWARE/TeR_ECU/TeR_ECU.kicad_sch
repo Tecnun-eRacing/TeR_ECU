@@ -2193,7 +2193,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "3120aa2d-43f7-45e0-8e9f-779f72cfb5e6")
-		(property "Sheetname" "Functions"
+		(property "Sheetname" "OUTPUTS"
 			(at 96.52 74.2184 0)
 			(effects
 				(font
@@ -2202,7 +2202,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "Functions.kicad_sch"
+		(property "Sheetfile" "OUTPUTS.kicad_sch"
 			(at 96.52 89.4846 0)
 			(effects
 				(font
@@ -2846,7 +2846,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "a7e5ef7e-c831-4d4f-a194-90a98bc5e16b")
-		(property "Sheetname" "Detección señales"
+		(property "Sheetname" "INPUTS"
 			(at 96.52 57.7084 0)
 			(effects
 				(font
@@ -2855,8 +2855,8 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "Deteccion_señales.kicad_sch"
-			(at 88.9 71.12 0)
+		(property "Sheetfile" "INPUTS.kicad_sch"
+			(at 96.52 70.612 0)
 			(effects
 				(font
 					(size 1.27 1.27)
