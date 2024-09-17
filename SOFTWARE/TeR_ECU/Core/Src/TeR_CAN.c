@@ -23,6 +23,32 @@
  *  A su vez están creados aqui todas las estructuras de memoria del can
  *
  */
+
+/*Implementacion FreeRTOS Piero
+ *
+ * - El envio de CAN de inverters, main CAN y decodificación son tareas diferentes, con prioridades diferentes, siendo la de decodificación superior a las anteriores.
+ * - En los envios se utiliza vTaskDelayUntil (en nuestro caso osDelayUntil), y para la recepción desbloqueo basado en colas.
+ *
+ * - La Decodificación y la maquina de estados comparten un MUTEX para evitar que ambas funciones puedan modificar los valores de TeR y provocar
+ * 		corrupciones de memoria, race conditions, etc. Este mutex es adquirido al principio de la ejecución y liberado al final de la ejecución de la función
+ *
+ * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
+ *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
+ * 		 Podriamos usar software timers, su implementacion sin embargo no es la mas practica, ya que debemos registrar un callback que mande señales de desbloqueo
+ *  	a los threads, y que estos a su vez esperen a dichas señales, ademas de que no garantiza ejecucion temporal precisa (Reference Manual)
+ *  	Usar osDelay() es una buena alternativa, pero puede sufrir desfases temporales ya que su frecuencia depende en parte del tiempo de ejecucion
+ *  	de la funcion (ya que el tiempo empieza a contar cuando dicha funcion es llamada, y el tiempo que tarda una funcion no es fijo)
+ *
+ * - Se utilizan colas para comunicar la interrupcion de recepcion (y su mensaje) con la decodificación, es la manera mas optima cuando utilizamos un sistema
+ * 		operativo en tiempo real (no nos interesa llamar funciones dentro de interrupciones, queremos que se encarge el scheduler de cuando hay que decodificar
+ * 		 muy en resumen).
+ *
+ * - SOLO EJECUTAREMOS CUANDO HAYAMOS PODIDO OBTENER EL MUTEX (decodificacion)
+ *
+ */
+
+
+
 #include "TeR_CAN.h"
 
 /* ---------------------------[Estructuras del CAN]-------------------------- */
@@ -72,7 +98,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, msg.data); //Recoge el mensaje
 	msg.id = rxHeader.StdId;
 	msg.DLC = rxHeader.DLC;
-	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U);
+	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
 
@@ -111,6 +137,8 @@ void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 /* ---------------------------[INVERTER CAN]-------------------------- */
 
 void invCanTx(void *argument) {
+	//Tarea con ejecucion temoporizada FreeRTOS (echar ojo a reference manual)
+	uint32_t currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el valor actual del tick del kernel
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -119,7 +147,8 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	for (;;) {
-		osDelay(2);
+		currentTick+=2; //añadimos 2 ticks a el valor actual del tick del kernel
+		osDelayUntil(currentTick); //cuando el kernel consiga llegar a el valor actual de currentTick, el kernel desbloqueará la tarea
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
 
@@ -186,6 +215,8 @@ void invCanTx(void *argument) {
 }
 /* ---------------------------[MAIN CAN]-------------------------- */
 void mainCanTx(void *argument) {
+	//Tarea con ejecucion temoporizada FreeRTOS (echar ojo a reference manual)
+	uint32_t currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el valor actual del tick del kernel
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
@@ -193,7 +224,8 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		osDelay(10);
+		currentTick+=10; //añadimos 2 ticks a el valor actual del tick del kernel
+		osDelayUntil(currentTick);// Cuando el kernel consiga llegar a el valor actual de currentTick, desbloqueará la tarea
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -346,6 +378,8 @@ void canRx(void *argument) {
 			//if(algo)
 			//osThreadSetPriority(thread_id, priority); podriamos poner en prioridad alta a la tarea de envio, para asegurar que mandaremos el coche a off
 			//osEventFlagsSet(ef_id, flags); podriamos despertar a una tarea de shutdown de emergencia del vehiculo
+			//podriamos irnos a command de apagado del coche
+			//abrir safety line
 		}
 	}
 }

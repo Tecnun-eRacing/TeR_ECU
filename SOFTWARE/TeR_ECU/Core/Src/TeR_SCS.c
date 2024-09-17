@@ -10,6 +10,18 @@
  * Hay que añadir a tu gestor de interrupciones favorito el callback de checkeo
  *
  */
+/*Implementacion FreeRTOS Piero
+ *
+ * - Para la ejecución temporizada utilizamos un software timer en modo periodico, ya que nos interesa poder activar/desactivar el checkeo de las scs
+ * 		hay otras maneras (bloqueando flags, eventos...) pero lo hacemos asi porque mola
+ *
+ * - Consiste en una tarea que al ser desbloqueada checkea las scs cada 10 ms y toma las acciones pertinentes
+ *
+ */
+
+
+
+
 //FreeRTOS dependencies
 extern osTimerId_t scsTimerHandle;
 extern osThreadId_t systemCriticalTaskHandle;
@@ -46,7 +58,7 @@ uint8_t initSCS(TIM_HandleTypeDef *timBase) {
 }
 
 uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
-	osTimerStart(scsTimerHandle, 10);
+	osTimerStart(scsTimerHandle, 10); //arancamos el software timer, period elapsed callback cada 10 ticks.
 	//Resetea a 0 el timer y los timestamps para evitar errores al volver a arrancar
 	memset(&timestamps, 0, sizeof(timestamps));
 	base->Instance->CNT = 0;
@@ -57,7 +69,7 @@ uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
 }
 
 uint8_t stopSCS(void) { //Desactiva la comprobación activa de tiempos
-	osTimerStop(scsTimerHandle);
+	osTimerStop(scsTimerHandle); //detenemos el software timer.
 	HAL_TIM_Base_Stop(base); //Congela el timer haciendo que los checks difieran 0 a partir de ahora
 	TeR.status.scs = 0;
 	return 1;

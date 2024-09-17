@@ -6,6 +6,14 @@
  */
 #include "TeR_COMMAND.h"
 
+/*Implementacion FreeRTOS Piero
+ *
+ * - Un Software Timer que se encarga de desactivar el beep pasados 500 ticks, simplemente para evitar halting en la tarea que llama a beep
+ *
+ */
+
+
+
 //FreeRTOS dependencies
 void beepCallback(void *argument) { // esto es el callback del software timer del beep, usamos un timer para no bloquear tareas debido al delay del timer
     // Reset the GPIO pin to turn off the beep

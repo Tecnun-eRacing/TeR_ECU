@@ -31,25 +31,66 @@
  */
 #include "TeR_STATEMACHINE.h"
 
+ /*Implementacion FreeRTOS Piero
+ *
+ * - La idea principal es tener una tarea que se encargue de controlar la maquina de estados, de igual prioridad que la recepción de mensajes (no queremos que se pisen)
+ * - Esta tarea comparte un Mutex con la función de decodificación encontrada en el módulo TeR_CAN
+ *
+ * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
+ *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
+ * 		 Podriamos usar software timers (se ha probado y es lo mismo), su implementacion sin embargo no es la mas practica, ya que debemos
+ * 		 registrar un callback que mande señales de desbloqueo a los threads, y que estos a su vez esperen a dichas señales,
+ * 		 ademas de que NO garantiza ejecucion temporal precisa, ya que por naturaleza la Daemon Task es de baja prioridad(se puede cambiar) (Reference Manual),
+ * 		 por lo que se ha decidido utilizar la funcion recomendada por el reference manual para ejecuciones temporales precisas
+ *
+ *- El funcionamiento consiste en esperar un delay, esperar al mutex, y una vez hecho esto ejecutar la maquina de estados del coche
+ *-
+ *- En su momento se planteo separar  la funcion torqueManager de la maquina de estados, en su tarea propia, pero esto puede llevar a problemas de sincronización y
+ *- en mi opinión haria el codigo mas dificil de leer, con beneficios casi nulos.
+ *
+ * - Cuando pasamos al estado DRIVING debemos tener un delay durante 2 segundos, no necesariamente para el beep (que actualmente esta
+ * 		implementado utilizando un One Shoot Software timer para evitar halts en las tareas, ver command) sino porque debemos detener la maquina de estados
+ *		para evitar la comanda de par durante el pitido.
+ *
+ * 		Existen otras maneras de resolver este problema, una de ellas es bloqueando la region de codigo utilizando un evento
+ * 		que se libera 2 segundos despues utilizando un one shot timer, osthreadflagswait(), y que el timer lo ponga a set en 2 seg, desbloqueando la region de codigo
+ * 		(probado y funciona, pero no quiero que esto sea un lio para entender para alguien nuevo)
+ * 		Otra manera seria aislar el torqueManager en otra tarea y despertarla 2 segundos despues utilizando un oneShotTimer
+ *
+ * - Debido a esta decisión de arquitectura, debemos soltar el mutex antes del delay (para que otras tareas puedan seguir ejecutandose)
+ * 		y resincronizar el tiempo del kernel con el valor posterior al delay (no es necesario, pero lo hacemos porque es gratis)
+ * 		y posteriormente readquirir el mutex para continuar con la ejecución
+ *
+ *- La permatask no interesa separarla ya que los datos tienen que estar sync con la maquina de estados, por lo que no ganamos nada separando
+ *
+ *  - SOLO EJECUTAREMOS CUANDO HAYAMOS PODIDO OBTENER EL MUTEX
+ *
+ */
+
+
 //Persistance checker
 persist_t SL;
 
 // FreeRTOS dependencies
 extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de recepción de CAN (para tener exclusión mutua sobre la modificacion de la variable TeR)
+uint32_t currentTick; // declaramos nuestra variable currentTick como global (para reactualizar su valor al parar la maquina de estados)
+// IMPORTANTE: Se utiliza osDelayUntil debido a que es la manera recomendada por FreeRTOS en el reference manual para ejecucion temporal estricta sin desfases
 
 //FreeRTOS Task
 void stateMachineTask(void *argument) {
-	uint32_t errorCounter = 0; // debemos inicializar! (porque se declara en el stack)
+	currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el tick actual del Kernel
+	uint32_t errorCounter = 0; // contador de errores de la no obtención del mutex (debug purposes)
     osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
 	for (;;) {
-		osDelay(2); //ejecucion temporizada cada 2 ticks
+		currentTick+=2; //incrementamos nuestro tiempo con respecto al tiempo del kernel
+		osDelayUntil(currentTick); // bloqueamos la tarea hasta que lleguemos al valor de tick scheduled para la ejecucion.
 		mutexStatus = osMutexAcquire(preventRaceHandle,500); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
 		if(mutexStatus==osOK){ //SI hemos obtenido acceso al Mutex
 		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente
 		osMutexRelease(preventRaceHandle); // y una vez terminada la ejecucion, liberamos el mutex, si y solo si lo teniamos antes
 		}
 		else{ // NO hemos obtenido acceso al mutex
-			errorCounter++; // haremos un handle bien
+			errorCounter++; // haremos un handle bien, loggeamos el error
 		}
 	}
 }
@@ -139,10 +180,11 @@ void stateMachine(void) {
 			TER_DYNAMIC_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 			break;
-		case DRIVING:
+		case DRIVING: // se puede utilizar un one shot software timer para hacer wakeup de una tarea torquemanager dentro de 2 seg, pero eso implicaria tener una maquina de estados desincronizada, prefiero asi
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay
+			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay (ya que comparten mutex)
 			osDelay(2000); //EV 4.12.1, delay para el sonido y ADEMAS para que el coche NO acelere mientras pite, (la maquina de estados se para aqui 2 segs)
+			currentTick=osKernelGetTickCount(); // resincronizamos nuestro tick con el valor actual del tick del kernel (debido al delay, hacemos esto porque queremos parar la maquna de estados, no es necesario)
 			osMutexAcquire(preventRaceHandle, osWaitForever); //volvemos a obtenerlo para ejecutar el torque manager
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // apagamos la bocina y el coche ya puede acelerar
 			startSCS(); //activamos el sistema de señales críticas del vehículo
@@ -250,6 +292,6 @@ void permaTask() {
 	TeR.status.refri = TeR.lvbms.refri_on; // Relay del estado de refri
 
 //Check SCS
-	checkSCS();
+	//checkSCS(); Deprecated SCS task implemented
 
 }
