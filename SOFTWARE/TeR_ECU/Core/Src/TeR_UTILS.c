@@ -12,11 +12,11 @@ uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax) {
 	if (*instance > 0) { //Estabamos en error
 		if (ok) { //No tenemos error
 			*instance = 0; //Ponemos el timestamp a 0, ya no hay error
-		} else if (HAL_GetTick() - *instance >= tMax) { //El error supera maxtime
+		} else if (osKernelGetTickCount() - *instance >= tMax) { //El error supera maxtime
 			return 0; //Damos el error
 		}
 	} else if (!ok) { // no estabamos en error y ahora si
-		*instance = HAL_GetTick();
+		*instance = osKernelGetTickCount();
 	}
 
 	return 1; //Tenemos Error pero no hemos superado maxTime

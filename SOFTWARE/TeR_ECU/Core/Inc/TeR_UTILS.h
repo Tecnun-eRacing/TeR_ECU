@@ -9,6 +9,7 @@
 #define INC_TER_UTILS_H_
 
 #include "stm32f4xx_hal.h"
+#include "cmsis_os.h"
 
 // Boolean Persistance checker (Una función que comprueba que un error se da durante un cierto tiempo)
 
