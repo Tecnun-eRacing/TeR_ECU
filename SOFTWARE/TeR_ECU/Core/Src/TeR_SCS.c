@@ -53,7 +53,6 @@ TIM_HandleTypeDef *base;
 uint8_t initSCS(TIM_HandleTypeDef *timBase) {
 //Alamacenamos los timers de uso
 	base = timBase;
-	startSCS(); //Activa el checking de SCS
 	return 1;
 }
 
