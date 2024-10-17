@@ -1916,6 +1916,16 @@
 		(color 0 0 0 0)
 		(uuid "ff30d5ea-37e6-4941-9d74-547fc93ad42c")
 	)
+	(wire
+		(pts
+			(xy 151.13 39.37) (xy 161.29 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "022e79b9-f316-417f-b319-ec2eb03798aa")
+	)
 	(polyline
 		(pts
 			(xy 125.73 68.58) (xy 125.73 116.84)
@@ -2248,16 +2258,6 @@
 	)
 	(wire
 		(pts
-			(xy 161.29 39.37) (xy 151.765 39.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f18e00e4-85ca-4107-8bcf-f80e60636b65")
-	)
-	(wire
-		(pts
 			(xy 139.7 86.36) (xy 148.59 86.36)
 		)
 		(stroke
@@ -2348,9 +2348,9 @@
 		)
 		(uuid "f00610cb-d58b-46ba-95e5-b9a57ad23202")
 	)
-	(hierarchical_label "24V_IN"
+	(global_label "24_VIN"
 		(shape input)
-		(at 151.765 39.37 180)
+		(at 151.13 39.37 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2358,7 +2358,17 @@
 			)
 			(justify right)
 		)
-		(uuid "52782fa0-6bd5-408c-b8a7-dc976e757424")
+		(uuid "99bc9e68-ac06-4b34-adb0-5fac9e855d57")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 141.7343 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
 	)
 	(symbol
 		(lib_id "power:+5V")

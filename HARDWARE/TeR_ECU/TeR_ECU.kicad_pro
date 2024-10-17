@@ -565,6 +565,10 @@
       "Raíz"
     ],
     [
+      "57c564d0-e71b-4ec8-8e08-7691aefb5091",
+      "LEDS"
+    ],
+    [
       "5e77d980-0e17-4264-b0d2-78c6bd2786ec",
       "CAN_MAIN"
     ],
@@ -590,7 +594,7 @@
     ],
     [
       "3120aa2d-43f7-45e0-8e9f-779f72cfb5e6",
-      "OUTPUTS"
+      "D_OUTPUTS"
     ],
     [
       "e25d0f8a-65a3-47e2-987f-518da8891580",
@@ -601,20 +605,24 @@
       "MICRO_F4"
     ],
     [
-      "3e95f185-9df1-42f9-aa76-21fb32ee8ccb",
-      "SD"
+      "f4983e62-bb86-4f44-906d-788ec401c377",
+      "USB"
     ],
     [
       "8b9caf06-a922-47e0-a594-89ed95d0f438",
       "IMU"
     ],
     [
-      "f4983e62-bb86-4f44-906d-788ec401c377",
-      "USB"
-    ],
-    [
       "7ff49dfd-e79b-4d4a-bad4-beb43905c8a0",
       "GPS"
+    ],
+    [
+      "4603c2b6-f2a3-4455-a4af-ef759efb651a",
+      "EEPROM"
+    ],
+    [
+      "9bbcdc7c-0701-4dd0-beea-e4fc6fde525c",
+      "PWM_OUT"
     ]
   ],
   "text_variables": {}
