@@ -6915,7 +6915,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LGA-14L_2P5X3X0P83_STM"
+		(property "Footprint" "IMU:LGA-14L_2P5X3X0P83_STM-L"
 			(at 128.27 125.73 0)
 			(effects
 				(font

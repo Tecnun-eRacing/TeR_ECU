@@ -3,4 +3,5 @@
   (lib (name "MX34040NF2")(type "Legacy")(uri "${KIPRJMOD}/Libraries/MX34040NF2/KiCad/MX34040NF2.mod")(options "")(descr ""))
   (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/Libraries/footprints.pretty")(options "")(descr ""))
   (lib (name "Nucleo-F446RE")(type "KiCad")(uri "${KIPRJMOD}/Libraries/Nucleo-F446RE")(options "")(descr ""))
+  (lib (name "IMU")(type "KiCad")(uri "${KIPRJMOD}/Libraries/IMU/KiCADv6/footprints.pretty")(options "")(descr ""))
 )

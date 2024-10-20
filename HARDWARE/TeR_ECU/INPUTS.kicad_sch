@@ -916,10 +916,9 @@
 				)
 			)
 		)
-		(symbol "Diode:SMAJ26A"
+		(symbol "Diode:PTVS26VZ1USK"
 			(pin_numbers hide)
-			(pin_names
-				(offset 1.016) hide)
+			(pin_names hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -931,7 +930,7 @@
 					)
 				)
 			)
-			(property "Value" "SMAJ26A"
+			(property "Value" "PTVS26VZ1USK"
 				(at 0 -2.54 0)
 				(effects
 					(font
@@ -939,8 +938,8 @@
 					)
 				)
 			)
-			(property "Footprint" "Diode_SMD:D_SMA"
-				(at 0 -5.08 0)
+			(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+				(at 0 -4.445 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -948,16 +947,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-				(at -1.27 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
+			(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
 				(at 0 0 0)
 				(effects
 					(font
@@ -966,7 +956,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "unidirectional diode TVS voltage suppressor"
+			(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
 				(at 0 0 0)
 				(effects
 					(font
@@ -975,7 +965,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "D*SMA*"
+			(property "ki_keywords" "TVS diode"
 				(at 0 0 0)
 				(effects
 					(font
@@ -984,10 +974,31 @@
 					(hide yes)
 				)
 			)
-			(symbol "SMAJ26A_0_1"
+			(property "ki_fp_filters" "*DSN1608?2*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "PTVS26VZ1USK_0_1"
 				(polyline
 					(pts
-						(xy -0.762 1.27) (xy -1.27 1.27) (xy -1.27 -1.27)
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -1.27) (xy -1.27 1.27) (xy -0.762 1.27)
 					)
 					(stroke
 						(width 0.254)
@@ -999,7 +1010,7 @@
 				)
 				(polyline
 					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
 					)
 					(stroke
 						(width 0.254)
@@ -1010,11 +1021,11 @@
 					)
 				)
 			)
-			(symbol "SMAJ26A_1_1"
+			(symbol "PTVS26VZ1USK_1_1"
 				(pin passive line
 					(at -3.81 0 0)
 					(length 2.54)
-					(name "A1"
+					(name "K"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1032,7 +1043,7 @@
 				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
-					(name "A2"
+					(name "A"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1459,22 +1470,16 @@
 		)
 	)
 	(junction
-		(at 173.99 54.61)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "099ac8c1-b216-4500-b5bb-4073981565f6")
-	)
-	(junction
 		(at 224.79 128.27)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "152cefe8-307a-4c2b-a6b1-01d86711902a")
 	)
 	(junction
-		(at 80.01 83.82)
+		(at 88.9 83.82)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "1c5d1dbc-e212-4186-9cf2-1b093c14646d")
+		(uuid "3a125537-d795-4bc9-b689-ec831819c499")
 	)
 	(junction
 		(at 185.42 125.73)
@@ -1489,6 +1494,12 @@
 		(uuid "416218ac-43bf-427e-a3cc-ca311dcc6c43")
 	)
 	(junction
+		(at 173.99 125.73)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "46efc012-4b59-40cd-a771-a24c20ae88b2")
+	)
+	(junction
 		(at 210.82 81.28)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1498,7 +1509,13 @@
 		(at 29.21 83.82)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "5a4cf0fb-9117-41c9-b46f-35286d4ffc93")
+		(uuid "5c161523-1b66-4f4f-95bd-655ecee224ab")
+	)
+	(junction
+		(at 173.99 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6bdbd900-989f-42a4-a7b4-d088601a1dd8")
 	)
 	(junction
 		(at 210.82 128.27)
@@ -1507,7 +1524,7 @@
 		(uuid "6f98f0cb-223f-4d78-8db7-37fbb6a63e8f")
 	)
 	(junction
-		(at 83.82 96.52)
+		(at 92.71 96.52)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "702d9eff-0dc0-4256-b210-ba3b52fb0c5f")
@@ -1531,10 +1548,10 @@
 		(uuid "990b706e-6c71-4e41-a664-0ac4b39f9300")
 	)
 	(junction
-		(at 173.99 78.74)
+		(at 58.42 83.82)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "b2708b62-5913-447d-be9f-1ce990f194b2")
+		(uuid "aa5efa2c-244f-486d-935c-793f19e68ffc")
 	)
 	(junction
 		(at 224.79 81.28)
@@ -1543,10 +1560,10 @@
 		(uuid "b3dd2578-3d5e-4495-9911-b0af80a6e1b5")
 	)
 	(junction
-		(at 173.99 101.6)
+		(at 116.84 83.82)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "bafbae44-32a1-4567-8b86-02a890d25762")
+		(uuid "b8074fdd-1e81-4b49-86d4-98f2f401a95f")
 	)
 	(junction
 		(at 224.79 57.15)
@@ -1561,40 +1578,34 @@
 		(uuid "c4602b6d-05b1-4ef9-b504-0ef7e3ca3019")
 	)
 	(junction
-		(at 173.99 125.73)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ce47e1f3-a9f4-4d2c-aba3-7966da5aa69a")
-	)
-	(junction
 		(at 185.42 78.74)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d5c9f0dc-2087-4211-87e7-44b02fa57f81")
 	)
 	(junction
-		(at 58.42 96.52)
+		(at 63.5 96.52)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "da87834d-4bf8-408b-8bba-726390abeb08")
 	)
 	(junction
-		(at 106.68 83.82)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e099f4d4-564e-45d5-9312-51fd807ec44a")
-	)
-	(junction
-		(at 110.49 96.52)
+		(at 120.65 96.52)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e273c1a2-638e-42b2-9db5-1ea959afe35d")
 	)
 	(junction
-		(at 53.34 83.82)
+		(at 173.99 78.74)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "e7a68c14-bca5-41f3-bd13-9be156a78f0a")
+		(uuid "f05131d2-1c5a-4028-9ec0-907d0f8da03b")
+	)
+	(junction
+		(at 173.99 101.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fbe18439-dd9a-4ec3-9118-048c3f688774")
 	)
 	(junction
 		(at 34.29 96.52)
@@ -1614,7 +1625,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 83.82) (xy 34.29 83.82)
+			(xy 21.59 83.82) (xy 29.21 83.82)
 		)
 		(stroke
 			(width 0)
@@ -1634,7 +1645,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 83.82) (xy 106.68 83.82)
+			(xy 109.22 83.82) (xy 116.84 83.82)
 		)
 		(stroke
 			(width 0)
@@ -1694,13 +1705,23 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 92.71) (xy 83.82 96.52)
+			(xy 92.71 92.71) (xy 92.71 96.52)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "1c5d1983-a886-46ec-8cc7-5bc606c75c02")
+	)
+	(wire
+		(pts
+			(xy 58.42 83.82) (xy 63.5 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3393e539-52d6-4124-89ec-eef5755048c7")
 	)
 	(wire
 		(pts
@@ -1734,7 +1755,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 83.82) (xy 110.49 85.09)
+			(xy 120.65 83.82) (xy 120.65 85.09)
 		)
 		(stroke
 			(width 0)
@@ -1754,17 +1775,7 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 83.82) (xy 53.34 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3be77832-1e24-4842-8a2d-f63b8fa946d3")
-	)
-	(wire
-		(pts
-			(xy 110.49 107.95) (xy 110.49 114.3)
+			(xy 120.65 107.95) (xy 120.65 114.3)
 		)
 		(stroke
 			(width 0)
@@ -1804,17 +1815,7 @@
 	)
 	(wire
 		(pts
-			(xy 21.59 83.82) (xy 29.21 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4b495ca5-5970-410c-9a04-52e5792b865a")
-	)
-	(wire
-		(pts
-			(xy 80.01 83.82) (xy 83.82 83.82)
+			(xy 80.01 83.82) (xy 88.9 83.82)
 		)
 		(stroke
 			(width 0)
@@ -1824,7 +1825,17 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 96.52) (xy 93.98 96.52)
+			(xy 173.99 54.61) (xy 176.53 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5384d990-cbdf-4d2b-91f1-6c3c2b4c8200")
+	)
+	(wire
+		(pts
+			(xy 92.71 96.52) (xy 102.87 96.52)
 		)
 		(stroke
 			(width 0)
@@ -1854,6 +1865,16 @@
 	)
 	(wire
 		(pts
+			(xy 29.21 83.82) (xy 34.29 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "63b8972e-75af-4dc4-9f87-f1540b1a29e5")
+	)
+	(wire
+		(pts
 			(xy 210.82 57.15) (xy 210.82 64.77)
 		)
 		(stroke
@@ -1874,7 +1895,7 @@
 	)
 	(wire
 		(pts
-			(xy 53.34 83.82) (xy 58.42 83.82)
+			(xy 50.8 83.82) (xy 58.42 83.82)
 		)
 		(stroke
 			(width 0)
@@ -1884,7 +1905,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 96.52) (xy 83.82 100.33)
+			(xy 92.71 96.52) (xy 92.71 100.33)
 		)
 		(stroke
 			(width 0)
@@ -1894,7 +1915,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 96.52) (xy 110.49 100.33)
+			(xy 120.65 96.52) (xy 120.65 100.33)
 		)
 		(stroke
 			(width 0)
@@ -1904,7 +1925,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 83.82) (xy 83.82 85.09)
+			(xy 92.71 83.82) (xy 92.71 85.09)
 		)
 		(stroke
 			(width 0)
@@ -2004,17 +2025,7 @@
 	)
 	(wire
 		(pts
-			(xy 173.99 78.74) (xy 176.53 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "96d27d39-f950-4c03-a5b2-d98d6f3da963")
-	)
-	(wire
-		(pts
-			(xy 58.42 96.52) (xy 58.42 100.33)
+			(xy 63.5 96.52) (xy 63.5 100.33)
 		)
 		(stroke
 			(width 0)
@@ -2064,6 +2075,16 @@
 	)
 	(wire
 		(pts
+			(xy 116.84 83.82) (xy 120.65 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a0fbcbc5-5b44-4ca3-90e3-777696487774")
+	)
+	(wire
+		(pts
 			(xy 34.29 83.82) (xy 34.29 85.09)
 		)
 		(stroke
@@ -2074,7 +2095,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 107.95) (xy 83.82 114.3)
+			(xy 92.71 107.95) (xy 92.71 114.3)
 		)
 		(stroke
 			(width 0)
@@ -2094,16 +2115,6 @@
 	)
 	(wire
 		(pts
-			(xy 173.99 101.6) (xy 176.53 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a98596dc-feab-4915-9b30-756626a2f2fb")
-	)
-	(wire
-		(pts
 			(xy 185.42 104.14) (xy 185.42 101.6)
 		)
 		(stroke
@@ -2114,7 +2125,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 96.52) (xy 120.65 96.52)
+			(xy 120.65 96.52) (xy 130.81 96.52)
 		)
 		(stroke
 			(width 0)
@@ -2174,7 +2185,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 96.52) (xy 69.85 96.52)
+			(xy 63.5 96.52) (xy 74.93 96.52)
 		)
 		(stroke
 			(width 0)
@@ -2194,33 +2205,13 @@
 	)
 	(wire
 		(pts
-			(xy 163.83 125.73) (xy 173.99 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c557bb63-a919-43fc-b29a-6aa65c5cf6cd")
-	)
-	(wire
-		(pts
-			(xy 110.49 92.71) (xy 110.49 96.52)
+			(xy 120.65 92.71) (xy 120.65 96.52)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "ca57836b-26a2-4434-814d-cd6f53b7e452")
-	)
-	(wire
-		(pts
-			(xy 173.99 54.61) (xy 176.53 54.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cb79e7d2-d915-4019-b6cf-220556aa2ca9")
 	)
 	(polyline
 		(pts
@@ -2234,7 +2225,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 83.82) (xy 58.42 85.09)
+			(xy 63.5 83.82) (xy 63.5 85.09)
 		)
 		(stroke
 			(width 0)
@@ -2244,17 +2235,17 @@
 	)
 	(wire
 		(pts
-			(xy 71.12 83.82) (xy 80.01 83.82)
+			(xy 173.99 125.73) (xy 176.53 125.73)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d0f9591a-f7ac-46cf-871c-ffacd5abbf9d")
+		(uuid "d022fc9c-8093-4e4d-8127-f1d756b86190")
 	)
 	(wire
 		(pts
-			(xy 173.99 125.73) (xy 176.53 125.73)
+			(xy 163.83 125.73) (xy 173.99 125.73)
 		)
 		(stroke
 			(width 0)
@@ -2271,6 +2262,16 @@
 			(type default)
 		)
 		(uuid "d52cab30-cacb-4a51-a6d0-10f6f52959e8")
+	)
+	(wire
+		(pts
+			(xy 173.99 78.74) (xy 176.53 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d8d58c80-c1ee-4dc9-baa7-cb4567183a09")
 	)
 	(wire
 		(pts
@@ -2294,7 +2295,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 92.71) (xy 58.42 96.52)
+			(xy 63.5 92.71) (xy 63.5 96.52)
 		)
 		(stroke
 			(width 0)
@@ -2304,7 +2305,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 107.95) (xy 58.42 114.3)
+			(xy 63.5 107.95) (xy 63.5 114.3)
 		)
 		(stroke
 			(width 0)
@@ -2344,13 +2345,13 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 83.82) (xy 110.49 83.82)
+			(xy 173.99 101.6) (xy 176.53 101.6)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "f2600336-c572-4fd3-944e-21e7cdf3b24f")
+		(uuid "e9eda8a9-5ca5-4522-bc9a-dd915b48c802")
 	)
 	(wire
 		(pts
@@ -2361,6 +2362,16 @@
 			(type default)
 		)
 		(uuid "f4f0315d-5d66-4c79-a4a0-05c88e000321")
+	)
+	(wire
+		(pts
+			(xy 88.9 83.82) (xy 92.71 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fbc9b403-2bb5-4dff-bc56-89aba0acad7b")
 	)
 	(wire
 		(pts
@@ -2429,7 +2440,7 @@
 	)
 	(hierarchical_label "DIN3"
 		(shape input)
-		(at 99.06 83.82 180)
+		(at 109.22 83.82 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2454,7 +2465,7 @@
 	)
 	(hierarchical_label "D2"
 		(shape input)
-		(at 93.98 96.52 0)
+		(at 102.87 96.52 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2491,7 +2502,7 @@
 	)
 	(hierarchical_label "D1"
 		(shape input)
-		(at 69.85 96.52 0)
+		(at 74.93 96.52 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2578,7 +2589,7 @@
 	)
 	(hierarchical_label "D3"
 		(shape input)
-		(at 120.65 96.52 0)
+		(at 130.81 96.52 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2603,7 +2614,7 @@
 	)
 	(hierarchical_label "DIN2"
 		(shape input)
-		(at 71.12 83.82 180)
+		(at 80.01 83.82 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2616,7 +2627,7 @@
 	)
 	(hierarchical_label "DIN1"
 		(shape input)
-		(at 45.72 83.82 180)
+		(at 50.8 83.82 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2763,7 +2774,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 58.42 88.9 0)
+		(at 63.5 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2772,7 +2783,7 @@
 		(fields_autoplaced yes)
 		(uuid "0a142bc4-3b90-4213-9e2c-badc2baf84c4")
 		(property "Reference" "R12"
-			(at 60.96 87.6299 0)
+			(at 66.04 87.6299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2781,7 +2792,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 60.96 90.1699 0)
+			(at 66.04 90.1699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2790,7 +2801,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 56.642 88.9 90)
+			(at 61.722 88.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2799,7 +2810,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 58.42 88.9 0)
+			(at 63.5 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2808,7 +2819,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 58.42 88.9 0)
+			(at 63.5 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2826,6 +2837,76 @@
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
 					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 173.99 105.41 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "11f9af93-30f4-450a-afea-60fba5b7fccc")
+		(property "Reference" "D19"
+			(at 171.45 104.1399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 171.45 106.6799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 169.545 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 173.99 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 173.99 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e2c8c70e-ea6a-4d04-9f83-c3385c1cfa2d")
+		)
+		(pin "2"
+			(uuid "2e22ca95-a129-47d3-bfe3-da7d3241fd70")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D19")
 					(unit 1)
 				)
 			)
@@ -2859,7 +2940,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 185.42 59.69 0)
 			(effects
 				(font
@@ -2969,8 +3050,78 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 173.99 129.54 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1b479595-f256-43a2-99a9-8333e9936470")
+		(property "Reference" "D20"
+			(at 171.45 128.2699 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 171.45 130.8099 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 169.545 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 173.99 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 173.99 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "daab7ffc-5bbe-4309-b750-e048f601a9c2")
+		)
+		(pin "2"
+			(uuid "35abee4b-0627-4cab-beae-34510932205f")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
-		(at 80.01 91.44 0)
+		(at 88.9 91.44 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2979,7 +3130,7 @@
 		(fields_autoplaced yes)
 		(uuid "1b5b7eed-4500-4289-94c1-476fe9424f63")
 		(property "Reference" "#PWR045"
-			(at 80.01 97.79 0)
+			(at 88.9 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2988,7 +3139,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 80.01 96.52 0)
+			(at 88.9 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2996,7 +3147,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 80.01 91.44 0)
+			(at 88.9 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3005,7 +3156,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 80.01 91.44 0)
+			(at 88.9 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3014,7 +3165,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 80.01 91.44 0)
+			(at 88.9 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3129,7 +3280,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 185.42 130.81 0)
 			(effects
 				(font
@@ -3401,7 +3552,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 179.07 125.73 0)
 			(effects
 				(font
@@ -3510,218 +3661,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 53.34 87.63 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "331e16e6-6755-4ce7-aa05-ae6c9a180c15")
-		(property "Reference" "D11"
-			(at 50.8 86.3599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 50.8 88.8999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 48.26 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 53.34 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 53.34 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "35b6ec04-d192-477f-8510-4b34ac60f043")
-		)
-		(pin "2"
-			(uuid "828a40dc-4842-482b-bc5b-2a3c296455c3")
-		)
-		(instances
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 80.01 87.63 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "33a4b8a6-711a-4932-aa70-488097862eaf")
-		(property "Reference" "D13"
-			(at 77.47 86.3599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 77.47 88.8999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 74.93 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 80.01 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 80.01 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "387f44b0-4d4e-48e9-a011-1216d04ea562")
-		)
-		(pin "2"
-			(uuid "58319134-7181-4cdc-8411-43184c91a29b")
-		)
-		(instances
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D13")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 173.99 105.41 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "33cc5817-5783-4b1b-9715-54c057051209")
-		(property "Reference" "D19"
-			(at 171.45 104.1399 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 171.45 106.6799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 168.91 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 173.99 106.68 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 173.99 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3f21abe0-0423-4771-9f69-be0b563c7389")
-		)
-		(pin "2"
-			(uuid "7df9918e-8614-4185-9ea0-0c2826f03b9a")
-		)
-		(instances
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D19")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
-		(at 83.82 114.3 0)
+		(at 92.71 114.3 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3730,7 +3671,7 @@
 		(fields_autoplaced yes)
 		(uuid "342ac380-a4ea-4f24-a39d-ed6253eecdee")
 		(property "Reference" "#PWR046"
-			(at 83.82 120.65 0)
+			(at 92.71 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3739,7 +3680,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 83.82 119.38 0)
+			(at 92.71 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3747,7 +3688,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 83.82 114.3 0)
+			(at 92.71 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3756,7 +3697,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 83.82 114.3 0)
+			(at 92.71 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3765,7 +3706,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 83.82 114.3 0)
+			(at 92.71 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3811,7 +3752,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 201.93 78.74 0)
 			(effects
 				(font
@@ -3890,17 +3831,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 173.99 129.54 270)
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 88.9 87.63 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "3ccbcff8-0e29-4be0-a555-f56670d8d191")
-		(property "Reference" "D20"
-			(at 171.45 128.2699 90)
+		(uuid "37934d72-35b5-498b-bd16-ebcff11caa17")
+		(property "Reference" "D13"
+			(at 86.36 86.3599 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3908,8 +3849,8 @@
 				(justify right)
 			)
 		)
-		(property "Value" "SMAJ26A"
-			(at 171.45 130.8099 90)
+		(property "Value" "PTVS26VZ1USK"
+			(at 86.36 88.8999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3917,8 +3858,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 168.91 129.54 0)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 84.455 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3926,8 +3867,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 173.99 130.81 0)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 88.9 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3935,8 +3876,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 173.99 129.54 0)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 88.9 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3945,15 +3886,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "e88a25ea-52f8-45ac-a774-1b96762370fc")
+			(uuid "3d259396-f034-477a-86f6-2cbbc2bb4382")
 		)
 		(pin "2"
-			(uuid "50e08231-9e65-4d05-9d26-a94a65791f58")
+			(uuid "8d2e4b62-0584-4159-8e68-9dc4a37b2a96")
 		)
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D20")
+					(reference "D13")
 					(unit 1)
 				)
 			)
@@ -3961,7 +3902,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 58.42 114.3 0)
+		(at 63.5 114.3 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3970,7 +3911,7 @@
 		(fields_autoplaced yes)
 		(uuid "3f34cd7d-d6be-4cb4-b1cc-4e35f88af201")
 		(property "Reference" "#PWR044"
-			(at 58.42 120.65 0)
+			(at 63.5 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3979,7 +3920,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 58.42 119.38 0)
+			(at 63.5 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3987,7 +3928,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 58.42 114.3 0)
+			(at 63.5 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3996,7 +3937,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 58.42 114.3 0)
+			(at 63.5 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4005,7 +3946,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 58.42 114.3 0)
+			(at 63.5 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4020,76 +3961,6 @@
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
 					(reference "#PWR044")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 173.99 58.42 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "41abf7f9-63d9-47be-8e14-a6696680b32f")
-		(property "Reference" "D17"
-			(at 171.45 57.1499 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 171.45 59.6899 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 168.91 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 173.99 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 173.99 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d8bf474e-3ddb-4286-bb8e-14c0b70f4695")
-		)
-		(pin "2"
-			(uuid "aafac950-4217-41c0-8841-c2b04b30afda")
-		)
-		(instances
-			(project ""
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D17")
 					(unit 1)
 				)
 			)
@@ -4121,7 +3992,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 218.44 81.28 0)
 			(effects
 				(font
@@ -4231,8 +4102,78 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 29.21 87.63 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4ae6c60a-aa52-4b9c-bb04-6d7b8c966dcd")
+		(property "Reference" "D9"
+			(at 26.67 86.3599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 26.67 88.8999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 24.765 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 29.21 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 29.21 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7d06688e-dc30-4be5-b405-464e2a8f60b6")
+		)
+		(pin "2"
+			(uuid "40f40447-3320-4669-b8be-3335cd74339c")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Diode:BZV55B3V3")
-		(at 110.49 104.14 270)
+		(at 120.65 104.14 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4241,7 +4182,7 @@
 		(fields_autoplaced yes)
 		(uuid "4e000aa0-494e-4c9a-90ac-3a49398a827c")
 		(property "Reference" "D16"
-			(at 113.03 102.8699 90)
+			(at 123.19 102.8699 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4250,7 +4191,7 @@
 			)
 		)
 		(property "Value" "BZV55B3V3"
-			(at 113.03 105.4099 90)
+			(at 123.19 105.4099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4259,7 +4200,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_MiniMELF"
-			(at 106.045 104.14 0)
+			(at 116.205 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4268,7 +4209,7 @@
 			)
 		)
 		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/BZV55_SER.pdf"
-			(at 110.49 104.14 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4277,7 +4218,7 @@
 			)
 		)
 		(property "Description" "3.3V, 500mW, 2%, Zener diode, MiniMELF"
-			(at 110.49 104.14 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4393,7 +4334,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 218.44 57.15 0)
 			(effects
 				(font
@@ -4460,7 +4401,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 201.93 125.73 0)
 			(effects
 				(font
@@ -4564,7 +4505,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 201.93 101.6 0)
 			(effects
 				(font
@@ -4644,7 +4585,7 @@
 	)
 	(symbol
 		(lib_id "Diode:BZV55B3V3")
-		(at 58.42 104.14 270)
+		(at 63.5 104.14 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4653,7 +4594,7 @@
 		(fields_autoplaced yes)
 		(uuid "589863bc-4a00-4e09-8ef9-fc2391193a74")
 		(property "Reference" "D12"
-			(at 60.96 102.8699 90)
+			(at 66.04 102.8699 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4662,7 +4603,7 @@
 			)
 		)
 		(property "Value" "BZV55B3V3"
-			(at 60.96 105.4099 90)
+			(at 66.04 105.4099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4671,7 +4612,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_MiniMELF"
-			(at 53.975 104.14 0)
+			(at 59.055 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4680,7 +4621,7 @@
 			)
 		)
 		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/BZV55_SER.pdf"
-			(at 58.42 104.14 0)
+			(at 63.5 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4689,7 +4630,7 @@
 			)
 		)
 		(property "Description" "3.3V, 500mW, 2%, Zener diode, MiniMELF"
-			(at 58.42 104.14 0)
+			(at 63.5 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4714,7 +4655,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 106.68 91.44 0)
+		(at 116.84 91.44 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4723,7 +4664,7 @@
 		(fields_autoplaced yes)
 		(uuid "61119c2b-ed8c-4ed8-a246-f6f8fb094e9c")
 		(property "Reference" "#PWR047"
-			(at 106.68 97.79 0)
+			(at 116.84 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4732,7 +4673,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 106.68 96.52 0)
+			(at 116.84 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4740,7 +4681,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 106.68 91.44 0)
+			(at 116.84 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4749,7 +4690,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 106.68 91.44 0)
+			(at 116.84 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4758,7 +4699,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 106.68 91.44 0)
+			(at 116.84 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4849,9 +4790,79 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 58.42 87.63 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "64dc6f6c-d9ab-4302-906b-2f00335d60fc")
+		(property "Reference" "D11"
+			(at 55.88 86.3599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 55.88 88.8999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 53.975 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 58.42 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 58.42 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c9537c8a-29be-48b1-a600-c898aad68504")
+		)
+		(pin "2"
+			(uuid "c30c5b9d-a6c7-4244-a252-b1a2c296081e")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_name "GND_1")
 		(lib_id "power:GND")
-		(at 215.9 40.64 270)
+		(at 195.58 41.91 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4860,7 +4871,7 @@
 		(fields_autoplaced yes)
 		(uuid "68a9486e-ac2c-42ae-87a5-65582f658539")
 		(property "Reference" "#PWR057"
-			(at 209.55 40.64 0)
+			(at 189.23 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4869,7 +4880,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 212.09 40.6399 90)
+			(at 191.77 41.9099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4878,7 +4889,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 215.9 40.64 0)
+			(at 195.58 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4887,7 +4898,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 215.9 40.64 0)
+			(at 195.58 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4896,7 +4907,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 215.9 40.64 0)
+			(at 195.58 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4918,7 +4929,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 110.49 88.9 0)
+		(at 120.65 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4927,7 +4938,7 @@
 		(fields_autoplaced yes)
 		(uuid "6bffc16d-1f44-4506-88a1-b661f07dd6bb")
 		(property "Reference" "R14"
-			(at 113.03 87.6299 0)
+			(at 123.19 87.6299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4936,7 +4947,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 113.03 90.1699 0)
+			(at 123.19 90.1699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4945,7 +4956,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 108.712 88.9 90)
+			(at 118.872 88.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4954,7 +4965,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110.49 88.9 0)
+			(at 120.65 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4963,7 +4974,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 110.49 88.9 0)
+			(at 120.65 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5055,7 +5066,7 @@
 	)
 	(symbol
 		(lib_id "Diode:BZV55B3V3")
-		(at 83.82 104.14 270)
+		(at 92.71 104.14 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5064,7 +5075,7 @@
 		(fields_autoplaced yes)
 		(uuid "766e10b3-c62e-48bd-bb65-3258e2da3502")
 		(property "Reference" "D14"
-			(at 86.36 102.8699 90)
+			(at 95.25 102.8699 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5073,7 +5084,7 @@
 			)
 		)
 		(property "Value" "BZV55B3V3"
-			(at 86.36 105.4099 90)
+			(at 95.25 105.4099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5082,7 +5093,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_MiniMELF"
-			(at 79.375 104.14 0)
+			(at 88.265 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5091,7 +5102,7 @@
 			)
 		)
 		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/BZV55_SER.pdf"
-			(at 83.82 104.14 0)
+			(at 92.71 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5100,7 +5111,7 @@
 			)
 		)
 		(property "Description" "3.3V, 500mW, 2%, Zener diode, MiniMELF"
-			(at 83.82 104.14 0)
+			(at 92.71 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5190,6 +5201,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 173.99 58.42 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7b546925-4081-497c-9d09-448c243ed158")
+		(property "Reference" "D17"
+			(at 171.45 57.1499 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 171.45 59.6899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 169.545 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 173.99 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 173.99 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5f897740-fcbc-4365-b3ec-6b1844ef9a24")
+		)
+		(pin "2"
+			(uuid "9eaff596-cb4e-4e74-a421-7a1f9ec78d5c")
+		)
+		(instances
+			(project ""
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 179.07 54.61 90)
 		(unit 1)
@@ -5215,7 +5296,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 179.07 54.61 0)
 			(effects
 				(font
@@ -5325,8 +5406,78 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:PTVS26VZ1USK")
+		(at 116.84 87.63 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "816818d4-8c7b-4afd-9092-d9b73143529e")
+		(property "Reference" "D15"
+			(at 114.3 86.3599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "PTVS26VZ1USK"
+			(at 114.3 88.8999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 112.395 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 116.84 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
+			(at 116.84 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e6e0251c-8ecf-4446-acee-9a0a6fba05b4")
+		)
+		(pin "2"
+			(uuid "d6701643-f292-4948-8961-8097065e2798")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
+					(reference "D15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
-		(at 231.14 40.64 270)
+		(at 210.82 41.91 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5335,7 +5486,7 @@
 		(fields_autoplaced yes)
 		(uuid "8b128eb5-16e9-4555-ac4d-d4f3301bf4c9")
 		(property "Reference" "#PWR062"
-			(at 227.33 40.64 0)
+			(at 207.01 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5344,7 +5495,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 234.95 40.6399 90)
+			(at 214.63 41.9099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5353,7 +5504,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 231.14 40.64 0)
+			(at 210.82 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5362,7 +5513,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 231.14 40.64 0)
+			(at 210.82 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5371,7 +5522,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 231.14 40.64 0)
+			(at 210.82 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5416,7 +5567,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 201.93 54.61 0)
 			(effects
 				(font
@@ -5496,7 +5647,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 53.34 91.44 0)
+		(at 58.42 91.44 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5505,7 +5656,7 @@
 		(fields_autoplaced yes)
 		(uuid "98305a02-4504-442a-8564-9dc332937e90")
 		(property "Reference" "#PWR043"
-			(at 53.34 97.79 0)
+			(at 58.42 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5514,7 +5665,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 53.34 96.52 0)
+			(at 58.42 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5522,7 +5673,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 53.34 91.44 0)
+			(at 58.42 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5531,7 +5682,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 53.34 91.44 0)
+			(at 58.42 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5540,7 +5691,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 53.34 91.44 0)
+			(at 58.42 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5588,7 +5739,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 185.42 83.82 0)
 			(effects
 				(font
@@ -5658,7 +5809,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 185.42 106.68 0)
 			(effects
 				(font
@@ -5702,7 +5853,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:LM324")
-		(at 223.52 43.18 270)
+		(at 203.2 44.45 270)
 		(unit 5)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5711,7 +5862,7 @@
 		(fields_autoplaced yes)
 		(uuid "aff6f0c3-f292-4568-a4d8-c693ce8225b4")
 		(property "Reference" "U5"
-			(at 223.52 35.56 90)
+			(at 203.2 36.83 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5719,15 +5870,15 @@
 			)
 		)
 		(property "Value" "LM324"
-			(at 223.52 38.1 90)
+			(at 203.2 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 226.06 41.91 0)
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
+			(at 205.74 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5736,7 +5887,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/lm2902-n.pdf"
-			(at 228.6 44.45 0)
+			(at 208.28 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5745,7 +5896,7 @@
 			)
 		)
 		(property "Description" "Low-Power, Quad-Operational Amplifiers, DIP-14/SOIC-14/SSOP-14"
-			(at 223.52 43.18 0)
+			(at 203.2 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5900,7 +6051,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 218.44 128.27 0)
 			(effects
 				(font
@@ -6147,146 +6298,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 29.21 87.63 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "cd87d9e2-3239-4fcc-8f61-727baed0f8e7")
-		(property "Reference" "D9"
-			(at 26.67 86.3599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 26.67 88.8999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 24.13 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 29.21 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 29.21 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e5eef44c-5fc8-41cb-8101-82bb24ab3b5d")
-		)
-		(pin "2"
-			(uuid "7e478f70-cfbe-4295-9212-a2d951fd2422")
-		)
-		(instances
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Diode:SMAJ26A")
-		(at 106.68 87.63 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "d2388148-41e6-4b7d-b66c-285c873cc853")
-		(property "Reference" "D15"
-			(at 104.14 86.3599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ26A"
-			(at 104.14 88.8999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 101.6 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 106.68 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
-			(at 106.68 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "99cf4d55-9d4d-451c-a953-6a1bc47ae9f0")
-		)
-		(pin "2"
-			(uuid "dc5ae866-1dac-408f-9665-3cf782730cd8")
-		)
-		(instances
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/a7e5ef7e-c831-4d4f-a194-90a98bc5e16b"
-					(reference "D15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R_Small")
 		(at 179.07 101.6 90)
 		(unit 1)
@@ -6312,7 +6323,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 179.07 101.6 0)
 			(effects
 				(font
@@ -6380,7 +6391,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 218.44 104.14 0)
 			(effects
 				(font
@@ -6424,7 +6435,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 110.49 114.3 0)
+		(at 120.65 114.3 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6433,7 +6444,7 @@
 		(fields_autoplaced yes)
 		(uuid "d7340a68-4cfa-4b9e-923a-bb5607d41014")
 		(property "Reference" "#PWR048"
-			(at 110.49 120.65 0)
+			(at 120.65 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6442,7 +6453,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 110.49 119.38 0)
+			(at 120.65 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6450,7 +6461,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 110.49 114.3 0)
+			(at 120.65 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6459,7 +6470,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 110.49 114.3 0)
+			(at 120.65 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6468,7 +6479,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 110.49 114.3 0)
+			(at 120.65 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6629,7 +6640,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:SMAJ26A")
+		(lib_id "Diode:PTVS26VZ1USK")
 		(at 173.99 82.55 270)
 		(mirror x)
 		(unit 1)
@@ -6637,7 +6648,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "fb06f084-1ff1-4453-8b0e-25628f36b150")
+		(uuid "eb6d921e-1f76-45ec-96e7-54cc9f2449ac")
 		(property "Reference" "D18"
 			(at 171.45 81.2799 90)
 			(effects
@@ -6647,7 +6658,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "SMAJ26A"
+		(property "Value" "PTVS26VZ1USK"
 			(at 171.45 83.8199 90)
 			(effects
 				(font
@@ -6656,8 +6667,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 168.91 82.55 0)
+		(property "Footprint" "Diode_SMD:Nexperia_DSN1608-2_1.6x0.8mm"
+			(at 169.545 82.55 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6665,8 +6676,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 173.99 83.82 0)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/PTVS26VZ1USK.pdf"
+			(at 173.99 82.55 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6674,7 +6685,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 26.0Vr, SMA(DO-214AC)"
+		(property "Description" "26V, 1850W TVS unidirectional diode, DSN1608-2"
 			(at 173.99 82.55 0)
 			(effects
 				(font
@@ -6684,10 +6695,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "0f282852-65d5-4b56-922b-b37195d7e26f")
+			(uuid "88772879-af0f-4b4c-adee-6179535e5b58")
 		)
 		(pin "2"
-			(uuid "26ba4e82-dcfb-412e-9f37-31a00978d1aa")
+			(uuid "c2bea538-a289-4a0e-978b-0d3070b23aa9")
 		)
 		(instances
 			(project "TeR_ECU"
@@ -6724,7 +6735,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 179.07 78.74 0)
 			(effects
 				(font
@@ -6768,7 +6779,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 83.82 88.9 0)
+		(at 92.71 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6777,7 +6788,7 @@
 		(fields_autoplaced yes)
 		(uuid "fe51c11b-d8bb-40ba-9de4-3205a7058da6")
 		(property "Reference" "R13"
-			(at 86.36 87.6299 0)
+			(at 95.25 87.6299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6786,7 +6797,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 86.36 90.1699 0)
+			(at 95.25 90.1699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6795,7 +6806,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 82.042 88.9 90)
+			(at 90.932 88.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6804,7 +6815,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 83.82 88.9 0)
+			(at 92.71 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6813,7 +6824,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 83.82 88.9 0)
+			(at 92.71 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)

@@ -5,169 +5,6 @@
 	(uuid "2b38174a-4084-47b9-9c2a-15c23f59d783")
 	(paper "A4")
 	(lib_symbols
-		(symbol "Device:D"
-			(pin_numbers hide)
-			(pin_names
-				(offset 1.016) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "D"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "D"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Diode"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Sim.Device" "D"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Sim.Pins" "1=K 2=A"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "diode"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "D_0_1"
-				(polyline
-					(pts
-						(xy -1.27 1.27) (xy -1.27 -1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0) (xy -1.27 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "D_1_1"
-				(pin passive line
-					(at -3.81 0 0)
-					(length 2.54)
-					(name "K"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 2.54)
-					(name "A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "Device:R"
 			(pin_numbers hide)
 			(pin_names
@@ -289,7 +126,169 @@
 				)
 			)
 		)
-		(symbol "Relay:Panasonic_ALFG2PF24"
+		(symbol "Diode:SM4007"
+			(pin_numbers hide)
+			(pin_names hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SM4007"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Diode_SMD:D_MELF"
+				(at 0 -4.445 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://cdn-reichelt.de/documents/datenblatt/A400/SMD1N400%23DIO.pdf"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "1000V 1A General Purpose Rectifier Diode, MELF"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Device" "D"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "diode"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "D*MELF*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SM4007_0_1"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SM4007_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Relay:G5Q-1"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -302,7 +301,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "Panasonic_ALFG2PF24"
+			(property "Value" "G5Q-1"
 				(at 11.43 1.27 0)
 				(effects
 					(font
@@ -311,16 +310,27 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Relay_THT:Relay_SPST_Panasonic_ALFG_FormA_CircularHoles"
-				(at 32.258 -0.762 0)
+			(property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1"
+				(at 11.43 -1.27 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www3.panasonic.biz/ac/e_download/control/relay/power/catalog/mech_eng_lfg.pdf"
+			(property "Datasheet" "https://www.omron.com/ecb/products/pdf/en-g5q.pdf"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "Omron G5G relay, Miniature Single Pole, SPDT, 10A"
 				(at 0 0 0)
 				(effects
 					(font
@@ -329,7 +339,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "24V DC, High Capacity, 31A, Contact Gap 1.5mm, ALFG_FormA"
+			(property "ki_keywords" "Miniature Single Pole Relay"
 				(at 0 0 0)
 				(effects
 					(font
@@ -338,7 +348,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "single pole spst make contact"
+			(property "ki_fp_filters" "Relay*SPDT*Omron*G5Q*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -347,16 +357,21 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "Relay*SPST*Panasonic*ALFG*FormA*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
+			(symbol "G5Q-1_0_0"
+				(polyline
+					(pts
+						(xy 7.62 5.08) (xy 7.62 2.54) (xy 6.985 3.175) (xy 7.62 3.81)
 					)
-					(hide yes)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
 				)
 			)
-			(symbol "Panasonic_ALFG2PF24_0_1"
+			(symbol "G5Q-1_0_1"
 				(rectangle
 					(start -10.16 5.08)
 					(end 10.16 -5.08)
@@ -501,18 +516,36 @@
 				)
 				(polyline
 					(pts
-						(xy 7.62 5.08) (xy 7.62 2.54) (xy 6.985 3.175) (xy 7.62 3.81)
+						(xy 2.54 5.08) (xy 2.54 2.54) (xy 3.175 3.175) (xy 2.54 3.81)
 					)
 					(stroke
 						(width 0)
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
 					)
 				)
 			)
-			(symbol "Panasonic_ALFG2PF24_1_1"
+			(symbol "G5Q-1_1_1"
+				(pin passive line
+					(at -5.08 -7.62 90)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
 				(pin passive line
 					(at 5.08 -7.62 90)
 					(length 2.54)
@@ -523,7 +556,7 @@
 							)
 						)
 					)
-					(number "11"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -541,7 +574,25 @@
 							)
 						)
 					)
-					(number "14"
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 7.62 270)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -559,25 +610,7 @@
 							)
 						)
 					)
-					(number "A1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -5.08 -7.62 90)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A2"
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1117,6 +1150,10 @@
 		(color 0 0 0 0)
 		(uuid "a78c953c-1c62-4167-89fb-73635f2043bc")
 	)
+	(no_connect
+		(at 119.38 77.47)
+		(uuid "1828481d-6ffd-424e-85b3-4fce39014052")
+	)
 	(wire
 		(pts
 			(xy 114.3 69.85) (xy 114.3 77.47)
@@ -1139,7 +1176,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 95.25) (xy 138.43 95.25)
+			(xy 127 95.25) (xy 143.51 95.25)
 		)
 		(stroke
 			(width 0)
@@ -1179,7 +1216,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 73.66) (xy 127 73.66)
+			(xy 143.51 73.66) (xy 127 73.66)
 		)
 		(stroke
 			(width 0)
@@ -1209,7 +1246,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 81.28) (xy 138.43 73.66)
+			(xy 143.51 81.28) (xy 143.51 73.66)
 		)
 		(stroke
 			(width 0)
@@ -1269,7 +1306,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 88.9) (xy 138.43 95.25)
+			(xy 143.51 88.9) (xy 143.51 95.25)
 		)
 		(stroke
 			(width 0)
@@ -1336,94 +1373,82 @@
 		(uuid "fdb2fce3-1a5a-4929-a810-01827201acc2")
 	)
 	(symbol
-		(lib_id "Device:D")
-		(at 138.43 85.09 270)
+		(lib_id "Relay:G5Q-1")
+		(at 121.92 85.09 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "23bbb30a-2199-4002-a06a-dce1196fe2d9")
-		(property "Reference" "D10"
-			(at 140.97 83.82 90)
+		(uuid "0b9c5af9-3694-4111-ba94-d31d36ea33c5")
+		(property "Reference" "K2"
+			(at 133.35 83.8199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "G5Q-1"
+			(at 133.35 86.3599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1"
+			(at 110.49 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
 			)
 		)
-		(property "Value" "D"
-			(at 140.97 86.36 90)
+		(property "Datasheet" "https://www.omron.com/ecb/products/pdf/en-g5q.pdf"
+			(at 121.92 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-123F"
-			(at 138.43 85.09 0)
+		(property "Description" "Omron G5G relay, Miniature Single Pole, SPDT, 10A"
+			(at 121.92 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
-		)
-		(property "Datasheet" "~"
-			(at 138.43 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 138.43 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Device" "D"
-			(at 138.43 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Pins" "1=K 2=A"
-			(at 138.43 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "168d16f2-385d-455b-a107-b27bd605b19f")
 		)
 		(pin "2"
-			(uuid "6e78d8dc-f409-464d-b5f3-619b04a0bfb4")
+			(uuid "c3a49946-9930-4ea8-b238-d7339f61e8ad")
+		)
+		(pin "1"
+			(uuid "f77c5c8d-1aa7-4b6b-a451-047f34afc3fb")
+		)
+		(pin "5"
+			(uuid "1c5b895d-d365-4d50-80c8-e209e5bbb26d")
+		)
+		(pin "3"
+			(uuid "e7a6edfb-83ee-4fd1-9aba-803e4579636d")
+		)
+		(pin "4"
+			(uuid "7de524b8-4510-40b5-8d7b-a283da0de55d")
 		)
 		(instances
-			(project "TER_LVBMS"
-				(path "/427cf896-f780-4d4b-86ef-f90b31c1397d/8aa3c5f8-2a3f-44a9-920d-01bf32a384b0"
-					(reference "D10")
-					(unit 1)
-				)
-			)
-			(project "TER_LVBMS"
+			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/adfb2d76-93cc-4bc6-a50d-e4f688c5252c"
-					(reference "D31")
+					(reference "K2")
 					(unit 1)
 				)
 			)
@@ -1804,6 +1829,94 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode:SM4007")
+		(at 143.51 85.09 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9c8687f1-8350-46ec-8ae3-f8d70f96289b")
+		(property "Reference" "D6"
+			(at 146.05 83.8199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SM4007"
+			(at 146.05 86.3599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_MELF"
+			(at 139.065 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://cdn-reichelt.de/documents/datenblatt/A400/SMD1N400%23DIO.pdf"
+			(at 143.51 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "1000V 1A General Purpose Rectifier Diode, MELF"
+			(at 143.51 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 143.51 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 143.51 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "99c0b1c6-b554-4b9d-953e-df5c4f32a3e7")
+		)
+		(pin "2"
+			(uuid "a8b997d2-e3a0-4e85-bcdf-238018ef2c93")
+		)
+		(instances
+			(project ""
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/adfb2d76-93cc-4bc6-a50d-e4f688c5252c"
+					(reference "D6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 110.49 110.49 90)
 		(unit 1)
@@ -1872,88 +1985,6 @@
 			(project "TER_LVBMS"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/adfb2d76-93cc-4bc6-a50d-e4f688c5252c"
 					(reference "R52")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Relay:Panasonic_ALFG2PF24")
-		(at 121.92 85.09 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f93ff96e-350d-4bf2-9f9c-2a12e9c35cbd")
-		(property "Reference" "K1"
-			(at 110.49 83.8199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Panasonic_ALFG2PF24"
-			(at 110.49 86.3599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Relay_THT:Relay_SPST_Panasonic_ALFG_FormA_CircularHoles"
-			(at 89.662 85.852 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www3.panasonic.biz/ac/e_download/control/relay/power/catalog/mech_eng_lfg.pdf"
-			(at 121.92 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "24V DC, High Capacity, 31A, Contact Gap 1.5mm, ALFG_FormA"
-			(at 121.92 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "11"
-			(uuid "8cc2bff7-09b8-4e8f-9a5b-48544e399bee")
-		)
-		(pin "A2"
-			(uuid "0f7b462a-d4fa-4f58-8543-e3caa2819b1d")
-		)
-		(pin "A1"
-			(uuid "a8a6b928-41d9-4738-902c-0e76fca5c954")
-		)
-		(pin "14"
-			(uuid "463cd7da-798c-4532-8769-b42fba41536c")
-		)
-		(instances
-			(project "TER_LVBMS"
-				(path "/427cf896-f780-4d4b-86ef-f90b31c1397d/8aa3c5f8-2a3f-44a9-920d-01bf32a384b0"
-					(reference "K1")
-					(unit 1)
-				)
-			)
-			(project "TER_LVBMS"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/adfb2d76-93cc-4bc6-a50d-e4f688c5252c"
-					(reference "K1")
 					(unit 1)
 				)
 			)
