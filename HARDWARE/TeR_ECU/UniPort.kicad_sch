@@ -703,7 +703,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1745c818-70d4-45b0-bfa3-30ce33b3177b")
-		(property "Reference" "#PWR016"
+		(property "Reference" "#PWR020"
 			(at 160.02 77.47 0)
 			(effects
 				(font
@@ -754,11 +754,11 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
-					(reference "#PWR016")
+					(reference "#PWR020")
 					(unit 1)
 				)
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-					(reference "#PWR025")
+					(reference "#PWR029")
 					(unit 1)
 				)
 			)
@@ -774,7 +774,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "57adf174-b870-42ba-92ec-be9a1239acc4")
-		(property "Reference" "#PWR017"
+		(property "Reference" "#PWR019"
 			(at 127 106.68 0)
 			(effects
 				(font
@@ -824,11 +824,11 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/89fa6b65-e09d-462b-a9d8-e2037e38fa73"
-					(reference "#PWR017")
+					(reference "#PWR019")
 					(unit 1)
 				)
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/b3d71585-a15b-4975-adfa-12ed469b60dd"
-					(reference "#PWR026")
+					(reference "#PWR028")
 					(unit 1)
 				)
 			)

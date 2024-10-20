@@ -1214,7 +1214,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "22509d2d-cb57-497f-9086-c66ecdcfc86a")
-		(property "Reference" "#PWR085"
+		(property "Reference" "#PWR0105"
 			(at 140.97 93.98 0)
 			(effects
 				(font
@@ -1264,7 +1264,7 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "#PWR085")
+					(reference "#PWR0105")
 					(unit 1)
 				)
 			)
@@ -1280,7 +1280,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "746ac3cd-9442-4ab6-9c85-90451d83b31b")
-		(property "Reference" "#PWR086"
+		(property "Reference" "#PWR0106"
 			(at 140.97 109.22 0)
 			(effects
 				(font
@@ -1330,7 +1330,7 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "#PWR086")
+					(reference "#PWR0106")
 					(unit 1)
 				)
 			)
@@ -1346,7 +1346,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "da47308e-7a7e-4d8a-aaa7-2028df0b17a5")
-		(property "Reference" "#PWR087"
+		(property "Reference" "#PWR0103"
 			(at 114.3 113.03 0)
 			(effects
 				(font
@@ -1396,7 +1396,7 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "#PWR087")
+					(reference "#PWR0103")
 					(unit 1)
 				)
 			)
@@ -1412,7 +1412,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "eae1c1ac-87fe-4f83-be3f-f15c7c5e0267")
-		(property "Reference" "#PWR084"
+		(property "Reference" "#PWR0104"
 			(at 118.11 90.17 0)
 			(effects
 				(font
@@ -1463,7 +1463,7 @@
 		(instances
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "#PWR084")
+					(reference "#PWR0104")
 					(unit 1)
 				)
 			)
@@ -1479,7 +1479,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f7426af5-897a-4e63-aeba-95f68ef2cf2a")
-		(property "Reference" "J5"
+		(property "Reference" "J4"
 			(at 114.3 82.55 0)
 			(effects
 				(font
@@ -1495,7 +1495,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_USB:USB_Mini-B_Wuerth_65100516121_Horizontal"
 			(at 118.11 96.52 0)
 			(effects
 				(font
@@ -1543,7 +1543,7 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "J5")
+					(reference "J4")
 					(unit 1)
 				)
 			)

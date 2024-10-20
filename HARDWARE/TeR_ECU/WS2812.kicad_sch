@@ -362,14 +362,20 @@
 		)
 	)
 	(junction
-		(at 132.08 88.9)
+		(at 130.81 67.31)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9be02c6a-8cc8-4814-8c4f-bb2ef85502e0")
 	)
+	(junction
+		(at 130.81 87.63)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a251a44a-5a61-461f-9642-43686d969de9")
+	)
 	(wire
 		(pts
-			(xy 149.86 88.9) (xy 165.1 88.9)
+			(xy 148.59 67.31) (xy 163.83 67.31)
 		)
 		(stroke
 			(width 0)
@@ -379,7 +385,17 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 88.9) (xy 142.24 88.9)
+			(xy 120.65 87.63) (xy 130.81 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "69021548-b6c8-4132-90f4-c7ae0e33e695")
+	)
+	(wire
+		(pts
+			(xy 130.81 67.31) (xy 140.97 67.31)
 		)
 		(stroke
 			(width 0)
@@ -389,13 +405,33 @@
 	)
 	(wire
 		(pts
-			(xy 121.92 88.9) (xy 132.08 88.9)
+			(xy 120.65 67.31) (xy 130.81 67.31)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "ae97ca12-ae84-4147-ab6f-a395fadbccb6")
+	)
+	(wire
+		(pts
+			(xy 130.81 87.63) (xy 140.97 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cfa7d212-e57f-44b0-9b2e-6e8a84f54573")
+	)
+	(wire
+		(pts
+			(xy 148.59 87.63) (xy 163.83 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e9869982-0ad3-4abc-943f-9e79533fc310")
 	)
 	(text "Just limit output current and protect SPI line\nIt is meant to drive the WS2812 using SPI@2.5mbps\nwhich is conformant with the protocol and can exploit\nthe periferal efficency compared to bitbanging with a timer"
 		(exclude_from_sim no)
@@ -408,9 +444,21 @@
 		)
 		(uuid "c7a95755-ee62-4929-a329-4342f868a862")
 	)
-	(hierarchical_label "LED_DATA"
+	(hierarchical_label "LED2"
 		(shape input)
-		(at 121.92 88.9 180)
+		(at 120.65 87.63 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4ede27c1-c7a6-4d15-b5c1-6287e3b4636d")
+	)
+	(hierarchical_label "LED1"
+		(shape input)
+		(at 120.65 67.31 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -420,9 +468,21 @@
 		)
 		(uuid "6ed9609a-74df-428f-b241-16be4a0d82f3")
 	)
-	(hierarchical_label "LED_SPI"
+	(hierarchical_label "LED2_SPI"
 		(shape input)
-		(at 165.1 88.9 0)
+		(at 163.83 87.63 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "81068a21-d15b-4f5f-8a4d-2c62c075ea53")
+	)
+	(hierarchical_label "LED1_SPI"
+		(shape input)
+		(at 163.83 67.31 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -434,7 +494,7 @@
 	)
 	(symbol
 		(lib_id "Diode:SMAJ6.0A")
-		(at 132.08 92.71 90)
+		(at 130.81 71.12 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -442,8 +502,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "03034d15-3f24-4e13-81f2-4e76df84870e")
-		(property "Reference" "D19"
-			(at 134.62 91.4399 90)
+		(property "Reference" "D5"
+			(at 133.35 69.8499 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -452,7 +512,7 @@
 			)
 		)
 		(property "Value" "SMAJ6.0A"
-			(at 134.62 93.9799 90)
+			(at 133.35 72.3899 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -461,7 +521,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 137.16 92.71 0)
+			(at 135.89 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -470,7 +530,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 132.08 93.98 0)
+			(at 130.81 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -479,7 +539,7 @@
 			)
 		)
 		(property "Description" "400W unidirectional Transient Voltage Suppressor, 6.0Vr, SMA(DO-214AC)"
-			(at 132.08 92.71 0)
+			(at 130.81 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -496,7 +556,77 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
-					(reference "D19")
+					(reference "D5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:SMAJ6.0A")
+		(at 130.81 91.44 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0f97aaec-a565-4851-9127-64ed14c0c21b")
+		(property "Reference" "D6"
+			(at 133.35 90.1699 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SMAJ6.0A"
+			(at 133.35 92.7099 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SMA"
+			(at 135.89 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
+			(at 130.81 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "400W unidirectional Transient Voltage Suppressor, 6.0Vr, SMA(DO-214AC)"
+			(at 130.81 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b0c2e647-249e-449a-8bbd-e82462b4b10b")
+		)
+		(pin "1"
+			(uuid "2df5f716-1d2e-4562-aec0-52827f0db7ae")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
+					(reference "D6")
 					(unit 1)
 				)
 			)
@@ -504,7 +634,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 146.05 88.9 90)
+		(at 144.78 67.31 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -512,8 +642,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "674f5539-c508-41bf-b8c2-1457a12952f1")
-		(property "Reference" "R25"
-			(at 146.05 82.55 90)
+		(property "Reference" "R5"
+			(at 144.78 60.96 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -521,7 +651,7 @@
 			)
 		)
 		(property "Value" "100R"
-			(at 146.05 85.09 90)
+			(at 144.78 63.5 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -529,7 +659,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 146.05 90.678 90)
+			(at 144.78 69.088 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -538,7 +668,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 146.05 88.9 0)
+			(at 144.78 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -547,7 +677,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 146.05 88.9 0)
+			(at 144.78 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -564,7 +694,75 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
-					(reference "R25")
+					(reference "R5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 144.78 87.63 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a709464a-3808-4036-8bc5-9c0a33769fc3")
+		(property "Reference" "R6"
+			(at 144.78 81.28 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100R"
+			(at 144.78 83.82 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 144.78 89.408 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 144.78 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 144.78 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "da4285a9-d4a5-4300-a608-eaddf2e35918")
+		)
+		(pin "1"
+			(uuid "c21cf705-5d5e-4390-a2a7-59f7bb4407af")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -572,16 +770,16 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 132.08 96.52 0)
+		(at 130.81 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "fc27144b-6bf5-45d0-ae40-589f19fcc706")
-		(property "Reference" "#PWR0101"
-			(at 132.08 102.87 0)
+		(uuid "ecbd0711-eca9-4791-81dc-90cc4b75c412")
+		(property "Reference" "#PWR011"
+			(at 130.81 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -590,7 +788,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 132.08 101.6 0)
+			(at 130.81 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -598,7 +796,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 132.08 96.52 0)
+			(at 130.81 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -607,7 +805,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 96.52 0)
+			(at 130.81 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -616,7 +814,73 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 132.08 96.52 0)
+			(at 130.81 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "094146ae-02a9-4e59-ab64-66b7766e4740")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
+					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 130.81 74.93 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "fc27144b-6bf5-45d0-ae40-589f19fcc706")
+		(property "Reference" "#PWR010"
+			(at 130.81 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 130.81 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 130.81 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 130.81 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 130.81 74.93 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -630,7 +894,7 @@
 		(instances
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/57c564d0-e71b-4ec8-8e08-7691aefb5091"
-					(reference "#PWR0101")
+					(reference "#PWR010")
 					(unit 1)
 				)
 			)
