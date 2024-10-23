@@ -4213,7 +4213,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "ACT45B-510-2P-TL003:FIL_ACT45B-510-2P-TL003"
+		(property "Footprint" "CAN_CMF:FIL_ACT45B-510-2P-TL003"
 			(at 147.32 95.25 0)
 			(effects
 				(font

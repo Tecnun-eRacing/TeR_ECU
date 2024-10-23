@@ -1133,30 +1133,30 @@
 		)
 	)
 	(junction
-		(at 127 73.66)
+		(at 148.59 67.31)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5c05e48e-bc23-42b7-a588-b3865a1b0c35")
 	)
 	(junction
-		(at 104.14 110.49)
+		(at 125.73 104.14)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "65c128b6-152b-4788-b172-c7566cce028f")
 	)
 	(junction
-		(at 127 95.25)
+		(at 148.59 88.9)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a78c953c-1c62-4167-89fb-73635f2043bc")
 	)
 	(no_connect
-		(at 119.38 77.47)
+		(at 140.97 71.12)
 		(uuid "1828481d-6ffd-424e-85b3-4fce39014052")
 	)
 	(wire
 		(pts
-			(xy 114.3 69.85) (xy 114.3 77.47)
+			(xy 135.89 68.58) (xy 135.89 71.12)
 		)
 		(stroke
 			(width 0)
@@ -1166,7 +1166,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 73.66) (xy 127 77.47)
+			(xy 148.59 67.31) (xy 148.59 71.12)
 		)
 		(stroke
 			(width 0)
@@ -1176,7 +1176,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 95.25) (xy 143.51 95.25)
+			(xy 148.59 88.9) (xy 165.1 88.9)
 		)
 		(stroke
 			(width 0)
@@ -1186,7 +1186,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 92.71) (xy 127 95.25)
+			(xy 148.59 86.36) (xy 148.59 88.9)
 		)
 		(stroke
 			(width 0)
@@ -1196,7 +1196,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 110.49) (xy 104.14 110.49)
+			(xy 116.84 104.14) (xy 125.73 104.14)
 		)
 		(stroke
 			(width 0)
@@ -1206,7 +1206,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 110.49) (xy 119.38 110.49)
+			(xy 135.89 104.14) (xy 140.97 104.14)
 		)
 		(stroke
 			(width 0)
@@ -1216,7 +1216,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 73.66) (xy 127 73.66)
+			(xy 165.1 67.31) (xy 148.59 67.31)
 		)
 		(stroke
 			(width 0)
@@ -1226,17 +1226,7 @@
 	)
 	(wire
 		(pts
-			(xy 116.84 97.79) (xy 116.84 92.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "711a1d5b-8ca2-4ba8-8d18-7854728f3bd2")
-	)
-	(wire
-		(pts
-			(xy 104.14 113.03) (xy 104.14 110.49)
+			(xy 125.73 106.68) (xy 125.73 104.14)
 		)
 		(stroke
 			(width 0)
@@ -1246,7 +1236,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 81.28) (xy 143.51 73.66)
+			(xy 165.1 74.93) (xy 165.1 67.31)
 		)
 		(stroke
 			(width 0)
@@ -1256,7 +1246,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 57.15) (xy 127 73.66)
+			(xy 148.59 50.8) (xy 148.59 67.31)
 		)
 		(stroke
 			(width 0)
@@ -1266,7 +1256,7 @@
 	)
 	(wire
 		(pts
-			(xy 104.14 110.49) (xy 106.68 110.49)
+			(xy 125.73 104.14) (xy 128.27 104.14)
 		)
 		(stroke
 			(width 0)
@@ -1276,7 +1266,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 95.25) (xy 127 105.41)
+			(xy 148.59 88.9) (xy 148.59 99.06)
 		)
 		(stroke
 			(width 0)
@@ -1286,7 +1276,7 @@
 	)
 	(wire
 		(pts
-			(xy 104.14 120.65) (xy 104.14 121.92)
+			(xy 125.73 114.3) (xy 125.73 115.57)
 		)
 		(stroke
 			(width 0)
@@ -1296,7 +1286,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 115.57) (xy 127 123.19)
+			(xy 148.59 109.22) (xy 148.59 116.84)
 		)
 		(stroke
 			(width 0)
@@ -1306,7 +1296,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 88.9) (xy 143.51 95.25)
+			(xy 165.1 82.55) (xy 165.1 88.9)
 		)
 		(stroke
 			(width 0)
@@ -1316,7 +1306,7 @@
 	)
 	(text "El diodo proteje el mosfet del sobrevoltaje que se da al dejar\nde suministrar la corriente a la bobina."
 		(exclude_from_sim no)
-		(at 166.37 82.55 0)
+		(at 91.948 160.528 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1324,6 +1314,17 @@
 			(justify left bottom)
 		)
 		(uuid "25d60b4d-f6cb-4f10-b72a-53cf4897fa03")
+	)
+	(text "El peak insrush current de los coils de los AIR es 3.8Amps luego el switch current\ndel relé debería ser capáz de soportarlos. Este lo hace\n"
+		(exclude_from_sim no)
+		(at 93.472 153.162 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "49dbf272-5de8-4ef1-9484-d66783e9b515")
 	)
 	(text "La resistencia de puerta regula la carga del gate del \nmosfet para no exigir sobrecorrientes al micro, la otra es una resistencia\nde pulldown."
 		(exclude_from_sim no)
@@ -1336,21 +1337,9 @@
 		)
 		(uuid "aadfdd37-e4ea-4181-97ae-0c86f420f522")
 	)
-	(hierarchical_label "SL_IN"
-		(shape input)
-		(at 116.84 97.79 270)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "150415cd-b84c-4467-8fd4-a36093408a0d")
-	)
-	(hierarchical_label "SL_OUT"
+	(hierarchical_label "SC_OUT"
 		(shape output)
-		(at 114.3 69.85 90)
+		(at 135.89 68.58 90)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1360,9 +1349,21 @@
 		)
 		(uuid "780aa9b4-c5d9-4467-b627-6e7307f14984")
 	)
+	(hierarchical_label "SC_IN"
+		(shape input)
+		(at 138.43 86.36 270)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7aed96ab-c3e9-44b8-a323-a7725a915ed0")
+	)
 	(hierarchical_label "ON{slash}OFF"
 		(shape input)
-		(at 95.25 110.49 180)
+		(at 116.84 104.14 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1374,17 +1375,16 @@
 	)
 	(symbol
 		(lib_id "Relay:G5Q-1")
-		(at 121.92 85.09 0)
+		(at 143.51 78.74 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "0b9c5af9-3694-4111-ba94-d31d36ea33c5")
 		(property "Reference" "K2"
-			(at 133.35 83.8199 0)
+			(at 154.94 77.4699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1393,7 +1393,7 @@
 			)
 		)
 		(property "Value" "G5Q-1"
-			(at 133.35 86.3599 0)
+			(at 154.94 80.0099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1402,7 +1402,7 @@
 			)
 		)
 		(property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5Q-1"
-			(at 110.49 86.36 0)
+			(at 132.08 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1412,7 +1412,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.omron.com/ecb/products/pdf/en-g5q.pdf"
-			(at 121.92 85.09 0)
+			(at 143.51 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1422,7 +1422,7 @@
 			)
 		)
 		(property "Description" "Omron G5G relay, Miniature Single Pole, SPDT, 10A"
-			(at 121.92 85.09 0)
+			(at 143.51 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1456,7 +1456,7 @@
 	)
 	(symbol
 		(lib_id "Transistor_FET:ZXMN3F30FH")
-		(at 124.46 110.49 0)
+		(at 146.05 104.14 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1465,7 +1465,7 @@
 		(fields_autoplaced yes)
 		(uuid "2df874e1-af4a-479c-bdb4-656613e8ba7a")
 		(property "Reference" "Q1"
-			(at 130.81 109.22 0)
+			(at 152.4 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1474,7 +1474,7 @@
 			)
 		)
 		(property "Value" "ZXMN3F30FH"
-			(at 130.81 111.76 0)
+			(at 152.4 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1483,7 +1483,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 129.54 112.395 0)
+			(at 151.13 106.045 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1494,7 +1494,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.diodes.com/assets/Datasheets/ZXMN3F30FH.pdf"
-			(at 124.46 110.49 0)
+			(at 146.05 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1504,7 +1504,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 124.46 110.49 0)
+			(at 146.05 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1538,7 +1538,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 127 123.19 0)
+		(at 148.59 116.84 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1547,7 +1547,7 @@
 		(fields_autoplaced yes)
 		(uuid "47f62ace-b754-49af-a3ce-1b26aa6a07ba")
 		(property "Reference" "#PWR078"
-			(at 127 129.54 0)
+			(at 148.59 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1556,7 +1556,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 127 128.27 0)
+			(at 148.59 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1564,7 +1564,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 127 123.19 0)
+			(at 148.59 116.84 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1573,7 +1573,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 127 123.19 0)
+			(at 148.59 116.84 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1582,7 +1582,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 127 123.19 0)
+			(at 148.59 116.84 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1610,7 +1610,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 104.14 116.84 180)
+		(at 125.73 110.49 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1619,7 +1619,7 @@
 		(fields_autoplaced yes)
 		(uuid "6649b34d-323e-4246-9846-a11ac55afd81")
 		(property "Reference" "R28"
-			(at 106.045 115.57 0)
+			(at 127.635 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1628,7 +1628,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 106.045 118.11 0)
+			(at 127.635 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1637,7 +1637,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 105.918 116.84 90)
+			(at 127.508 110.49 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1646,7 +1646,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 104.14 116.84 0)
+			(at 125.73 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1655,7 +1655,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 104.14 116.84 0)
+			(at 125.73 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1686,7 +1686,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 104.14 121.92 0)
+		(at 125.73 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1695,7 +1695,7 @@
 		(fields_autoplaced yes)
 		(uuid "7b8ce974-c285-4883-ba71-1b127f97974a")
 		(property "Reference" "#PWR077"
-			(at 104.14 128.27 0)
+			(at 125.73 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1704,7 +1704,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 104.14 127 0)
+			(at 125.73 120.65 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1712,7 +1712,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 104.14 121.92 0)
+			(at 125.73 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1721,7 +1721,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 104.14 121.92 0)
+			(at 125.73 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1730,7 +1730,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 104.14 121.92 0)
+			(at 125.73 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1758,7 +1758,7 @@
 	)
 	(symbol
 		(lib_id "power:+24V")
-		(at 127 57.15 0)
+		(at 148.59 50.8 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1767,7 +1767,7 @@
 		(fields_autoplaced yes)
 		(uuid "939af23d-48a7-4574-90ed-42262fc99331")
 		(property "Reference" "#PWR076"
-			(at 127 60.96 0)
+			(at 148.59 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1776,7 +1776,7 @@
 			)
 		)
 		(property "Value" "+24V"
-			(at 127 52.705 0)
+			(at 148.59 46.355 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1784,7 +1784,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 127 57.15 0)
+			(at 148.59 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1793,7 +1793,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 127 57.15 0)
+			(at 148.59 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1802,7 +1802,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 127 57.15 0)
+			(at 148.59 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1830,7 +1830,7 @@
 	)
 	(symbol
 		(lib_id "Diode:SM4007")
-		(at 143.51 85.09 270)
+		(at 165.1 78.74 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1839,7 +1839,7 @@
 		(fields_autoplaced yes)
 		(uuid "9c8687f1-8350-46ec-8ae3-f8d70f96289b")
 		(property "Reference" "D6"
-			(at 146.05 83.8199 90)
+			(at 167.64 77.4699 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1848,7 +1848,7 @@
 			)
 		)
 		(property "Value" "SM4007"
-			(at 146.05 86.3599 90)
+			(at 167.64 80.0099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1857,7 +1857,7 @@
 			)
 		)
 		(property "Footprint" "Diode_SMD:D_MELF"
-			(at 139.065 85.09 0)
+			(at 160.655 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1866,7 +1866,7 @@
 			)
 		)
 		(property "Datasheet" "http://cdn-reichelt.de/documents/datenblatt/A400/SMD1N400%23DIO.pdf"
-			(at 143.51 85.09 0)
+			(at 165.1 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1875,7 +1875,7 @@
 			)
 		)
 		(property "Description" "1000V 1A General Purpose Rectifier Diode, MELF"
-			(at 143.51 85.09 0)
+			(at 165.1 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1884,7 +1884,7 @@
 			)
 		)
 		(property "Sim.Device" "D"
-			(at 143.51 85.09 0)
+			(at 165.1 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1893,7 +1893,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 143.51 85.09 0)
+			(at 165.1 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1918,7 +1918,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 110.49 110.49 90)
+		(at 132.08 104.14 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1927,7 +1927,7 @@
 		(fields_autoplaced yes)
 		(uuid "f002c59e-3a5e-4902-96f3-ea6843102e02")
 		(property "Reference" "R27"
-			(at 110.49 104.775 90)
+			(at 132.08 98.425 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1935,7 +1935,7 @@
 			)
 		)
 		(property "Value" "6R"
-			(at 110.49 107.315 90)
+			(at 132.08 100.965 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1943,7 +1943,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 110.49 112.268 90)
+			(at 132.08 105.918 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1952,7 +1952,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110.49 110.49 0)
+			(at 132.08 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1961,7 +1961,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 110.49 110.49 0)
+			(at 132.08 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)

@@ -1095,6 +1095,28 @@
 		)
 		(uuid "afff7bd9-114c-4ae6-a1f5-7e92cc627b65")
 	)
+	(label "D+"
+		(at 128.27 95.25 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "17b65901-e1eb-4f06-9c74-abc7332102a0")
+	)
+	(label "D-"
+		(at 128.27 97.79 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "830ff2cd-6e61-4c09-9675-183201a66003")
+	)
 	(hierarchical_label "USB_D+"
 		(shape input)
 		(at 146.05 95.25 0)
@@ -1118,91 +1140,6 @@
 			(justify left)
 		)
 		(uuid "e11701a3-6336-4ee8-b849-b391e3ec5a24")
-	)
-	(symbol
-		(lib_id "Power_Protection:USBLC6-2SC6")
-		(at 140.97 95.25 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0f5f94b1-6022-4796-8a12-ddaedcb1a118")
-		(property "Reference" "U7"
-			(at 142.6211 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "USBLC6-2SC6"
-			(at 142.6211 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 142.24 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
-			(at 142.24 103.505 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6"
-			(at 140.97 95.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "3"
-			(uuid "87189d28-af8e-43ed-bb60-fda09eda7ab9")
-		)
-		(pin "5"
-			(uuid "7f6d5759-7f76-44f8-a976-41a7c045a100")
-		)
-		(pin "6"
-			(uuid "880845eb-0899-4434-92e6-63704778dfd5")
-		)
-		(pin "2"
-			(uuid "0d80dec4-c1ed-4100-a592-a983b9bf15f9")
-		)
-		(pin "4"
-			(uuid "a6616888-1dbe-4d0d-b241-13b466395b33")
-		)
-		(pin "1"
-			(uuid "7d29b5f5-9c25-4dda-ad4e-c205c6c05110")
-		)
-		(instances
-			(project ""
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
-					(reference "U7")
-					(unit 1)
-				)
-			)
-		)
 	)
 	(symbol
 		(lib_id "power:+5V")
@@ -1265,6 +1202,91 @@
 			(project ""
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
 					(reference "#PWR0105")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Power_Protection:USBLC6-2SC6")
+		(at 140.97 95.25 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4053278b-8ed0-4320-89a9-cbb9e6788c99")
+		(property "Reference" "U7"
+			(at 139.3189 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "USBLC6-2SC6"
+			(at 157.226 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 139.7 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
+			(at 139.7 103.505 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6"
+			(at 140.97 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "4cf2f286-18af-4a59-84e0-af1269840242")
+		)
+		(pin "5"
+			(uuid "765cc482-5983-4b1c-84e9-e5027ca510fb")
+		)
+		(pin "6"
+			(uuid "488ab9ee-36ef-4f47-90a5-5b4c968ad9a7")
+		)
+		(pin "2"
+			(uuid "16fd9c41-121a-4244-8053-0bd7cdaac5d6")
+		)
+		(pin "4"
+			(uuid "3a334a68-8e11-4cd8-811c-990d51894d2b")
+		)
+		(pin "1"
+			(uuid "8f080faf-8b58-4ae4-990e-228f351546d2")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/f4983e62-bb86-4f44-906d-788ec401c377"
+					(reference "U7")
 					(unit 1)
 				)
 			)

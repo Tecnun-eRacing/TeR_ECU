@@ -4226,7 +4226,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "SODFL1006X40N"
+		(property "Footprint" "GPS_D:SODFL1006X40N"
 			(at 67.64 102.87 0)
 			(effects
 				(font
@@ -5106,7 +5106,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0201_0603Metric"
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
 			(at 144.78 106.68 0)
 			(effects
 				(font
