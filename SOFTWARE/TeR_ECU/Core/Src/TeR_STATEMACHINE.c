@@ -131,6 +131,7 @@ void stateMachine(void) {
 		switch (TeR.status.state) {
 		case WAIT_SL:
 			//Security
+			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
@@ -181,6 +182,7 @@ void stateMachine(void) {
 			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 			break;
 		case DRIVING: // se puede utilizar un one shot software timer para hacer wakeup de una tarea torquemanager dentro de 2 seg, pero eso implicaria tener una maquina de estados desincronizada, prefiero asi
+			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay (ya que comparten mutex)
 			osDelay(2000); //EV 4.12.1, delay para el sonido y ADEMAS para que el coche NO acelere mientras pite, (la maquina de estados se para aqui 2 segs)

@@ -166,7 +166,7 @@ uint8_t command(struct ter_command_t command) {
 			TxHeader.StdId = TER_COMMAND_FRAME_ID;
 			TxHeader.DLC = TER_COMMAND_LENGTH;
 			ter_command_pack(TxData, &command, TER_COMMAND_LENGTH);
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
+			while(HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)!=HAL_OK);
 			return 0; //Exit function, no result
 		}
 		break;
