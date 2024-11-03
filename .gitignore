@@ -7,7 +7,7 @@
 *.bck
 *.kicad_pcb-bak
 *.kicad_sch-bak
-*-backups
+*-backups/
 *.kicad_prl
 *.sch-bak
 *~
@@ -16,6 +16,7 @@ _autosave-*
 *-save.pro
 *-save.kicad_pcb
 fp-info-cache
+sym-lib-table
 ~*.lck
 \#auto_saved_files#
 
@@ -34,6 +35,6 @@ fp-info-cache
 # Eclipse
 .metadata
 .settings
-[Rr]elease
-[Dd]ebug
+[Rr]elease/
+[Dd]ebug/
 .launch
