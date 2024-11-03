@@ -506,15 +506,15 @@
 	(symbol
 		(lib_id "Diode:PTVS7V5Z1USK")
 		(at 130.81 91.44 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "2fe03036-0c94-46c1-bc48-30a392ff63bd")
 		(property "Reference" "D5"
-			(at 133.35 90.1699 90)
+			(at 133.35 92.7101 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -523,7 +523,7 @@
 			)
 		)
 		(property "Value" "PTVS7V5Z1USK"
-			(at 133.35 92.7099 90)
+			(at 133.35 90.1701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -576,15 +576,15 @@
 	(symbol
 		(lib_id "Diode:PTVS7V5Z1USK")
 		(at 130.81 71.12 90)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "501d35d4-dda9-41a9-a546-e6fdb1d7d844")
 		(property "Reference" "D32"
-			(at 133.35 69.8499 90)
+			(at 133.35 72.3901 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -593,7 +593,7 @@
 			)
 		)
 		(property "Value" "PTVS7V5Z1USK"
-			(at 133.35 72.3899 90)
+			(at 133.35 69.8501 90)
 			(effects
 				(font
 					(size 1.27 1.27)

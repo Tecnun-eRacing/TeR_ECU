@@ -3161,7 +3161,7 @@
 		(fields_autoplaced yes)
 		(uuid "2553b94c-1f96-4ed3-96ac-b1ef54cb1c9e")
 		(property "Reference" "JP2"
-			(at 179.07 92.71 90)
+			(at 179.07 92.7099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3169,8 +3169,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "SolderJumper_3_Open"
-			(at 179.07 95.25 90)
+		(property "Value" "120R Term"
+			(at 179.07 95.2499 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3178,7 +3178,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Jumper:SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm"
+		(property "Footprint" "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm"
 			(at 176.53 93.98 0)
 			(effects
 				(font

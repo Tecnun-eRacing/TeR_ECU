@@ -6,7 +6,8 @@
 	(paper "A4")
 	(title_block
 		(title "TeR_ECU")
-		(date "2024-07-12")
+		(date "2024-11-03")
+		(rev "V2.0.0")
 		(company "Tecnun-eRacing")
 	)
 	(lib_symbols
@@ -1391,6 +1392,126 @@
 				)
 			)
 		)
+		(symbol "power:+24V"
+			(power)
+			(pin_numbers hide)
+			(pin_names
+				(offset 0) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "+24V"
+				(at 0 3.556 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+24V\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "+24V_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+24V_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "power:+3.3V"
 			(power)
 			(pin_names
@@ -1889,16 +2010,6 @@
 			(type default)
 		)
 		(uuid "0d64bc90-bba3-4477-bde3-8aa5a7e88d4c")
-	)
-	(wire
-		(pts
-			(xy 173.99 50.8) (xy 185.42 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "108753be-cfbe-4e2e-aeda-b19ed5e63073")
 	)
 	(wire
 		(pts
@@ -2572,7 +2683,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 87.63) (xy 148.59 87.63)
+			(xy 140.97 90.17) (xy 148.59 90.17)
 		)
 		(stroke
 			(width 0)
@@ -2612,7 +2723,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 90.17) (xy 148.59 90.17)
+			(xy 140.97 85.09) (xy 148.59 85.09)
 		)
 		(stroke
 			(width 0)
@@ -2662,7 +2773,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 85.09) (xy 148.59 85.09)
+			(xy 140.97 87.63) (xy 148.59 87.63)
 		)
 		(stroke
 			(width 0)
@@ -2689,6 +2800,16 @@
 			(type default)
 		)
 		(uuid "b4e1992b-cea0-445b-9039-5450cbcaec37")
+	)
+	(wire
+		(pts
+			(xy 173.99 53.34) (xy 185.42 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b506baf6-773b-4fd8-a89e-5ddf5237534c")
 	)
 	(wire
 		(pts
@@ -2782,6 +2903,16 @@
 	)
 	(wire
 		(pts
+			(xy 173.99 50.8) (xy 185.42 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bf71883d-16c3-4c17-bb08-bba4ea5762dc")
+	)
+	(wire
+		(pts
 			(xy 175.26 125.73) (xy 185.42 125.73)
 		)
 		(stroke
@@ -2789,16 +2920,6 @@
 			(type default)
 		)
 		(uuid "c053e1bc-5c14-4234-b310-d208b5e4309f")
-	)
-	(wire
-		(pts
-			(xy 173.99 53.34) (xy 185.42 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c0e1c17a-e3a7-4ce6-a3a5-06f361e925a8")
 	)
 	(polyline
 		(pts
@@ -3194,7 +3315,7 @@
 		(uuid "2615f01b-9aec-4ae5-80f8-8c1d8e70446c")
 	)
 	(label "PWM1"
-		(at 140.97 85.09 0)
+		(at 140.97 87.63 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3215,7 +3336,7 @@
 		)
 		(uuid "05f75969-0298-4ff8-9210-6bd5597cb61b")
 	)
-	(label "PWM3"
+	(label "PWM2"
 		(at 96.52 86.36 180)
 		(fields_autoplaced yes)
 		(effects
@@ -3225,17 +3346,6 @@
 			(justify right bottom)
 		)
 		(uuid "1b330e77-2645-43d5-9556-5c15785a51e9")
-	)
-	(label "PWM4"
-		(at 140.97 92.71 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "21b422ac-b57c-45d2-9a1e-d1f4f06d8f98")
 	)
 	(label "DOUT0"
 		(at 140.97 67.31 0)
@@ -3281,17 +3391,6 @@
 		)
 		(uuid "2f652ea2-d245-48aa-90a7-053aaf01e464")
 	)
-	(label "PWM3"
-		(at 140.97 90.17 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "3030e5db-5003-46c4-b402-d4c55b37b9d5")
-	)
 	(label "DOUT1"
 		(at 140.97 69.85 0)
 		(fields_autoplaced yes)
@@ -3303,7 +3402,7 @@
 		)
 		(uuid "30d42dd0-225d-4b4b-a6e9-5d13545f26ff")
 	)
-	(label "PWM4"
+	(label "PWM3"
 		(at 96.52 88.9 180)
 		(fields_autoplaced yes)
 		(effects
@@ -3335,6 +3434,17 @@
 			(justify right bottom)
 		)
 		(uuid "591b0200-7ca0-4e1f-98f7-bcf7dea6610a")
+	)
+	(label "PWM3"
+		(at 140.97 92.71 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5fe10bdc-e049-4236-a3ed-2a490de4ef29")
 	)
 	(label "AIN2"
 		(at 96.52 55.88 180)
@@ -3380,7 +3490,7 @@
 		)
 		(uuid "7a2a0a43-0727-409f-8387-29317c29ae8f")
 	)
-	(label "PWM1"
+	(label "PWM0"
 		(at 96.52 81.28 180)
 		(fields_autoplaced yes)
 		(effects
@@ -3568,7 +3678,7 @@
 		(uuid "b5c4294d-3475-4394-b7bd-57ecaeaa9688")
 	)
 	(label "PWM2"
-		(at 140.97 87.63 0)
+		(at 140.97 90.17 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3633,7 +3743,7 @@
 		)
 		(uuid "e577c861-f59c-4f53-ba44-3729af7eb399")
 	)
-	(label "PWM2"
+	(label "PWM1"
 		(at 96.52 83.82 180)
 		(fields_autoplaced yes)
 		(effects
@@ -3665,6 +3775,17 @@
 			(justify left bottom)
 		)
 		(uuid "f745a081-5d8b-4237-a755-bf7bfc5aabf1")
+	)
+	(label "PWM0"
+		(at 140.97 85.09 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f77a5e04-748e-4b3d-a718-53e232f9ce4e")
 	)
 	(label "AIN0"
 		(at 140.97 48.26 0)
@@ -3698,28 +3819,6 @@
 			(justify left bottom)
 		)
 		(uuid "fc46c0d0-9dc2-4b52-98c3-282eed0ff066")
-	)
-	(global_label "24_VIN"
-		(shape input)
-		(at 59.69 71.12 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "6292925d-cf33-411d-bd62-b5f18b18c9f0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 50.2943 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
 	)
 	(symbol
 		(lib_id "power:GND")
@@ -4656,6 +4755,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+24V")
+		(at 59.69 71.12 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8479a753-2964-47f3-b093-a55e43fa5796")
+		(property "Reference" "#PWR0141"
+			(at 63.5 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+24V"
+			(at 55.88 71.1199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 59.69 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 59.69 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+24V\""
+			(at 59.69 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a6c2cb7e-38b5-429f-91a5-af4d3d45b37c")
+		)
+		(instances
+			(project ""
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902"
+					(reference "#PWR0141")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 30.48 179.07 90)
 		(unit 1)
@@ -5447,7 +5613,7 @@
 				)
 			)
 		)
-		(property "Value" "SYS"
+		(property "Value" "ERR"
 			(at 40.64 168.91 0)
 			(effects
 				(font
@@ -5580,7 +5746,7 @@
 				)
 			)
 		)
-		(property "Value" "SYS"
+		(property "Value" "IMU"
 			(at 40.64 176.53 0)
 			(effects
 				(font
@@ -6269,46 +6435,6 @@
 			)
 			(uuid "1b697e20-ba39-47c4-9b01-1ab0c634664c")
 		)
-		(pin "T1_CH2" input
-			(at 185.42 87.63 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "4f34f020-8355-490d-8612-c1331091c506")
-		)
-		(pin "T1_CH3" input
-			(at 185.42 90.17 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "b7449c77-97d2-47a8-a499-1d7a43151409")
-		)
-		(pin "T1_CH4" input
-			(at 185.42 92.71 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "edaa2673-090f-45e7-9a7f-4977316b1980")
-		)
-		(pin "T1_CH1" input
-			(at 185.42 85.09 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "a1fd2753-815f-487e-80ff-368888b529ff")
-		)
 		(pin "SPI2_MOSI" input
 			(at 185.42 105.41 180)
 			(effects
@@ -6408,6 +6534,46 @@
 				(justify left)
 			)
 			(uuid "842732da-dd10-4f24-87f3-8cca82549282")
+		)
+		(pin "T3_CH1" input
+			(at 185.42 85.09 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "071e3e05-2c0b-40ab-8f72-67f116297698")
+		)
+		(pin "T3_CH2" input
+			(at 185.42 87.63 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "7ca0df59-ad7d-4a9e-a808-d1a4de52dfed")
+		)
+		(pin "T3_CH3" input
+			(at 185.42 90.17 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "079824c4-e22a-40e7-98e2-fe47e2fe7dad")
+		)
+		(pin "T3_CH4" input
+			(at 185.42 92.71 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "3bd8c86f-1fa5-4d95-aa67-378eb537c408")
 		)
 		(instances
 			(project "TeR_ECU"
@@ -6622,7 +6788,7 @@
 			)
 		)
 		(pin "PWM1" input
-			(at 148.59 85.09 180)
+			(at 148.59 87.63 180)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6632,7 +6798,7 @@
 			(uuid "0dfcef92-d7b3-4d9c-a134-06db0d1ea2ae")
 		)
 		(pin "PWM0" input
-			(at 148.59 90.17 180)
+			(at 148.59 85.09 180)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6682,7 +6848,7 @@
 			(uuid "c205f145-77d2-4b55-8cd6-4dbb84e3bcf1")
 		)
 		(pin "PWM2" input
-			(at 148.59 87.63 180)
+			(at 148.59 90.17 180)
 			(effects
 				(font
 					(size 1.27 1.27)

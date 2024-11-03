@@ -825,7 +825,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 134.62 66.04 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -833,7 +832,7 @@
 		(dnp no)
 		(uuid "7a6a307b-56a7-49a7-bd5c-b44657b5ac6e")
 		(property "Reference" "D28"
-			(at 132.08 64.7699 90)
+			(at 132.08 67.3101 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -842,7 +841,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 132.08 67.3099 90)
+			(at 132.08 64.7701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -963,7 +962,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 134.62 50.8 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -971,7 +969,7 @@
 		(dnp no)
 		(uuid "8fc5a22c-5788-4046-b5be-d0f0eed83d7d")
 		(property "Reference" "D27"
-			(at 132.08 49.5299 90)
+			(at 132.08 52.0701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -980,7 +978,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 132.08 52.0699 90)
+			(at 132.08 49.5301 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1167,7 +1165,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 134.62 97.79 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1175,7 +1172,7 @@
 		(dnp no)
 		(uuid "c18d294a-b4ff-4ad4-8d9c-88c56832776e")
 		(property "Reference" "D30"
-			(at 132.08 96.5199 90)
+			(at 132.08 99.0601 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1184,7 +1181,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 132.08 99.0599 90)
+			(at 132.08 96.5201 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1237,7 +1234,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 134.62 82.55 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1245,7 +1241,7 @@
 		(dnp no)
 		(uuid "e0249704-78eb-4933-8c72-53b9c6a665ea")
 		(property "Reference" "D29"
-			(at 132.08 81.2799 90)
+			(at 132.08 83.8201 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1254,7 +1250,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 132.08 83.8199 90)
+			(at 132.08 81.2801 90)
 			(effects
 				(font
 					(size 1.27 1.27)

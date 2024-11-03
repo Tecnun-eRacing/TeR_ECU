@@ -1499,16 +1499,16 @@
 		(uuid "1df3da12-46cf-44cf-8486-fa3dcc64b5b8")
 	)
 	(junction
-		(at 173.99 91.44)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "49bd44b2-731d-4edf-8020-8c6a7412c43b")
-	)
-	(junction
 		(at 223.52 86.36)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5c3ee3a9-c96b-4e7e-b30b-90a98ef22128")
+	)
+	(junction
+		(at 140.97 91.44)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6aea2efc-c907-4003-bf0a-f4a80e1566be")
 	)
 	(junction
 		(at 109.22 91.44)
@@ -1620,7 +1620,7 @@
 	)
 	(wire
 		(pts
-			(xy 163.83 91.44) (xy 173.99 91.44)
+			(xy 163.83 91.44) (xy 186.69 91.44)
 		)
 		(stroke
 			(width 0)
@@ -1667,16 +1667,6 @@
 			(type default)
 		)
 		(uuid "924767ee-efe7-4208-ba7c-c3d959269de0")
-	)
-	(wire
-		(pts
-			(xy 173.99 91.44) (xy 186.69 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a3fe9863-a357-4add-84ba-010bd4bc42b8")
 	)
 	(wire
 		(pts
@@ -1730,7 +1720,7 @@
 	)
 	(wire
 		(pts
-			(xy 134.62 91.44) (xy 143.51 91.44)
+			(xy 134.62 91.44) (xy 140.97 91.44)
 		)
 		(stroke
 			(width 0)
@@ -1770,6 +1760,16 @@
 	)
 	(wire
 		(pts
+			(xy 140.97 86.36) (xy 140.97 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dac89bf6-b9ed-47fb-9020-490baae6621d")
+	)
+	(wire
+		(pts
 			(xy 214.63 85.09) (xy 214.63 86.36)
 		)
 		(stroke
@@ -1797,6 +1797,16 @@
 			(type default)
 		)
 		(uuid "e41d6214-eb6c-41df-a90c-ef9abd624146")
+	)
+	(wire
+		(pts
+			(xy 140.97 91.44) (xy 143.51 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e609231b-1059-4182-9061-5dbee8aed34f")
 	)
 	(wire
 		(pts
@@ -2805,6 +2815,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 140.97 86.36 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ba1132b3-85b0-4fd8-a5f9-5341336d44bd")
+		(property "Reference" "#FLG02"
+			(at 140.97 84.455 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 140.97 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 140.97 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 140.97 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 140.97 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "86207f4d-af1f-4d30-a3a4-ef7a06c878b1")
+		)
+		(instances
+			(project "TeR_ECU"
+				(path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
+					(reference "#FLG02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 223.52 91.44 0)
 		(unit 1)
@@ -3112,77 +3187,6 @@
 			(project "TeR_ECU"
 				(path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
 					(reference "L1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 173.99 91.44 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e7680a84-feda-4bc0-bc37-69003c165540")
-		(property "Reference" "#FLG03"
-			(at 173.99 89.535 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 173.99 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 173.99 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 173.99 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 173.99 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c718eb8b-dc6e-4705-b74d-9f72a9e016f9")
-		)
-		(instances
-			(project "TER_PEDAL"
-				(path "/73ede3a3-6344-40fe-9207-10ff50d388ba/6f10bd65-583f-4818-aeb8-8b5e6e37f336"
-					(reference "#FLG03")
-					(unit 1)
-				)
-			)
-			(project "TeR_ECU"
-				(path "/84413845-c4f3-4743-bcd2-a67649c90902/b76a95f3-584c-4daf-bbe9-70945b593e94"
-					(reference "#FLG02")
 					(unit 1)
 				)
 			)

@@ -2846,7 +2846,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 173.99 105.41 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2854,7 +2853,7 @@
 		(dnp no)
 		(uuid "11f9af93-30f4-450a-afea-60fba5b7fccc")
 		(property "Reference" "D19"
-			(at 171.45 104.1399 90)
+			(at 171.45 106.6801 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2863,7 +2862,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 171.45 106.6799 90)
+			(at 171.45 104.1401 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3053,7 +3052,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 173.99 129.54 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3061,7 +3059,7 @@
 		(dnp no)
 		(uuid "1b479595-f256-43a2-99a9-8333e9936470")
 		(property "Reference" "D20"
-			(at 171.45 128.2699 90)
+			(at 171.45 130.8101 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3070,7 +3068,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 171.45 130.8099 90)
+			(at 171.45 128.2701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3904,7 +3902,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 88.9 87.63 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3912,7 +3909,7 @@
 		(dnp no)
 		(uuid "37934d72-35b5-498b-bd16-ebcff11caa17")
 		(property "Reference" "D13"
-			(at 86.36 86.3599 90)
+			(at 86.36 88.9001 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3921,7 +3918,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 86.36 88.8999 90)
+			(at 86.36 86.3601 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4175,7 +4172,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 29.21 87.63 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4183,7 +4179,7 @@
 		(dnp no)
 		(uuid "4ae6c60a-aa52-4b9c-bb04-6d7b8c966dcd")
 		(property "Reference" "D9"
-			(at 26.67 86.3599 90)
+			(at 26.67 88.9001 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4192,7 +4188,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 26.67 88.8999 90)
+			(at 26.67 86.3601 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4723,7 +4719,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 58.42 87.63 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4731,7 +4726,7 @@
 		(dnp no)
 		(uuid "64dc6f6c-d9ab-4302-906b-2f00335d60fc")
 		(property "Reference" "D11"
-			(at 55.88 86.3599 90)
+			(at 55.88 88.9001 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4740,7 +4735,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 55.88 88.8999 90)
+			(at 55.88 86.3601 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5064,7 +5059,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 173.99 58.42 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5072,7 +5066,7 @@
 		(dnp no)
 		(uuid "7b546925-4081-497c-9d09-448c243ed158")
 		(property "Reference" "D17"
-			(at 171.45 57.1499 90)
+			(at 171.45 59.6901 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5081,7 +5075,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 171.45 59.6899 90)
+			(at 171.45 57.1501 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5269,7 +5263,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 116.84 87.63 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5277,7 +5270,7 @@
 		(dnp no)
 		(uuid "816818d4-8c7b-4afd-9092-d9b73143529e")
 		(property "Reference" "D15"
-			(at 114.3 86.3599 90)
+			(at 114.3 88.9001 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5286,7 +5279,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 114.3 88.8999 90)
+			(at 114.3 86.3601 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6573,7 +6566,6 @@
 	(symbol
 		(lib_id "Diode:PTVS26VZ1USK")
 		(at 173.99 82.55 270)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6581,7 +6573,7 @@
 		(dnp no)
 		(uuid "eb6d921e-1f76-45ec-96e7-54cc9f2449ac")
 		(property "Reference" "D18"
-			(at 171.45 81.2799 90)
+			(at 171.45 83.8201 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6590,7 +6582,7 @@
 			)
 		)
 		(property "Value" "PTVS26VZ1USK"
-			(at 171.45 83.8199 90)
+			(at 171.45 81.2801 90)
 			(effects
 				(font
 					(size 1.27 1.27)
