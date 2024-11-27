@@ -1847,7 +1847,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "SM4007"
+		(property "Value" "SS14"
 			(at 167.64 80.0099 90)
 			(effects
 				(font
@@ -1856,7 +1856,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_MELF"
+		(property "Footprint" "Diode_SMD:D_SOD-123"
 			(at 160.655 78.74 0)
 			(effects
 				(font
