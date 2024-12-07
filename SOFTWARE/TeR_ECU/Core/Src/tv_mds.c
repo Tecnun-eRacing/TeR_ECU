@@ -6,9 +6,9 @@
  */
 
 #include "tv_mds.h"
-
+// la velocidad hay que sacarla mejor de otro sitio ya que de la rueda no me mola
 pid_t tvPid; //Estructura del PID
-
+uint8_t actSpeed = 10; //fidget spinner prevention
 float yawRef(float steer, float vx) {
 	return (steer * vx) / ((L_FRONT + L_REAR) + K_U * (vx * vx)); //unidades rad/seg
 }
@@ -20,7 +20,6 @@ float mz2DeltaTorque(float alpha) { //Takes PID output (Toca revisar unidades de
 
 trqMap_t trqDistribution(trq_t limit) {
 	trqMap_t trqMap;
-	if(TeR.wheelInfo.speed>10){ // hopes to save pilot from never ending fidget spinner
 	float dTorque = 0;
 	//Compute Torque
 	float ref = yawRef(TeR.steer.angle, TeR.speed.vx_av); // tenemos el Mutex, podemos leer de forma segura
@@ -28,14 +27,26 @@ trqMap_t trqDistribution(trq_t limit) {
 	float corr = pid(&tvPid, ref, imuYawR); //Computa el lazo y devuelve el valor de correccion
 	dTorque = mz2DeltaTorque(corr);
 	//Compute Torque output
-	float gas = TeR.apps.apps_av/ 255.0; //Comanda de 0-1 de gas
-	trqMap.rRight = gas * limit / 2 + dTorque / 2;
-	trqMap.rLeft = gas * limit / 2 - dTorque / 2;
-return trqMap;
+	//float gas = TeR.apps.apps_av/ 255.0; //Comanda de 0-1 de gas
+	//trqMap.rRight = gas * limit / 2 + dTorque / 2;
+	//trqMap.rLeft = gas * limit / 2 - dTorque / 2;
+	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)+dTorque/2;
+	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)-dTorque/2;
+	if(trqMap.rLeft<0 || trqMap.rRight<0){ //safety
+		trqMap.rLeft = 0;
+		trqMap.rRight = 0;
+		return trqMap;
 	}
-	else{
-		trqMap.rRight = limit/2;
-		trqMap.rLeft = limit/2;
+	if(trqMap.rLeft+trqMap.rRight>limit){ // safety
+		trqMap.rLeft = 0;
+		trqMap.rRight = 0;
+		return trqMap;}
+	if(TeR.wheelInfo.speed > actSpeed){ // activates the torque response only if it has a certain speed
+		return trqMap;}
+	else { //if not in the speed, lineal torque response
+		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
+		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 	}
+
 
 }
