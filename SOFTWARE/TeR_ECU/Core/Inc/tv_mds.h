@@ -4,12 +4,13 @@
  *  Created on: Jan 31, 2024
  *      Author: Ozuba Telmo Martinez de Salinas
  */
-#include "TeR_CAN.h"
-#include "pid.h"
 
 
 #ifndef INC_TV_MDS_H_
 #define INC_TV_MDS_H_
+
+
+#include "TeR_TRQMANAGER.h"
 
 #define DEG2RAD 0.0174533 //Degs to radians
 
@@ -28,14 +29,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
-
-float trqDistribution();
+extern trqMap_t trqDistribution(trq_t limit);
 
 
 #endif /* INC_TV_MDS_H_ */

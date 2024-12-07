@@ -111,6 +111,8 @@ uint8_t command(struct ter_command_t command) {
 			case TER_DYNAMIC_CONFIG_MODE_LINEAL_CHOICE:
 				conf.drivingMode = &lineal; //Configura el limiter al torque
 				break;
+			case TER_DYNAMIC_CONFIG_MODE_MDS_TORQUE_CHOICE:
+				conf.drivingMode = &trqDistribution;
 
 			default:
 				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;

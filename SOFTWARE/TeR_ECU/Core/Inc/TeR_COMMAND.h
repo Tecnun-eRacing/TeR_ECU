@@ -10,8 +10,6 @@
 #include "TeR_STATEMACHINE.h" //Para los estados
 #include "TeR_SCS.h" //Activation/Deactivation
 
-
-
 uint8_t command(struct ter_command_t command); //Función comando
 uint8_t easyCommand(uint8_t cmd); //Wrapper para el uso rápido de comandos sin argumentos (Usan solo el campo cmd)
 uint8_t switchCommand(uint8_t cmd,uint8_t onOff); //Wrapper para el uso rápido de comandos onOff
