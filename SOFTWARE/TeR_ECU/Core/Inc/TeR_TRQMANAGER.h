@@ -52,26 +52,11 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 
 #ifndef TORQUE_MANAGER_H
 #define TORQUE_MANAGER_H
-
-#include <stdint.h>
 #include "TeR_CAN.h" //For controlling TeR vehicle
 #include "pid.h"
-//Dynamic value types
-typedef int32_t trq_t; //Mucho ojo va a tener signo por ahora regen/marcha atrás, tiene sentido (Se implementarán sanity checks)
-
-
-typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
-	trq_t rLeft; //Rear left wheel
-	trq_t rRight; //Rear right wheel
-}trqMap_t;
-
-//ManagerConfigs
-typedef struct { // Contiene configuraciones del pipeline
-	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
-	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
-	trqMap_t (*tractionControl)();
-} trqPipeline_t;
-
+#include "TeR_TRQTYPES.h"
+#include "tv_mds.h"
+#include "easyTV.h"
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
 //Main functions
 

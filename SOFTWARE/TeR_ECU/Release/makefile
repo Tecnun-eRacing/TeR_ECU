@@ -65,8 +65,8 @@ all: main-build
 main-build: TeR_ECU.elf secondary-outputs
 
 # Tool invocations
-TeR_ECU.elf TeR_ECU.map: $(OBJS) $(USER_OBJS) C:\Users\Colegio\Documents\eracing\TeR_ECU\SOFTWARE\TeR_ECU\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TeR_ECU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Colegio\Documents\eracing\TeR_ECU\SOFTWARE\TeR_ECU\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TeR_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TeR_ECU.elf TeR_ECU.map: $(OBJS) $(USER_OBJS) /home/piero/Escritorio/ERACING/TeR_ECU/SOFTWARE/TeR_ECU/STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TeR_ECU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/piero/Escritorio/ERACING/TeR_ECU/SOFTWARE/TeR_ECU/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TeR_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

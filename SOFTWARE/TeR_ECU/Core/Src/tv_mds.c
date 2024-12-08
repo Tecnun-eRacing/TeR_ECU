@@ -6,10 +6,10 @@
  */
 
 #include "tv_mds.h"
+static uint8_t actSpeed = 10; //fidget spinner prevention
 // la velocidad hay que sacarla mejor de otro sitio ya que de la rueda no me mola
 pid_t tvPid; //Estructura del PID
-uint8_t actSpeed = 10; //fidget spinner prevention
-float yawRef(float steer, float vx) {
+float yawRef(float steer, float vx) { //TODO creo que el steer hay que pasarlo a radianes
 	return (steer * vx) / ((L_FRONT + L_REAR) + K_U * (vx * vx)); //unidades rad/seg
 }
 
@@ -35,18 +35,16 @@ trqMap_t trqDistribution(trq_t limit) {
 	if(trqMap.rLeft<0 || trqMap.rRight<0){ //safety
 		trqMap.rLeft = 0;
 		trqMap.rRight = 0;
-		return trqMap;
-	}
+		return trqMap;}//returns 0 torque
 	if(trqMap.rLeft+trqMap.rRight>limit){ // safety
 		trqMap.rLeft = 0;
 		trqMap.rRight = 0;
-		return trqMap;}
+		return trqMap;}//returns 0 torque
 	if(TeR.wheelInfo.speed > actSpeed){ // activates the torque response only if it has a certain speed
-		return trqMap;}
-	else { //if not in the speed, lineal torque response
+		return trqMap;} //returns tv output
+	else { //if not in the speed, lineal torque response,
 		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 	}
-
-
+	return trqMap; //returns lineal response as we are not travelling at speed
 }
