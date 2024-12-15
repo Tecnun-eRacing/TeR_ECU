@@ -32,19 +32,21 @@ trqMap_t trqDistribution(trq_t limit) {
 	//trqMap.rLeft = gas * limit / 2 - dTorque / 2;
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)+dTorque/2;
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)-dTorque/2;
-	if(trqMap.rLeft<0 || trqMap.rRight<0){ //safety
+	if(trqMap.rLeft<0 || trqMap.rRight<0){ //safety, but negative torque will be allowed after testing
 		trqMap.rLeft = 0;
 		trqMap.rRight = 0;
 		return trqMap;}//returns 0 torque
 	if(trqMap.rLeft+trqMap.rRight>limit){ // safety
 		trqMap.rLeft = 0;
 		trqMap.rRight = 0;
-		return trqMap;}//returns 0 torque
-	if(TeR.wheelInfo.speed > actSpeed){ // activates the torque response only if it has a certain speed
-		return trqMap;} //returns tv output
-	else { //if not in the speed, lineal torque response,
+		return trqMap;}//returns 0 torque //            // safety for testing, if no pedal tv off, will be removed
+	if(TeR.wheelInfo.speed < actSpeed || TeR.apps.apps_av < 10){ // if below activation speed, return linear response and clear pid error
 		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
-	}
-	return trqMap; //returns lineal response as we are not travelling at speed
+		tvPid.error = 0; //clear P error, innecesario pero por claridad
+		tvPid.errorI = 0; // clear I error
+		tvPid.errorD = 0; // clear D error
+		tvPid.prevError; //clear previous error
+		return trqMap;} //returns tv output
+	return trqMap; //if all ok return calculated tv output
 }
