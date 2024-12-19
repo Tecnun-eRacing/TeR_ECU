@@ -19,7 +19,7 @@ trqMap_t trqMap;
 float output = 0;
 float deltaTorque = 0;
 //output=-a*TeR.wheelInfo.speed+constante esta tambien puede estar interesante
-output=a*exp(-(TeR.wheelInfo.speed-b)/(c))+d; // use a=1.3 b=-140 c=-79 d=-4.1, esta funcion me mola porque puedes modificar muchos parametros de la curva
+//output=a*exp(-(TeR.speed.vx_av-b)/(c))+d; // use a=1.3 b=-140 c=-79 d=-4.1, esta funcion me mola porque puedes modificar muchos parametros de la curva
 output=output < 0 ? 0:output;//if we are in the negative part of function return 0
 deltaTorque=(TeR.steer.angle*output)/30; //from the maximum deltatorque that we can have, multiply by a factor -1<f<1
 //float gas = TeR.apps.apps_av/255.0;
@@ -36,7 +36,7 @@ if(trqMap.rLeft+trqMap.rRight>limit){ // safety
 	trqMap.rLeft = 0;
 	trqMap.rRight = 0;
 	return trqMap;} //returns 0
-if(TeR.wheelInfo.speed > actSpeed){ // activates the torque response only if it has a certain speed
+if(TeR.speed.vx_av > actSpeed){ // activates the torque response only if it has a certain speed
 	return trqMap;}
 else { //if not in the speed, lineal torque response
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);

@@ -112,7 +112,8 @@ uint8_t command(struct ter_command_t command) {
 				conf.drivingMode = &lineal; //Configura el limiter al torque
 				break;
 			case TER_DYNAMIC_CONFIG_MODE_MDS_TORQUE_CHOICE:
-				conf.drivingMode = &trqDistribution;
+				initTVMDS(); //arrancamos pid
+				conf.drivingMode = &trqDistribution; //pasamos el function pointer
 
 			default:
 				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;
