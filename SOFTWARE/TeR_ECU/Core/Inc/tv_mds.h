@@ -22,10 +22,15 @@
 #define H_CDG 0.27   //height of the CDG (en estatico)  (m)
 #define GEAR_R 5     //Indice de Reducccion
 #define R_WHEEL 0.2023 //Radio de la rueda (m)
-
 #define K_U 0 //Gradiente de subviraje objetivo (rad)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////[Seguridad]/////////////////////////////////////////////////////////////
+#define ACTSPEED 5
+#define ACTAPPS 10
+
+
 
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate

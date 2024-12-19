@@ -57,6 +57,14 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 #include "TeR_TRQTYPES.h"
 #include "tv_mds.h"
 #include "easyTV.h"
+#define THERSHOLD_SPEED 10 //velocidad de prohibición de torque negativo para todos los modulos
+//ManagerConfigs
+typedef struct { // Contiene configuraciones del pipeline
+	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
+	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
+	trqMap_t (*tractionControl)();
+} trqPipeline_t;
+
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
 //Main functions
 
@@ -73,6 +81,8 @@ trqMap_t lineal(trq_t limit);
 
 //Basic traction Control
 trqMap_t tractionControlOFF(trqMap_t in);
+
+trqMap_t torqueCheck(trqMap_t in, uint8_t allowNegative);
 
 
 

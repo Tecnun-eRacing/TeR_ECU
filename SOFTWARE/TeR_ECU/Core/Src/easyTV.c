@@ -27,20 +27,9 @@ deltaTorque=(TeR.steer.angle*output)/30; //from the maximum deltatorque that we 
 //trqMap.rRight=(limit/2)*gas-deltaTorque;
 trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)+deltaTorque;
 trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)-deltaTorque;
-if(trqMap.rLeft<0 || trqMap.rRight<0){ //safety
-	trqMap.rLeft = 0;
-	trqMap.rRight = 0;
-	return trqMap; //returns 0
-}
-if(trqMap.rLeft+trqMap.rRight>limit){ // safety
-	trqMap.rLeft = 0;
-	trqMap.rRight = 0;
-	return trqMap;} //returns 0
-if(TeR.speed.vx_av > actSpeed){ // activates the torque response only if it has a certain speed
-	return trqMap;}
-else { //if not in the speed, lineal torque response
+if(TeR.speed.vx_av < actSpeed){ // activates the torque response only if it has a certain speed
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
-	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
-}
+	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);}
+trqMap=torqueCheck(trqMap, 0);
 return trqMap; //lastly returns linear response
 }

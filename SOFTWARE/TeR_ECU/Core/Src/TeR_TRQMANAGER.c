@@ -122,6 +122,21 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 return in;
 }
 
+trqMap_t torqueCheck(trqMap_t in, uint8_t allowNegative){
+    // check if negative torque is present
+    if (in.rLeft < 0 || in.rRight < 0) {
+        if (allowNegative) { // negative torque is allowed
+            if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // hardcoded speed below threshold
+                in.rLeft = 0;
+                in.rRight = 0;
+            }
+        } else { // megative torque is not allowed
+            in.rLeft = 0;
+            in.rRight = 0;
+        }
+    }
+    return in; // return torque map
+}
 
 
 

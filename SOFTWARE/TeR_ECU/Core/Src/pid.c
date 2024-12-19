@@ -17,8 +17,7 @@
 #include "pid.h"
 
 
-pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
-	pid_t *pid; //temporal pointer for init
+void initPID(pid_t *pid,float Kp, float Ki, float Kd, float loopTime, float iMax) {
 	pid = (pid_t*) calloc(1, sizeof(pid)); //Allocates one pid instance Zeroes memory to prevent disaster
 	pid->Kp = Kp;
 	pid->Ki = Ki;
