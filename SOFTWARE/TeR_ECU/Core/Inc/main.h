@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -57,14 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BSPD_Pin GPIO_PIN_12
-#define BSPD_GPIO_Port GPIOB
-#define TSMS_Pin GPIO_PIN_13
-#define TSMS_GPIO_Port GPIOB
-#define BL_Pin GPIO_PIN_11
-#define BL_GPIO_Port GPIOA
-#define HORN_Pin GPIO_PIN_12
-#define HORN_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
