@@ -83,15 +83,16 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-	/*Prevents  scs Timebase  from incrementing when hitting a braekpoint (No te da error despues de ver un breakpoint) */
-	__HAL_DBGMCU_FREEZE_TIM5();
-	__HAL_DBGMCU_FREEZE_IWDG();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+	/*Prevents  scs Timebase  from incrementing when hitting a braekpoint (No te da error despues de ver un breakpoint) */
+	__HAL_DBGMCU_FREEZE_TIM5();
+	__HAL_DBGMCU_FREEZE_IWDG();
 
   /* USER CODE END SysInit */
 

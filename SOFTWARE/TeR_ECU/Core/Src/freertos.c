@@ -102,6 +102,13 @@ const osThreadAttr_t imuTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for ledsTask */
+osThreadId_t ledsTaskHandle;
+const osThreadAttr_t ledsTask_attributes = {
+  .name = "ledsTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -135,6 +142,7 @@ extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
 extern void imu(void *argument);
+extern void leds(void *argument);
 extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
@@ -232,6 +240,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of imuTask */
   imuTaskHandle = osThreadNew(imu, NULL, &imuTask_attributes);
+
+  /* creation of ledsTask */
+  ledsTaskHandle = osThreadNew(leds, NULL, &ledsTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
