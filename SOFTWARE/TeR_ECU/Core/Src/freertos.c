@@ -30,6 +30,7 @@
 /* USER CODE BEGIN Includes */
 #include "TeR_CAN.h"
 #include "TeR_STATEMACHINE.h"
+#include "TeR_IMU.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +95,13 @@ const osThreadAttr_t systemCriticalTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for imuTask */
+osThreadId_t imuTaskHandle;
+const osThreadAttr_t imuTask_attributes = {
+  .name = "imuTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -126,6 +134,7 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
+extern void imu(void *argument);
 extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
@@ -220,6 +229,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of systemCriticalTask */
   systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
+
+  /* creation of imuTask */
+  imuTaskHandle = osThreadNew(imu, NULL, &imuTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

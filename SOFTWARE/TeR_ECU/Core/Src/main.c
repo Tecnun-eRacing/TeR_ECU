@@ -21,7 +21,9 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "can.h"
+#include "i2c.h"
 #include "iwdg.h"
+#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -97,13 +99,13 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_CAN2_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
   MX_TIM5_Init();
-  MX_TIM4_Init();
   MX_TIM13_Init();
   MX_IWDG_Init();
   MX_ADC1_Init();
+  MX_I2C1_Init();
+  MX_SPI2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	initSCS(&htim5); //Arranca las systemCritical signals
 	initCAN(&hcan2, &hcan1); //Arranca los can de inverters y main
