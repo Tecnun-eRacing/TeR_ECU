@@ -64,7 +64,7 @@ uint8_t trqManager(void) { // Corre las etapas del pipeline y solicita la comand
 	TeR.trqReqRight.torque_nm_req = trqToWheels.rRight;
 	//Checks de seguridad y saturaciones: (Redundantes pero permiten dormir tranquilo)
 	if (TeR.trqReqLeft.torque_nm_req < 0 || TeR.trqReqLeft.torque_nm_req < 0) {
-		if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // if wheel speed below a thershold, no negative torque allowed
+		if (TeR.wheelInfo.speed < THRESHOLD_SPEED) { // if wheel speed below a thershold, no negative torque allowed
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
 		} // innecesario con correcta implementacion pero asi duermo mejor
@@ -123,15 +123,15 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 //MANDATORY USE IN EACH DRIVINGMODE
 trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative,trq_t limit) { //wrapper function that enables or disables negative torque up to a certain value.
 
-	// check if negative torque is being requested
+	// 1) check if negative torque is being requested
 	if (in.rLeft < 0 || in.rRight < 0) {
 		if (allowNegative) { // negative torque is allowed
-			if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // if speed below threshold no negative torque. hardcoded speed below threshold to prevent failure
+			if (TeR.wheelInfo.speed < THRESHOLD_SPEED) { // if speed below threshold no negative torque. hardcoded speed below threshold to prevent failure
 				in.rLeft = 0;
 				in.rRight = 0;
 			}
 
-			else if(in.rLeft+in.rRight < -allowNegative){//negative torque saturation ONLY IF WHEEL SPINNING POSITIVE
+			else if(in.rLeft < -allowNegative/2 || in.rRight < -allowNegative/2){//negative torque saturation ONLY IF WHEEL SPINNING POSITIVE
 				//in.rLeft=-allowNegative/2;
 				//in.rRight=-allowNegative/2;
 				in.rLeft=0; //aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
@@ -144,8 +144,8 @@ trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative,trq_t limit) { //wrapper 
 		}
 	}
 
-	//check if requested torque exceds limit
-	if(abs(in.rLeft)>limit/2 || abs(in.rLeft)>limit/2){
+	//2) check if requested torque exceds limit
+	if(abs(in.rLeft)>limit/2 || abs(in.rRight)>limit/2){
 		in.rLeft = 0;//aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
 		in.rRight = 0;//prefiero de momento poner a 0 por temas de seguridad
 	}

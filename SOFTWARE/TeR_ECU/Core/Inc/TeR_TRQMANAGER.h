@@ -57,7 +57,7 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 #include "TeR_TRQTYPES.h"
 #include "tv_mds.h"
 #include "easyTV.h"
-#define THERSHOLD_SPEED 10 //velocidad de prohibición de torque negativo para todos los modulos
+#define THRESHOLD_SPEED 10 //velocidad de prohibición de torque negativo para todos los modulos
 //ManagerConfigs
 typedef struct { // Contiene configuraciones del pipeline
 	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)

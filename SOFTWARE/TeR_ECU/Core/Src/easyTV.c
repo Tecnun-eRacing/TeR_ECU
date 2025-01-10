@@ -4,7 +4,7 @@
  *  Created on: Dec 7, 2024
  *      Author: Piero
  */
-//ESTO ES UN CONCEPTO
+//ESTO ES UN CONCEPTO NO USAR NUNCA
 // la velocidad hay que sacarla mejor de otro sitio ya que de la rueda no me mola
 //polinomial based torque vectoring
 //the main idea is that a function provides us with a range of possible
@@ -13,7 +13,7 @@
 //ostrich algorithm in junction with "confia" method will be used for tunning
 #include "easyTV.h"
 static uint8_t actSpeed = 10; // activation speed of tv
-static uint8_t a,b,c,d;//we will read this from the eeprom
+//static uint8_t a,b,c,d;//we will read this from the eeprom
 trqMap_t easyTorque(trq_t limit){
 trqMap_t trqMap;
 float output = 0;
@@ -30,6 +30,6 @@ trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5)-deltaTorque;
 if(TeR.speed.vx_av < actSpeed){ // activates the torque response only if it has a certain speed
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);}
-trqMap=torqueCheck(trqMap, 0);
+trqMap=torqueCheck(trqMap, 0,limit);
 return trqMap; //lastly returns linear response
 }
