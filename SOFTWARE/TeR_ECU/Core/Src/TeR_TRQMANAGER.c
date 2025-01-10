@@ -6,24 +6,24 @@
  *
  */
 /*
-                                             STEER
-                                             ────────────────────┐
-                                             APPS                │
-             KWLimit                         ───────────────┐    │
-             ──────────────┐                 IMU            │    │                                                      ┌────────┐
-                           │                 ──────────┐    │    │                                              ┌──────►│RIGHT   │
-                           ▼                           ▼    ▼    ▼                                              │       │INVERTER│
-                  ┌──────────────────┐            ┌──────────────────┐ TorqueR   ┌───────────────────┐ TorqueR  │       └────────┘
-                  │                  │            │                  ├──────────►│                   ├──────────┘
-Speed(Rpm)        │     Limitador    │  Torque    │     Modos de     │           │      Control      │
-─────────────────►│        de        ├───────────►│                  │           │        de         │
-                  │     Potencia     │ Available  │    Conducción    │ TorqueL   │     Traccion      │ TorqueL
-                  │                  │            │                  ├──────────►│                   ├──────────┐
-                  └──────────────────┘            └──────────────────┘           └───────────────────┘          │
-                                                                                                                │       ┌────────┐
-                                                                                                                └──────►│LEFT    │
-                                                                                                                        │INVERTER│
-                                                                                                                        └────────┘
+ STEER
+ ────────────────────┐
+ APPS                │
+ KWLimit                         ───────────────┐    │
+ ──────────────┐                 IMU            │    │                                                      ┌────────┐
+ │                 ──────────┐    │    │                                              ┌──────►│RIGHT   │
+ ▼                           ▼    ▼    ▼                                              │       │INVERTER│
+ ┌──────────────────┐            ┌──────────────────┐ TorqueR   ┌───────────────────┐ TorqueR  │       └────────┘
+ │                  │            │                  ├──────────►│                   ├──────────┘
+ Speed(Rpm)        │     Limitador    │  Torque    │     Modos de     │           │      Control      │
+ ─────────────────►│        de        ├───────────►│                  │           │        de         │
+ │     Potencia     │ Available  │    Conducción    │ TorqueL   │     Traccion      │ TorqueL
+ │                  │            │                  ├──────────►│                   ├──────────┐
+ └──────────────────┘            └──────────────────┘           └───────────────────┘          │
+ │       ┌────────┐
+ └──────►│LEFT    │
+ │INVERTER│
+ └────────┘
 
  The torque manager is the library in charge of managing the dynamic control of the vehicle, it consists on 3 differenciated stages
  which are modular and interchangable with the idea of creating different driving experiences according to the competition. The principal
@@ -31,28 +31,27 @@ Speed(Rpm)        │     Limitador    │  Torque    │     Modos de     │  
 
 
  - Limitador de Potencia: Se establece una limitación de potencia en kw y se calcula un torque máximo desarrollable suponiendo que la potencia
- 	 	 	 	 	 se conserva a lo largo del powertrain Pelectrica = Pmecanica*FactorEficiencia
+ se conserva a lo largo del powertrain Pelectrica = Pmecanica*FactorEficiencia
 
  - Modo de conducción:
- 	 * Lineal: El torque se distribuye equitativamente a las 2 ruedas
- 	 * BasicTorque: Distrubución del torque basada en una función del steering (Normalmente un polinomio)
- 	 * ControlTorque: Distribución del Torque basada en un scheduled gain PID calibrado mediante un modelo bicicleta del vehículo
- 	 * Modo Marcha atras: Self-Explainatory (Pitará en modo obra jajaj) Ilegalisimo en competi
-	 * Autonomo(Futuro): Permite el control del TeR mediante la librería de comandos TeR_COMMAND
+ * Lineal: El torque se distribuye equitativamente a las 2 ruedas
+ * BasicTorque: Distrubución del torque basada en una función del steering (Normalmente un polinomio)
+ * ControlTorque: Distribución del Torque basada en un scheduled gain PID calibrado mediante un modelo bicicleta del vehículo
+ * Modo Marcha atras: Self-Explainatory (Pitará en modo obra jajaj) Ilegalisimo en competi
+ * Autonomo(Futuro): Permite el control del TeR mediante la librería de comandos TeR_COMMAND
  - Control de tracción:
- 	 * Feedforward
- 	 * Feedback etc
+ * Feedforward
+ * Feedback etc
 
 
-Para permitir la modularidad se va a utilizar un ciclo de procesado basado en function pointers lo que permite escribir funciones en otros modulos facilmente
-- Limitador de potencia void -> trq_t (La estimación es interna al modulo no entra como argumento(Puede hacer estimaciones basadas en el consumo electrico))
-- Modo de conducción torque_t -> trqMap_t
-- Control de Tracción torqueMap_t -> trqMap_t
+ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en function pointers lo que permite escribir funciones en otros modulos facilmente
+ - Limitador de potencia void -> trq_t (La estimación es interna al modulo no entra como argumento(Puede hacer estimaciones basadas en el consumo electrico))
+ - Modo de conducción torque_t -> trqMap_t
+ - Control de Tracción torqueMap_t -> trqMap_t
  */
 #include "TeR_TRQMANAGER.h"
 
 trqPipeline_t DriveConfig; //Configuración en uso
-
 
 uint8_t trqManager(void) { // Corre las etapas del pipeline y solicita la comanda
 	//Pipeline
@@ -64,15 +63,15 @@ uint8_t trqManager(void) { // Corre las etapas del pipeline y solicita la comand
 	TeR.trqReqLeft.torque_nm_req = trqToWheels.rLeft;
 	TeR.trqReqRight.torque_nm_req = trqToWheels.rRight;
 	//Checks de seguridad y saturaciones: (Redundantes pero permiten dormir tranquilo)
-
 	if (TeR.trqReqLeft.torque_nm_req < 0 || TeR.trqReqLeft.torque_nm_req < 0) {
-		TeR.trqReqLeft.torque_nm_req = 0;
-		TeR.trqReqRight.torque_nm_req = 0;
+		if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // if wheel speed below a thershold, no negative torque allowed
+			TeR.trqReqLeft.torque_nm_req = 0;
+			TeR.trqReqRight.torque_nm_req = 0;
+		} // innecesario con correcta implementacion pero asi duermo mejor
 	}
 
 	return 1;
 }
-
 
 //------------------------------------------------[Basic Power Limiters]------------------------------------------------//
 // void -> trq_t
@@ -83,8 +82,7 @@ trq_t limitTorque(void) {
 
 //Potencia mecanica constante
 trq_t limitMechPWR(void) {
-	int32_t meanRPM = (TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rl_rpm)
-			/ 2; //RPMs medias
+	int32_t meanRPM = (TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rl_rpm) / 2; //RPMs medias
 	if (meanRPM > 0) { //Estamos moviendonos se estima el torque desarrollable
 		return (trq_t) (TeR.dynamicConfig.kw_limit * ELEC2MECH_EFF) / meanRPM; //Devolvemos la potencia desarrollable limitada en potencia
 	} else if (meanRPM == 0) { //Estamos quietos luego se devuelve la limitación de torque máximo
@@ -111,32 +109,39 @@ trq_t limitElecPWR(void) {
 // trq_t -> trqMap_t
 trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas
 	trqMap_t trqMap;
-	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
-	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit*0.5);
+	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
+	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 	return trqMap;
 }
 
 //------------------------------------------------[Basic traction Control]------------------------------------------------//
 // trqMap_t -> trqMap_t
 trqMap_t tractionControlOFF(trqMap_t in) {
-return in;
+	return in;
 }
 
-trqMap_t torqueCheck(trqMap_t in, uint8_t allowNegative){
-    // check if negative torque is present
-    if (in.rLeft < 0 || in.rRight < 0) {
-        if (allowNegative) { // negative torque is allowed
-            if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // hardcoded speed below threshold
-                in.rLeft = 0;
-                in.rRight = 0;
-            }
-        } else { // megative torque is not allowed
-            in.rLeft = 0;
-            in.rRight = 0;
-        }
-    }
-    return in; // return torque map
+//MANDATORY USE IN EACH DRIVINGMODE
+trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative) { //wrapper function that enables or disables negative torque up to a certain value.
+	// check if negative torque is being requested
+	if (in.rLeft < 0 || in.rRight < 0) {
+		if (allowNegative) { // negative torque is allowed
+			if (TeR.wheelInfo.speed < THERSHOLD_SPEED) { // if speed below threshold no negative torque. hardcoded speed below threshold to prevent failure
+				in.rLeft = 0;
+				in.rRight = 0;
+			}
+
+			else if(in.rLeft+in.rRight < -allowNegative){//negative torque saturation ONLY IF WHEEL SPINNING POSITIVE
+				//in.rLeft=-allowNegative/2;
+				//in.rRight=-allowNegative/2;
+				in.rLeft=0; //aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
+				in.rRight=0; //prefiero de momento poner a 0 por temas de seguridad
+			}
+
+		} else { // if negative torque is not allowed
+			in.rLeft = 0;
+			in.rRight = 0;
+		}
+	}
+	return in; // return torque map
 }
-
-
 
