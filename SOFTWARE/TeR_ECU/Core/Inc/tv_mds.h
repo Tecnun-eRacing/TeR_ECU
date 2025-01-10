@@ -36,6 +36,6 @@
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
 trqMap_t trqDistribution(trq_t limit);
-uint8_t tv_updateGains(float Kp,float Ki, float Kd,float loopTime,float iMax);//wrapper function
+uint8_t tv_loadGains(float Kp,float Ki, float Kd,float loopTime,float iMax);//wrapper function
 
 #endif /* INC_TV_MDS_H_ */

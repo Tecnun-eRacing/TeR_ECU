@@ -43,7 +43,7 @@ trqMap_t trqDistribution(trq_t limit) {
 	trqMap=torqueCheck(trqMap,0,limit); //no negative torque allowed
 	return trqMap; //return tv output
 }
-uint8_t tv_updateGains(float Kp,float Ki, float Kd,float loopTime,float iMax){
+uint8_t tv_loadGains(float Kp,float Ki, float Kd,float loopTime,float iMax){
 	 tvPid=initPID(Kp,Ki,Kd,loopTime,iMax);
 	 return 0;
 }
