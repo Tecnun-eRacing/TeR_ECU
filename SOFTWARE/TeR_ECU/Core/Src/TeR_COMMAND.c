@@ -112,7 +112,7 @@ uint8_t command(struct ter_command_t command) {
 				conf.drivingMode = &lineal; //Configura el limiter al torque
 				break;
 			case TER_DYNAMIC_CONFIG_MODE_MDS_TORQUE_CHOICE:
-//				 tv_updateGains(Kp,Ki,Kd,loopTime,iMax);
+//				 tv_updateGains(Kp,Ki,Kd,loopTime,iMax); ahora no lo meto pero algo asi me mola
 				conf.drivingMode = &trqDistribution; //pasamos el function pointer
 
 			default:

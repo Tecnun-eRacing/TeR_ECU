@@ -82,7 +82,7 @@ trqMap_t lineal(trq_t limit);
 //Basic traction Control
 trqMap_t tractionControlOFF(trqMap_t in);
 
-trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative);
+trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative,trq_t limit);
 
 
 

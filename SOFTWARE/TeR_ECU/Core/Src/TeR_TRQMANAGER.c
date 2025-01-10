@@ -121,7 +121,8 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 }
 
 //MANDATORY USE IN EACH DRIVINGMODE
-trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative) { //wrapper function that enables or disables negative torque up to a certain value.
+trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative,trq_t limit) { //wrapper function that enables or disables negative torque up to a certain value.
+
 	// check if negative torque is being requested
 	if (in.rLeft < 0 || in.rRight < 0) {
 		if (allowNegative) { // negative torque is allowed
@@ -141,6 +142,12 @@ trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative) { //wrapper function tha
 			in.rLeft = 0;
 			in.rRight = 0;
 		}
+	}
+
+	//check if requested torque exceds limit
+	if(abs(in.rLeft)>limit/2 || abs(in.rLeft)>limit/2){
+		in.rLeft = 0;//aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
+		in.rRight = 0;//prefiero de momento poner a 0 por temas de seguridad
 	}
 	return in; // return torque map
 }
