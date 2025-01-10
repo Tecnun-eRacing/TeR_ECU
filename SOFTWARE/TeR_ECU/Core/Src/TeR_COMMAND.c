@@ -106,13 +106,13 @@ uint8_t command(struct ter_command_t command) {
 				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;
 				break;
 			}
-			switch (command.cfg_mode) {			//Mode
+			switch (command.cfg_mode) {//Mode
 
 			case TER_DYNAMIC_CONFIG_MODE_LINEAL_CHOICE:
 				conf.drivingMode = &lineal; //Configura el limiter al torque
 				break;
 			case TER_DYNAMIC_CONFIG_MODE_MDS_TORQUE_CHOICE:
-				tv_loadGains(0,0,0,0.002f,1); //chapuzon pero para pruebas
+				tv_loadGains(0,0,0,0.002f,1); //chapuzon pero para pruebas SE ESTA PRODUCIENDO UN MEMORY LEAK SI LLAMAMOS REPETIDAMENTE EL CAMBIO DE MODO DE CONDUCCION AVISO SOLO PRUEBAS
 				conf.drivingMode = &trqDistribution; //pasamos el function pointer
 
 			default:
