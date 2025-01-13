@@ -7,7 +7,7 @@
  */
 /*
  STEER
- 	 	 	 	 	 	 	 	 ────────────────────┐
+ ────────────────────┐
  APPS               								 │
  KWLimit                         ───────────────┐    │
  ──────────────┐                 IMU            │    │                                                      ┌────────┐
@@ -121,34 +121,31 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 }
 
 //MANDATORY USE IN EACH DRIVINGMODE
-trqMap_t torqueCheck(trqMap_t in, int8_t allowNegative,trq_t limit) { //wrapper function that enables or disables negative torque up to a certain value.
+trqMap_t torqueCheck(trqMap_t in, trq_t allowNegative, trq_t limit) { //wrapper function that enables or disables negative torque up to a certain value.
 
-	// 1) check if negative torque is being requested
-	if (in.rLeft < 0 || in.rRight < 0) {
-		if (allowNegative) { // negative torque is allowed
-			if (TeR.wheelInfo.speed < THRESHOLD_SPEED) { // if speed below threshold no negative torque. hardcoded speed below threshold to prevent failure
-				in.rLeft = 0;
-				in.rRight = 0;
-			}
-
-			else if(in.rLeft < -allowNegative/2 || in.rRight < -allowNegative/2){//negative torque saturation ONLY IF WHEEL SPINNING POSITIVE
-				//in.rLeft=-allowNegative/2;
-				//in.rRight=-allowNegative/2;
-				in.rLeft=0; //aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
-				in.rRight=0; //prefiero de momento poner a 0 por temas de seguridad
-			}
-
-		} else { // if negative torque is not allowed
-			in.rLeft = 0;
-			in.rRight = 0;
-		}
+	//1) First check if wheels are spinning at THR speed and negative torque is being requested
+	if(TeR.wheelInfo.speed < THRESHOLD_SPEED && (in.rLeft<0 || in.rRight<0)){
+		in.rLeft = 0;
+		in.rRight = 0;
+		return in; //return 0 torque as negative torque is being requested with below security speed
 	}
 
-	//2) check if requested torque exceds limit
-	if(abs(in.rLeft)>limit/2 || abs(in.rRight)>limit/2){
-		in.rLeft = 0;//aqui hay 2 aproaches, o hacemos saturacion a negativo o ponemos torque a 0 si nos pasamos de negativo
-		in.rRight = 0;//prefiero de momento poner a 0 por temas de seguridad
+	// 2) check if negative torque is being requested and between allowNegative
+	allowNegative = allowNegative > limit ? limit : allowNegative; //check if negative allowance is in limit and if not clamp it
+	if (in.rLeft <= -allowNegative / 2) { // if torque exceeds allowance
+		in.rLeft = -allowNegative / 2; //clamp to allowance
 	}
-	return in; // return torque map
+	if (in.rRight <= -allowNegative / 2) { //if torque exceeds allowance
+		in.rRight = -allowNegative / 2; //clamp to allowance
+	}
+
+	//3) check if requested torque exceds limit (negative torque excess is taken into account in step 2)
+	if (in.rLeft > limit / 2) {
+		in.rLeft = limit / 2;
+	}
+	if (in.rRight > limit / 2) {
+		in.rRight = limit / 2;
+	}
+	return in;
 }
 
