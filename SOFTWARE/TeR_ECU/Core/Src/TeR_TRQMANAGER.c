@@ -121,7 +121,7 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 }
 
 //MANDATORY USE IN EACH DRIVINGMODE
-trqMap_t torqueCheck(trqMap_t in, trq_t allowNegative, trq_t limit) { //wrapper function that enables or disables negative torque up to a certain value.
+trqMap_t torqueCheck(trqMap_t in,  trq_t limit, trq_t allowedNegativeTorque) { //wrapper function that enables or disables negative torque up to a certain value.
 
 	//1) First check if wheels are spinning at THR speed and negative torque is being requested
 	if(TeR.wheelInfo.speed < THRESHOLD_SPEED && (in.rLeft<0 || in.rRight<0)){
@@ -130,13 +130,13 @@ trqMap_t torqueCheck(trqMap_t in, trq_t allowNegative, trq_t limit) { //wrapper 
 		return in; //return 0 torque as negative torque is being requested with below security speed
 	}
 
-	// 2) check if negative torque is being requested and between allowNegative
-	allowNegative = allowNegative > limit ? limit : allowNegative; //check if negative allowance is in limit and if not clamp it
-	if (in.rLeft <= -allowNegative / 2) { // if torque exceeds allowance
-		in.rLeft = -allowNegative / 2; //clamp to allowance
+	// 2) check if negative torque is being requested and between allowedNegativeTorque
+	allowedNegativeTorque = allowedNegativeTorque > limit ? limit : allowedNegativeTorque; //check if negative allowance is in limit and if not clamp it
+	if (in.rLeft <= -allowedNegativeTorque / 2) { // if torque exceeds allowance
+		in.rLeft = -allowedNegativeTorque / 2; //clamp to allowance
 	}
-	if (in.rRight <= -allowNegative / 2) { //if torque exceeds allowance
-		in.rRight = -allowNegative / 2; //clamp to allowance
+	if (in.rRight <= -allowedNegativeTorque / 2) { //if torque exceeds allowance
+		in.rRight = -allowedNegativeTorque / 2; //clamp to allowance
 	}
 
 	//3) check if requested torque exceds limit (negative torque excess is taken into account in step 2)
