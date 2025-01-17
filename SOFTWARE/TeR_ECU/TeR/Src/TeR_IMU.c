@@ -25,6 +25,13 @@ static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
 static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
 		uint16_t len);
 
+
+
+
+
+
+
+
 void imu(void *argument) {
 
 	stmdev_ctx_t dev_ctx;
@@ -62,6 +69,9 @@ void imu(void *argument) {
 	 */
 	asm330lhh_xl_hp_path_on_out_set(&dev_ctx, ASM330LHH_LP_ODR_DIV_100);
 	asm330lhh_xl_filter_lp2_set(&dev_ctx, PROPERTY_ENABLE);
+
+
+
 	for (;;) {
 		osDelay(5);
 		   uint8_t reg;
@@ -104,6 +114,11 @@ void imu(void *argument) {
 		      temperature_degC = asm330lhh_from_lsb_to_celsius(
 		                           data_raw_temperature);
 		    }
+
+
+
+
+
 		  }
 	}
 

@@ -5,7 +5,7 @@
  *      Author: Ozuba, Telmo Martinez de Salinas
  */
 
-#include "tv_mds.h"
+#include "TeR_TRQVECTORING.h"
 
 pid_t tvPid; //Estructura del PID
 

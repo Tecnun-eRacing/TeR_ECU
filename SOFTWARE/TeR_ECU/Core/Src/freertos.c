@@ -109,6 +109,13 @@ const osThreadAttr_t ledsTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for gpsTask */
+osThreadId_t gpsTaskHandle;
+const osThreadAttr_t gpsTask_attributes = {
+  .name = "gpsTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -143,9 +150,11 @@ extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
 extern void imu(void *argument);
 extern void leds(void *argument);
+extern void gps(void *argument);
 extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
+extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* Hook prototypes */
@@ -244,6 +253,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of ledsTask */
   ledsTaskHandle = osThreadNew(leds, NULL, &ledsTask_attributes);
 
+  /* creation of gpsTask */
+  gpsTaskHandle = osThreadNew(gps, NULL, &gpsTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -263,6 +275,8 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_osRunning */
 void osRunning(void *argument)
 {
+  /* init code for USB_DEVICE */
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN osRunning */
 	/* Infinite loop */
 	for (;;) {

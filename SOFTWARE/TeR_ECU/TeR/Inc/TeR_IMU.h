@@ -12,6 +12,8 @@
 #include "cmsis_os2.h"
 #include <string.h>
 #include "i2c.h"
+#include "usart.h"
+
 
 void imu(void *argument);
 
