@@ -12,7 +12,6 @@ pid_t *tvPid; //Estructura del PID
 float Kp = 0; // temporal, leeremos valores de la estructura TeR
 float Ki = 0; // temporal, leeremos valores de la estructura TeR
 float Kd = 0; // temporal, leeremos valores de la estructura TeR
-float loopTime = 0.002f; //corremos statemachine cada 2 millis
 float iMax = 1; // limitado a mas o menos 60 grados por segundo (1 rad/s 60 grad seg aprox)
 float yawRef(float steer, float vx) { //STEER EN RADIANES
 	steer = (steer < STEER_DEADZONE && steer > -STEER_DEADZONE) ? 0 : steer; // check if steering angle is within the defined deadzone
@@ -44,7 +43,25 @@ trqMap_t trqDistribution(trq_t limit) {
 	trqMap = torqueCheck(trqMap, limit, 0); //no negative torque allowed
 	return trqMap; //return tv output
 }
-uint8_t tv_loadGains(float Kp, float Ki, float Kd, float loopTime, float iMax) {
-	tvPid = initPID(Kp, Ki, Kd, loopTime, iMax);
-	return 0;
+uint8_t tv_initPID(float Kp, float Ki, float Kd, float iMax) {
+	if(!areGainsInRange(Kp,Ki,Kd)){ // if any gain not in predefined range, return 0 gain
+		Kp=0;
+		Ki=0;
+		Kd=0;
+	}
+	tvPid = initPID(Kp, Ki, Kd, LOOPTIME, iMax);
+	return 1;
+}
+uint8_t tv_deInitPID(void) {
+	deInitPID(tvPid);
+	return 1;
+}
+
+uint8_t areGainsInRange(float Kp, float Ki, float Kd) {
+	if (Kp < 0 || Ki < 0 || Kd < 0) {
+		return 0;
+	} else if (Kp > KPMAX || Ki > KIMAX || Kd > KDMAX) {
+		return 0;
+	}
+	return 1;
 }

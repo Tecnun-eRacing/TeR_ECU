@@ -12,7 +12,7 @@
 #include "pid.h"
 #include "TeR_TRQTYPES.h"
 #define DEG2RAD 0.0174533 //Degs to radians
-
+#define LOOPTIME 0.002f //looptime for integration and derivation
 /////////////////////////////////////////[Constantes del Vehiculo]/////////////////////////////////////////////////////////////
 
 #define I_ZZ 122.0 //Momento de inercia en eje Z (kg*M^4) (Modelo Juan Gastaminza)
@@ -20,16 +20,19 @@
 #define L_FRONT 0.806 //A Distance(from front axle to CDG) (m)
 #define L_REAR 0.744 //B Distance (from CDG to rear axle)  (m)
 #define H_CDG 0.27   //height of the CDG (en estatico)  (m)
-#define GEAR_R 5     //Indice de Reducccion
+#define GEAR_R 5.0     //Indice de Reducccion
 #define R_WHEEL 0.2023 //Radio de la rueda (m)
-#define K_U 0 //Gradiente de subviraje objetivo (rad)
+#define K_U 0.0 //Gradiente de subviraje objetivo (rad)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////[Seguridad]/////////////////////////////////////////////////////////////
-#define ACTSPEED 5
-#define ACTAPPS 10
-#define STEER_DEADZONE 5
+#define ACTSPEED 5.0
+#define ACTAPPS 10.0
+#define STEER_DEADZONE 5.0
+#define KPMAX 1000.0
+#define KIMAX 1000.0
+#define KDMAX 1000.0
 
 
 
@@ -37,6 +40,7 @@
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
 trqMap_t trqDistribution(trq_t limit);
-uint8_t tv_loadGains(float Kp,float Ki, float Kd,float loopTime,float iMax);//wrapper function
-
+uint8_t tv_initPID(float Kp,float Ki, float Kd,float iMax);//wrapper function
+uint8_t tv_deInitPID(void);
+uint8_t areGainsInRange(float Kp, float Ki, float Kd);
 #endif /* INC_TV_MDS_H_ */
