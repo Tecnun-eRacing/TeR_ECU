@@ -13,7 +13,8 @@
 #include <string.h>
 #include "i2c.h"
 #include "usart.h"
-
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
 
 void imu(void *argument);
 

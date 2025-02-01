@@ -19,6 +19,7 @@ static uint8_t whoamI, rst;
 asm330lhh_ctrl3_c_t ctrl3_c;
 
 
+
 //Private function prototypes
 static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
 		uint16_t len);
@@ -44,9 +45,9 @@ void imu(void *argument) {
 
 	asm330lhh_device_id_get(&dev_ctx, &whoamI);
 	//Check id
-	if (whoamI != ASM330LHH_ID)
-		while (1)
-			;
+	//if (whoamI != ASM330LHH_ID)
+	//	while (1)
+	//		;
 	/* Restore default configuration */
 	asm330lhh_reset_set(&dev_ctx, PROPERTY_ENABLE);
 
@@ -114,9 +115,6 @@ void imu(void *argument) {
 		      temperature_degC = asm330lhh_from_lsb_to_celsius(
 		                           data_raw_temperature);
 		    }
-
-
-
 
 
 		  }
