@@ -10,6 +10,7 @@
 #include <stdint.h>
 #pragma pack(push, 1)  // Ensure no padding is added to any struct for alignment
 
+//Class 0x01 Id 0x07
 typedef struct {
 	uint32_t iTow;       // GPS time of week in milliseconds
 	uint16_t year;       // Year (UTC)
@@ -39,34 +40,54 @@ typedef struct {
 	uint32_t sAcc;       // Speed accuracy estimate in millimeters per second
 	uint32_t headAcc;    // Heading accuracy estimate in 1e-5 degrees
 	uint16_t pDOP;       // Position DOP (scaled by 0.01)
-	uint8_t flags3;      // Additional flags (bitfield)
+	uint16_t flags3;      // Additional flags (bitfield)
+	uint8_t reserved0[4]; //reserved field
 	int32_t headVeh;     // Heading of vehicle in 1e-5 degrees
 	int16_t magDec;      // Magnetic declination in 1e-2 degrees
 	uint16_t magAcc;     // Magnetic declination accuracy in 1e-2 degrees
 } ubx_nav_pvt_t;
 
+//Class 0x06 Id 0x24
 
-typedef struct{
+typedef struct {
+	uint16_t mask;
+	uint8_t dynModel;
+	uint8_t fixMode;
+	int32_t fixedAlt;
+	uint32_t fixedAltVar;
+	int8_t minElev;
+	uint8_t drLimit;
+	uint16_t pDop;
+	uint16_t tDop;
+	uint16_t pAcc;
+	uint16_t tAcc;
+	uint8_t staticHoldThres;
+	uint8_t dgnssTimeout;
+	uint8_t cnoThresNumSVs;
+	uint8_t cnoThres;
+	uint8_t reserved0[2];
+	uint16_t staticHoldMaxDist;
+	uint8_t utcStandard;
+	uint8_t reserved1[5];
+} ubx_cfg_nav5_t;
+
+typedef struct {
 	uint8_t portID;
 	uint8_t reserved0;
 	uint16_t txReady;
-	uint32_t  mode;
+	uint32_t mode;
 	uint32_t baudRate;
 	uint16_t inProtoMask;
 	uint16_t outProtoMask;
 	uint16_t flags;
 	uint8_t reserved[2];
-}ubx_cfg_prt;
-
-
+} ubx_cfg_prt;
 
 typedef struct {
 	uint8_t version;
 	uint8_t layers;
 	uint8_t reserved0[2];
 } ubx_cfg_valset_t;
-
-
 
 #pragma pack(pop)  // Restore the packing alignment
 #endif /* UBLOX_GPS_INC_UBX_MSGS_H_ */

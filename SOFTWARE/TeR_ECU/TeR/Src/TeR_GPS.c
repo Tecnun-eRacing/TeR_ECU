@@ -6,63 +6,66 @@
  */
 
 #include "TeR_GPS.h"
-static const uint8_t configUBX[]={0xB5,0x62,0x06,0x00,0x14,0x00,0x01,0x00,0x00,0x00,0xD0,0x08,0x00,0x00,0x80,0x25,0x00,0x00,0x01,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x9A,0x79};
 
-static const uint8_t getPVTData[] = { 0xB5, 0x62, 0x01, 0x07, 0x00, 0x00, 0x08,
-		0x19 };
-
-uint8_t buffer[256];
-
+//Rtos uart event
+osEventFlagsId_t uartEventFlags;
 
 ubx_nav_pvt_t pvt;
-
+ubx_device_t gps_d;
 
 void gps(void *argument) {
+	uartEventFlags = osEventFlagsNew(NULL);
 
-
-	ubx_device_t gps;
-	gps.write = &gps_write;
-	gps.read = &gps_read;
+	gps_d.write = &gps_write;
+	gps_d.read = &gps_read;
+	gps_d.wait_for_data = &gps_wait_for_data;
 
 	//Prepare ubx to disable nmea
-	ubx_cfg_prt cfg;
-	checksum(&configUBX[2], sizeof(configUBX)-4); //Validate checksum usage
-	memset(&cfg, 0, sizeof(cfg)); //set blank
-	cfg.portID = 0x01; //Uart 1
-	cfg.txReady = 0x00;
-	cfg.mode = 0x000008D0; //No idea jajaj
-	cfg.baudRate = 38400; //Current baud
-	cfg.inProtoMask = 0b0000000000000001;//Activate just ubx
-	cfg.outProtoMask = 0b0000000000000001;//Activate just ubx
+	ubx_cfg_prt p_cfg;
+	memset(&p_cfg, 0, sizeof(p_cfg)); //set blank
+	p_cfg.portID = 0x01; //Uart 1
+	p_cfg.txReady = 0x00;
+	p_cfg.mode = 0x000008D0; //No idea jajaj
+	p_cfg.baudRate = 38400; //Current baud
+	p_cfg.inProtoMask = 0b0000000000000001; //Activate just ubx
+	p_cfg.outProtoMask = 0b0000000000000001; //Activate just ubx
 	//Desactiva nmea
-	send_ubx(&gps, 0x06, 0x00, &cfg, sizeof(cfg));
-	osDelay(100);
+	send_ubx(&gps_d, 0x06, 0x00, &p_cfg, sizeof(p_cfg));
 
+	//Activa el modo automotive
+	ubx_cfg_nav5_t nav5;
+	memset(&nav5, 0, sizeof(nav5)); //set blank
+	nav5.mask = 0b000000000000001; // Apply just dyn model
+	nav5.dynModel = 4; //Automotive mode
+	//Configura modo automotive
+	send_ubx(&gps_d, 0x06, 0x00, &nav5, sizeof(nav5));
+
+	osDelay(100);
 	for (;;) {
 		//GPS test
 		osDelay(100);
-		HAL_UART_Transmit(&huart1, getPVTData, sizeof(getPVTData), 100);
-		HAL_UART_Receive_DMA(&huart1, buffer, sizeof(buffer));
-		//read_ubx(&gps, &pvt, sizeof(pvt));
+		poll_ubx(&gps_d, 0x01, 0x07, &pvt, sizeof(pvt)); //Continously poll for nav data
 
 	}
 }
 
 uint8_t gps_read(uint8_t *dest, size_t size) {
-	return HAL_UART_Receive(&huart1, dest, size,100);
+	osEventFlagsSet(uartEventFlags, 0x00); //ensure you turn off the receive flag
+	return HAL_UART_Receive_DMA(&huart1, dest, size);
 }
 uint8_t gps_write(uint8_t *src, size_t size) {
 	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	CDC_Transmit_FS(buffer, sizeof(buffer));
-
-	for(int i = 0; i < sizeof(buffer);i++){
-		if(buffer[i] == 0xB5 && buffer[i+1] == 0x62 && i < sizeof(buffer)-sizeof(pvt)){
-			memcpy(&pvt,&buffer[i+6],sizeof(pvt));
-		}
+uint8_t gps_wait_for_data(void) {
+	//Makes the os able to do other tasks while waiting for gps data
+	if (osEventFlagsWait(uartEventFlags, 0x01, osFlagsWaitAny, 1000) == 0x01) {
+		return 0; //Data is available
+	}else{
+		return 1; //Timeouted
 	}
-	HAL_UART_Receive_DMA(&huart1, buffer, sizeof(buffer));
-
 }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	osEventFlagsSet(uartEventFlags, 0x01); //Set the data received to 1
+}
+

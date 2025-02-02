@@ -30,7 +30,6 @@
 /* USER CODE BEGIN Includes */
 #include "TeR_CAN.h"
 #include "TeR_STATEMACHINE.h"
-#include "TeR_IMU.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,10 +94,10 @@ const osThreadAttr_t systemCriticalTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for imuTask */
-osThreadId_t imuTaskHandle;
-const osThreadAttr_t imuTask_attributes = {
-  .name = "imuTask",
+/* Definitions for inertialTask */
+osThreadId_t inertialTaskHandle;
+const osThreadAttr_t inertialTask_attributes = {
+  .name = "inertialTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -113,7 +112,7 @@ const osThreadAttr_t ledsTask_attributes = {
 osThreadId_t gpsTaskHandle;
 const osThreadAttr_t gpsTask_attributes = {
   .name = "gpsTask",
-  .stack_size = 128 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for rxMsg */
@@ -148,7 +147,7 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
-extern void imu(void *argument);
+extern void inertial(void *argument);
 extern void leds(void *argument);
 extern void gps(void *argument);
 extern void beepCallback(void *argument);
@@ -247,8 +246,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of systemCriticalTask */
   systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
 
-  /* creation of imuTask */
-  imuTaskHandle = osThreadNew(imu, NULL, &imuTask_attributes);
+  /* creation of inertialTask */
+  inertialTaskHandle = osThreadNew(inertial, NULL, &inertialTask_attributes);
 
   /* creation of ledsTask */
   ledsTaskHandle = osThreadNew(leds, NULL, &ledsTask_attributes);
