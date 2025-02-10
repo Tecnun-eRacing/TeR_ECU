@@ -492,7 +492,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "TeR_ECU.step",
+      "step": "production/TeR_ECU.step",
       "svg": "",
       "vrml": ""
     },
