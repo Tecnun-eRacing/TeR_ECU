@@ -16,6 +16,9 @@
 #include "usbd_cdc_if.h"
 #include "asm330lhh_reg.h"
 #include "lis3mdl_reg.h"
+#include "imu_filter.h"
+
+#define TASK_PERIOD 10 //100hz
 
 void inertial(void *argument);
 

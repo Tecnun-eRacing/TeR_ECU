@@ -241,7 +241,7 @@ void precharged(void) {
 
 } //Espera a que se reciba el comando de r2d
 void driving(void) {
-	trqManager(); //Ejecuta el pipeline de torque
+	//trqManager(); //Ejecuta el pipeline de torque
 
 } //Ejecuta la comanda de par
 

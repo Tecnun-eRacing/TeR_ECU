@@ -52,11 +52,13 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 
 #ifndef TORQUE_MANAGER_H
 #define TORQUE_MANAGER_H
+#define trqManager_LOOPTIME 1
+
 
 #include <stdint.h>
 #include "TeR_CAN.h" //For controlling TeR vehicle
-#include "pid.h" //For torque vectoring
 
+#include "pid.h" //For torque vectoring
 //Dynamic value types
 typedef int32_t trq_t; //Mucho ojo va a tener signo por ahora regen/marcha atrás, tiene sentido (Se implementarán sanity checks)
 typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
@@ -72,9 +74,9 @@ typedef struct { // Contiene configuraciones del pipeline
 } trqPipeline_t;
 
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
-//Main functions
 
-uint8_t trqManager(void); //Executes all the torque pipeline
+//Main functions
+void trqManager(void* argument); //Executes all the torque pipeline
 uint8_t loadParams(trqPipeline_t* config); //
 
 //Basic limiters
@@ -88,8 +90,7 @@ trqMap_t lineal(trq_t limit);
 //Basic traction Control
 trqMap_t tractionControlOFF(trqMap_t in);
 
-
-
+trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t allowedNegativeTorque); //allowNegative is defined as a positive number that indicates the maximum allowed negative torque
 
 
 #endif

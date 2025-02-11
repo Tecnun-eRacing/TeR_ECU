@@ -6,54 +6,50 @@
  */
 #include <TeR_INERTIAL.h>
 
+//MARG devices
 stmdev_ctx_t imu;
+stmdev_ctx_t mag;
 
-stmdev_ctx_t dev_ctx;
-
-static uint8_t whoamI, rst;
+static uint8_t whoamI, rst; //Aux variables for operation
 
 /* IMU variables ---------------------------------------------------------*/
-static int16_t data_raw_acceleration[3];
-static int16_t data_raw_angular_rate[3];
-static int16_t data_raw_temperature;
-static float_t acceleration_mg[3];
-static float_t angular_rate_mdps[3];
-static float_t temperature_degC;
+static int16_t acc_raw[3];
+static int16_t gy_raw[3];
+static float_t acc_xyz[3]; //In m/s
+static float_t a_rate_rpy[3]; //In deg/s
 
 /* MAG variables ---------------------------------------------------------*/
-static int16_t data_raw_magnetic[3];
-static int16_t data_raw_temperature;
-static float_t magnetic_mG[3];
-static float_t temperature_degC;
+static int16_t mag_raw[3];
+static float_t mag_xyz[3];
 
-asm330lhh_ctrl3_c_t ctrl3_c;
+/* Combined attitude ---------------------------------------------------------*/
+float roll,pitch,yaw;
 
-//Private function prototypes
-static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
-		uint16_t len);
-static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len);
+
 
 void inertial(void *argument) {
+    uint32_t lastTick = osKernelGetTickCount(); // Initialize reference time
 	configIMU();
 	configMAG();
 
 	for (;;) {
-		osDelay(50);
+	    lastTick += TASK_PERIOD;
+        osDelayUntil(lastTick);
+
 		uint8_t reg;
 		/* Read output only if new xl value is available */
 		asm330lhh_xl_flag_data_ready_get(&imu, &reg);
 
 		if (reg) {
 			/* Read acceleration field data */
-			memset(data_raw_acceleration, 0x00, 3 * sizeof(int16_t));
-			asm330lhh_acceleration_raw_get(&imu, data_raw_acceleration);
-			acceleration_mg[0] = asm330lhh_from_fs2g_to_mg(
-					data_raw_acceleration[0]);
-			acceleration_mg[1] = asm330lhh_from_fs2g_to_mg(
-					data_raw_acceleration[1]);
-			acceleration_mg[2] = asm330lhh_from_fs2g_to_mg(
-					data_raw_acceleration[2]);
+			memset(acc_raw, 0x00, 3 * sizeof(int16_t));
+			asm330lhh_acceleration_raw_get(&imu, acc_raw);
+			acc_xyz[0] = asm330lhh_from_fs2g_to_mg(
+					acc_raw[0])/1000.0;
+			acc_xyz[1] = asm330lhh_from_fs2g_to_mg(
+					acc_raw[1])/1000.0;
+			acc_xyz[2] = asm330lhh_from_fs2g_to_mg(
+					acc_raw[2]/1000.0);
 
 		}
 
@@ -61,40 +57,34 @@ void inertial(void *argument) {
 
 		if (reg) {
 			/* Read angular rate field data */
-			memset(data_raw_angular_rate, 0x00, 3 * sizeof(int16_t));
-			asm330lhh_angular_rate_raw_get(&imu, data_raw_angular_rate);
-			angular_rate_mdps[0] = asm330lhh_from_fs2000dps_to_mdps(
-					data_raw_angular_rate[0]);
-			angular_rate_mdps[1] = asm330lhh_from_fs2000dps_to_mdps(
-					data_raw_angular_rate[1]);
-			angular_rate_mdps[2] = asm330lhh_from_fs2000dps_to_mdps(
-					data_raw_angular_rate[2]);
-		}
-
-		asm330lhh_temp_flag_data_ready_get(&imu, &reg);
-
-		if (reg) {
-			/* Read temperature data */
-			memset(&data_raw_temperature, 0x00, sizeof(int16_t));
-			asm330lhh_temperature_raw_get(&imu, &data_raw_temperature);
-			temperature_degC = asm330lhh_from_lsb_to_celsius(
-					data_raw_temperature);
+			memset(gy_raw, 0x00, 3 * sizeof(int16_t));
+			asm330lhh_angular_rate_raw_get(&imu, gy_raw);
+			a_rate_rpy[0] = asm330lhh_from_fs2000dps_to_mdps(
+					gy_raw[0])/1000.0;
+			a_rate_rpy[1] = asm330lhh_from_fs2000dps_to_mdps(
+					gy_raw[1])/1000.0;
+			a_rate_rpy[2] = asm330lhh_from_fs2000dps_to_mdps(
+					gy_raw[2])/1000.0;
 		}
 
 		//-----------------------------------------------------------------------------------------------------//
 		/* Read magnetic field data */
-		lis3mdl_mag_data_ready_get(&dev_ctx, &reg);
+		lis3mdl_mag_data_ready_get(&mag, &reg);
 
 		if (reg) {
-			memset(data_raw_magnetic, 0x00, 3 * sizeof(int16_t));
-			lis3mdl_magnetic_raw_get(&dev_ctx, data_raw_magnetic);
-			magnetic_mG[0] = 1000
-					* lis3mdl_from_fs16_to_gauss(data_raw_magnetic[0]);
-			magnetic_mG[1] = 1000
-					* lis3mdl_from_fs16_to_gauss(data_raw_magnetic[1]);
-			magnetic_mG[2] = 1000
-					* lis3mdl_from_fs16_to_gauss(data_raw_magnetic[2]);
+			memset(mag_raw, 0x00, 3 * sizeof(int16_t));
+			lis3mdl_magnetic_raw_get(&mag, mag_raw);
+			mag_xyz[0] = 1000
+					* lis3mdl_from_fs16_to_gauss(mag_raw[0]);
+			mag_xyz[1] = 1000
+					* lis3mdl_from_fs16_to_gauss(mag_raw[1]);
+			mag_xyz[2] = 1000
+					* lis3mdl_from_fs16_to_gauss(mag_raw[2]);
 		}
+		//Process attitude in euler angles
+	    compFilter(a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0], acc_xyz[1], acc_xyz[2], mag_xyz[0], mag_xyz[1], mag_xyz[2], &roll, &pitch, &yaw);
+	    printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", roll, pitch, yaw, a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0], acc_xyz[1], acc_xyz[2]);
+
 	}
 }
 
@@ -140,33 +130,33 @@ void configIMU(void) {
 
 void configMAG() {
 	/* Initialize mems driver interface */
-	dev_ctx.write_reg = &mag_write;
-	dev_ctx.read_reg = &mag_read;
-	dev_ctx.handle = &hi2c1;
+	mag.write_reg = &mag_write;
+	mag.read_reg = &mag_read;
+	mag.handle = &hi2c1;
 	/* Check device ID */
-	lis3mdl_device_id_get(&dev_ctx, &whoamI);
+	lis3mdl_device_id_get(&mag, &whoamI);
 
 	if (whoamI != LIS3MDL_ID)
 		while (1)
 			; /*manage here device not found */
 
 	/* Restore default configuration */
-	lis3mdl_reset_set(&dev_ctx, PROPERTY_ENABLE);
+	lis3mdl_reset_set(&mag, PROPERTY_ENABLE);
 
 	do {
-		lis3mdl_reset_get(&dev_ctx, &rst);
+		lis3mdl_reset_get(&mag, &rst);
 	} while (rst);
 
 	/* Enable Block Data Update */
-	lis3mdl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
+	lis3mdl_block_data_update_set(&mag, PROPERTY_ENABLE);
 	/* Set Output Data Rate */
-	lis3mdl_data_rate_set(&dev_ctx, LIS3MDL_HP_20Hz);
+	lis3mdl_data_rate_set(&mag, LIS3MDL_HP_20Hz);
 	/* Set full scale */
-	lis3mdl_full_scale_set(&dev_ctx, LIS3MDL_16_GAUSS);
+	lis3mdl_full_scale_set(&mag, LIS3MDL_16_GAUSS);
 	/* Enable temperature sensor */
-	lis3mdl_temperature_meas_set(&dev_ctx, PROPERTY_ENABLE);
+	lis3mdl_temperature_meas_set(&mag, PROPERTY_ENABLE);
 	/* Set device in continuous mode */
-	lis3mdl_operating_mode_set(&dev_ctx, LIS3MDL_CONTINUOUS_MODE);
+	lis3mdl_operating_mode_set(&mag, LIS3MDL_CONTINUOUS_MODE);
 
 }
 

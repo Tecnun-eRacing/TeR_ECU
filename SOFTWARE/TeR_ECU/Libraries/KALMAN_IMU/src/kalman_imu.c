@@ -1,8 +1,0 @@
-/*
- * kalman_imu.c
- *
- *  Created on: Feb 2, 2025
- *      Author: eracing
- */
-
-

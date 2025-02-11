@@ -98,7 +98,7 @@ const osThreadAttr_t systemCriticalTask_attributes = {
 osThreadId_t inertialTaskHandle;
 const osThreadAttr_t inertialTask_attributes = {
   .name = "inertialTask",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for ledsTask */
@@ -112,8 +112,15 @@ const osThreadAttr_t ledsTask_attributes = {
 osThreadId_t gpsTaskHandle;
 const osThreadAttr_t gpsTask_attributes = {
   .name = "gpsTask",
-  .stack_size = 1024 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for trqManagerTask */
+osThreadId_t trqManagerTaskHandle;
+const osThreadAttr_t trqManagerTask_attributes = {
+  .name = "trqManagerTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
@@ -150,6 +157,7 @@ extern void systemCritical(void *argument);
 extern void inertial(void *argument);
 extern void leds(void *argument);
 extern void gps(void *argument);
+extern void trqManager(void *argument);
 extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
@@ -254,6 +262,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of gpsTask */
   gpsTaskHandle = osThreadNew(gps, NULL, &gpsTask_attributes);
+
+  /* creation of trqManagerTask */
+  trqManagerTaskHandle = osThreadNew(trqManager, NULL, &trqManagerTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
