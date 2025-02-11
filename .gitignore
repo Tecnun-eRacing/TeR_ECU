@@ -37,3 +37,6 @@ fp-info-cache
 [Rr]elease/
 [Dd]ebug/
 .launch
+
+#Python
+.venv
