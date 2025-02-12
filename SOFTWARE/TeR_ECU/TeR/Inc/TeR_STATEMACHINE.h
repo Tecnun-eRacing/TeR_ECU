@@ -24,24 +24,22 @@
 #define BL_GPIO_Port DOUT0_GPIO_Port
 #define BL_Pin DOUT0_Pin
 
-
 //------------------------------------------------------------------------------------//
 
-
 typedef enum {
-	WAIT_SL, RDY2PRECH, PRECHARGING, PRECHARGED, DRIVING
+	WAIT_SL, // Comprueba SL esta bien
+	RDY2PRECH, // Espera a recibir el comando de precarga
+	PRECHARGING, //Estado transitorio, monitoriza que todo va bien
+	PRECHARGED, //Espera a que se reciba el comando de r2d
+	DRIVING //Se permite el movimiento del vehiculo
 } state_t; //Estados
 
-state_t getState(void); //Determina el estado en función de las lecturas y el can
-void stateMachine(void); //ejecuta el estado actual
+#define TASK_PERIOD 2; //Runs every 2 ms
 
-//Estados
-void waitSL(void); // Comprueba SL esta bien
-void rdy2Prech(void); // Espera a recibir el comando de precarga
-void precharging(void); //Estado transitorio, monitoriza que todo va bien
-void precharged(void); //Espera a que se reciba el comando de r2d
-void driving(void); //Ejecuta la comanda de par
-void stateMachineTask(void *argument);
+void stateMachine(void *argument); //Task
+state_t evalState(void); //Evalua en que estado se encuentra el coche
+void stateLoop(void); //Ejecuta el bucle de la maquina de estado
+
 //Permanent Task
 void permaTask(); //Se ejecuta en todos los estados (conversiones/brakelight...)
 

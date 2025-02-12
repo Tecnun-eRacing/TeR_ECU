@@ -52,13 +52,14 @@ Para permitir la modularidad se va a utilizar un ciclo de procesado basado en fu
 
 #ifndef TORQUE_MANAGER_H
 #define TORQUE_MANAGER_H
-#define trqManager_LOOPTIME 1
-
 
 #include <stdint.h>
 #include "TeR_CAN.h" //For controlling TeR vehicle
-
 #include "pid.h" //For torque vectoring
+
+#define TASK_PERIOD 10 //100hz
+
+
 //Dynamic value types
 typedef int32_t trq_t; //Mucho ojo va a tener signo por ahora regen/marcha atrás, tiene sentido (Se implementarán sanity checks)
 typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr

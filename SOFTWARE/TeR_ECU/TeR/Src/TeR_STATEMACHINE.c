@@ -31,10 +31,9 @@
  */
 #include "TeR_STATEMACHINE.h"
 
- /*Implementacion FreeRTOS Piero
+/*Implementacion FreeRTOS Piero
  *
  * - La idea principal es tener una tarea que se encargue de controlar la maquina de estados, de igual prioridad que la recepción de mensajes (no queremos que se pisen)
- * - Esta tarea comparte un Mutex con la función de decodificación encontrada en el módulo TeR_CAN
  *
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
  *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
@@ -42,11 +41,6 @@
  * 		 registrar un callback que mande señales de desbloqueo a los threads, y que estos a su vez esperen a dichas señales,
  * 		 ademas de que NO garantiza ejecucion temporal precisa, ya que por naturaleza la Daemon Task es de baja prioridad(se puede cambiar) (Reference Manual),
  * 		 por lo que se ha decidido utilizar la funcion recomendada por el reference manual para ejecuciones temporales precisas
- *
- *- El funcionamiento consiste en esperar un delay, esperar al mutex, y una vez hecho esto ejecutar la maquina de estados del coche
- *-
- *- En su momento se planteo separar  la funcion torqueManager de la maquina de estados, en su tarea propia, pero esto puede llevar a problemas de sincronización y
- *- en mi opinión haria el codigo mas dificil de leer, con beneficios casi nulos.
  *
  * - Cuando pasamos al estado DRIVING debemos tener un delay durante 2 segundos, no necesariamente para el beep (que actualmente esta
  * 		implementado utilizando un One Shoot Software timer para evitar halts en las tareas, ver command) sino porque debemos detener la maquina de estados
@@ -67,35 +61,26 @@
  *
  */
 
-
 //Persistance checker
 persist_t SL;
 
 // FreeRTOS dependencies
-extern osMutexId_t preventRaceHandle; // Mutex compartido con la tarea de recepción de CAN (para tener exclusión mutua sobre la modificacion de la variable TeR)
 uint32_t currentTick; // declaramos nuestra variable currentTick como global (para reactualizar su valor al parar la maquina de estados)
 // IMPORTANTE: Se utiliza osDelayUntil debido a que es la manera recomendada por FreeRTOS en el reference manual para ejecucion temporal estricta sin desfases
 
 //FreeRTOS Task
-void stateMachineTask(void *argument) {
-	currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el tick actual del Kernel
-	uint32_t errorCounter = 0; // contador de errores de la no obtención del mutex (debug purposes)
-    osStatus_t mutexStatus; //variable que almacena el estado de la obtencion del mutex
+void stateMachine(void *argument) {
+	uint32_t nextTick = 0; // Initialize reference time
 	for (;;) {
-		currentTick+=2; //incrementamos nuestro tiempo con respecto al tiempo del kernel
-		osDelayUntil(currentTick); // bloqueamos la tarea hasta que lleguemos al valor de tick scheduled para la ejecucion.
-		mutexStatus = osMutexAcquire(preventRaceHandle,500); //intentamos adquirir mutex de forma segura hasta tMax, el timeout es para saber si nos quedamos pillados y responder
-		if(mutexStatus==osOK){ //SI hemos obtenido acceso al Mutex
-		stateMachine(); //ejecutamos la maquina de estados del vehiculo, si y solo si el mutex se adquiere correctamente
-		osMutexRelease(preventRaceHandle); // y una vez terminada la ejecucion, liberamos el mutex, si y solo si lo teniamos antes
-		}
-		else{ // NO hemos obtenido acceso al mutex
-			errorCounter++; // haremos un handle bien, loggeamos el error
-		}
+		nextTick = osKernelGetTickCount() + TASK_PERIOD
+		; //Genera el timestamp de la siguiente ejecucion
+		osDelayUntil(nextTick);
+		stateLoop(); //ejecutamos la maquina de estados del vehiculo
+
 	}
 }
 
-state_t getState(void) {
+state_t evalState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
 	TeR.status.sl = checkPersistance(&SL,
@@ -120,45 +105,45 @@ state_t getState(void) {
 	return status;
 }
 
-void stateMachine(void) {
+void stateLoop(void) {
 	uint8_t prevState = TeR.status.state; //Guarda el estado previo
-	TeR.status.state = getState(); //Get Current State
+	TeR.status.state = evalState(); //Get Current State
 	uint8_t stateChanged = TeR.status.state != prevState ? 1 : 0; //for state setup
 	permaTask(); //Ejecuta las tareas permanentes
-	//-----------------------------------[Setups]--------------------------------------------//
+	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (TeR.status.state) {
 		case WAIT_SL:
+			//Anounce through USB CDC
+			printf("TeR is Waiting for Safety Line");
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
-			TeR.trqReqLeft.torque_nm_req = 0;
-			TeR.trqReqRight.torque_nm_req = 0;
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
 			TER_COMMAND_ONOFF_OFF_CHOICE);
 			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
 		case RDY2PRECH:
+			//Anounce through USB CDC
+			printf("TeR is Ready To Precharge");
 			//Security
-			TeR.trqReqLeft.torque_nm_req = 0;
-			TeR.trqReqRight.torque_nm_req = 0;
 			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
 			TeR.appReqRight.app_state_req = 1;
 			break;
 
 		case PRECHARGING:
-			//Security
-			TeR.trqReqLeft.torque_nm_req = 0;
-			TeR.trqReqRight.torque_nm_req = 0;
+			//Anounce through USB CDC
+			printf("TeR is Precharging");
 			break;
 
 		case PRECHARGED:
-			TeR.appReqLeft.app_state_req = 2; //Manda el inverter a ready
+			//Anounce through USB CDC
+			printf("TeR is Precharged");
+
+			//Manda el inverter a listo
+			TeR.appReqLeft.app_state_req = 2;
 			TeR.appReqRight.app_state_req = 2;
-			//Security
-			TeR.trqReqLeft.torque_nm_req = 0;
-			TeR.trqReqRight.torque_nm_req = 0;
 
 			//Arranca la refri
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
@@ -181,16 +166,12 @@ void stateMachine(void) {
 			TER_DYNAMIC_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 			break;
-		case DRIVING: // se puede utilizar un one shot software timer para hacer wakeup de una tarea torquemanager dentro de 2 seg, pero eso implicaria tener una maquina de estados desincronizada, prefiero asi
+		case DRIVING:
+			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			osMutexRelease(preventRaceHandle); // liberamos el mutex para que se siga ejecutando la recepcion durante el delay (ya que comparten mutex)
-			osDelay(2000); //EV 4.12.1, delay para el sonido y ADEMAS para que el coche NO acelere mientras pite, (la maquina de estados se para aqui 2 segs)
-			currentTick=osKernelGetTickCount(); // resincronizamos nuestro tick con el valor actual del tick del kernel (debido al delay, hacemos esto porque queremos parar la maquna de estados, no es necesario)
-			osMutexAcquire(preventRaceHandle, osWaitForever); //volvemos a obtenerlo para ejecutar el torque manager
+			osDelay(2000); //EV 4.12.1, delay para el sonido
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // apagamos la bocina y el coche ya puede acelerar
-			startSCS(); //activamos el sistema de señales críticas del vehículo
-
 			break;
 		default:
 			//Handle Invalid state
@@ -198,59 +179,11 @@ void stateMachine(void) {
 		}
 	}
 
-//-----------------------------------[LOOPS]--------------------------------------------//
-
-	switch (TeR.status.state) {
-	case WAIT_SL:
-		waitSL();
-		break;
-
-	case RDY2PRECH:
-		rdy2Prech();
-		break;
-
-	case PRECHARGING:
-		precharging();
-		break;
-
-	case PRECHARGED:
-		precharged();
-		break;
-	case DRIVING:
-		driving();
-		break;
-	default:
-		//Handle Invalid state
-		break;
-	}
-
 }
-
-/* -------------------------[Estados]---------------------------- */
-
-void waitSL(void) {
-
-} // Comprueba que la safety esta cerrada
-void rdy2Prech(void) {
-
-} // Espera a recibir el comando de precarga
-void precharging(void) {
-
-} //Estado transitorio, monitoriza que todo va bien
-void precharged(void) {
-
-} //Espera a que se reciba el comando de r2d
-void driving(void) {
-	//trqManager(); //Ejecuta el pipeline de torque
-
-} //Ejecuta la comanda de par
 
 /* -------------------------[PermaTask]---------------------------- */
 
 void permaTask() {
-	// Refri Management
-	//refriManager();
-
 //BrakeLight
 	if (TeR.bpps.bpps > 4) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
@@ -286,7 +219,7 @@ void permaTask() {
 			(uint8_t) inverter_emcu_state_4_right_pwr_stg_temp_deg_c_decode(
 					TeR.tempsRight.pwr_stg_temp_deg_c);
 
-//Fill in Status Message
+	//Fill in Status Message
 	TeR.status.ams = TeR.BmsAppState.dio1_state; //1 OK
 	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
