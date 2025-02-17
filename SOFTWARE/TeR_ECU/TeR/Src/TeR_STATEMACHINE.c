@@ -65,15 +65,15 @@
 persist_t SL;
 
 // FreeRTOS dependencies
+const static task_period = 2; // Task frequency
 uint32_t currentTick; // declaramos nuestra variable currentTick como global (para reactualizar su valor al parar la maquina de estados)
 // IMPORTANTE: Se utiliza osDelayUntil debido a que es la manera recomendada por FreeRTOS en el reference manual para ejecucion temporal estricta sin desfases
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
-	uint32_t nextTick = 0; // Initialize reference time
+	uint32_t nextTick = osKernelGetTickCount(); // Initialize reference time
 	for (;;) {
-		nextTick = osKernelGetTickCount() + TASK_PERIOD
-		; //Genera el timestamp de la siguiente ejecucion
+		nextTick += task_period; //Genera el timestamp de la siguiente ejecucion
 		osDelayUntil(nextTick);
 		stateLoop(); //ejecutamos la maquina de estados del vehiculo
 
@@ -197,8 +197,7 @@ void permaTask() {
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
-	TeR.wheelInfo.speed = 3.6 * (TeR.wheelInfo.rl_rpm * 2 * PI * WHEEL_RADIUS)
-			/ 60; //Linear velocity of vehicle
+	TeR.wheelInfo.speed = 3.6 * ((TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rr_rpm) * PI * WHEEL_RADIUS)/ 60; //Linear velocity of vehicle
 
 // Bypass Inverter data
 	TeR.invInfo.left_dem = TeR.demLeft.dem; //Dem

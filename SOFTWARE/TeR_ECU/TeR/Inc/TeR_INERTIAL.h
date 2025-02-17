@@ -16,24 +16,34 @@
 #include "usbd_cdc_if.h"
 #include "asm330lhh_reg.h"
 #include "lis3mdl_reg.h"
-#include "imu_filter.h"
 
-#define TASK_PERIOD 10 //100hz
+typedef struct {
+	float roll,pitch,yaw; // attitude
+	float a_x,a_y,a_z; //Linear Accel
+	float w_x,w_y,w_z; //Angular Rate
+}imu_t;
+//Complementary filter constants
+#define ALPHA 0.6
+#define DT 0.01  // Time step (e.g., 10ms)
 
+
+
+//Task
 void inertial(void *argument);
 
-
+//Device Config Wrappers
 void configIMU(void);
 void configMAG(void);
 
-static int32_t imu_write(void *handle, uint8_t reg, const uint8_t *bufp,
-		uint16_t len);
-static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len);
-static int32_t mag_write(void *handle, uint8_t reg, const uint8_t *bufp,
-		uint16_t len);
-static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len);
+//Make the importer be able to access
+extern imu_t IMU;
+
+
+
+// Complementary filter constant (adjust as needed)
+void compFilter(float gx, float gy, float gz, float ax, float ay, float az,
+                         float mx, float my, float mz, float *roll, float *pitch, float *yaw);
+
 
 
 #endif /* INC_TER_INERTIAL_H_ */

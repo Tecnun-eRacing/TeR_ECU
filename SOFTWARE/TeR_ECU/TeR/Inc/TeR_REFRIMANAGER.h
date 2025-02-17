@@ -6,8 +6,8 @@
  */
 //Fichero encargado de la gestión del sistema de refrigeración
 //Implementa por ahora un controlador de histeresis
-#ifndef INC_TER_REFRI_H_
-#define INC_TER_REFRI_H_
+#ifndef INC_TER_REFRIMANAGER_H_
+#define INC_TER_REFRIMANAGER_H_
 
 #include "TeR_UTILS.h"
 #include "TeR_CAN.h"
@@ -20,4 +20,4 @@
 void refriManager();// Ejecuta el lazo de refri
 
 
-#endif /* INC_TER_REFRI_H_ */
+#endif /* INC_TER_REFRIMANAGER_H_ */

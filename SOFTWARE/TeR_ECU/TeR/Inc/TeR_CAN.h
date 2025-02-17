@@ -56,7 +56,7 @@ struct TeR_t {
 	struct ter_steer_t steer; //Volante
 	struct ter_front_v_t speed; // FrontAxle Speed
 	struct ter_ang_rate_t angRate; //Angular rate from imu
-	struct ter_lv_status_t lvbms; //Sensor de acelerador
+	struct ter_lv_status_t lvbms; //Estado del BMS de baja
 
 	//Inverters.dbc
 	//Enviados

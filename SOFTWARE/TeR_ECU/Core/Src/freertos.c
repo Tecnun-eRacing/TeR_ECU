@@ -80,13 +80,6 @@ const osThreadAttr_t invCanTxTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for stateMachineTsk */
-osThreadId_t stateMachineTskHandle;
-const osThreadAttr_t stateMachineTsk_attributes = {
-  .name = "stateMachineTsk",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
-};
 /* Definitions for systemCriticalTask */
 osThreadId_t systemCriticalTaskHandle;
 const osThreadAttr_t systemCriticalTask_attributes = {
@@ -122,6 +115,13 @@ const osThreadAttr_t trqManagerTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for stateMachineTask */
+osThreadId_t stateMachineTaskHandle;
+const osThreadAttr_t stateMachineTask_attributes = {
+  .name = "stateMachineTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -152,12 +152,12 @@ void osRunning(void *argument);
 extern void canRx(void *argument);
 extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
-extern void stateMachineTask(void *argument);
 extern void systemCritical(void *argument);
 extern void inertial(void *argument);
 extern void leds(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
+extern void stateMachine(void *argument);
 extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
@@ -248,9 +248,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of invCanTxTask */
   invCanTxTaskHandle = osThreadNew(invCanTx, NULL, &invCanTxTask_attributes);
 
-  /* creation of stateMachineTsk */
-  stateMachineTskHandle = osThreadNew(stateMachineTask, NULL, &stateMachineTsk_attributes);
-
   /* creation of systemCriticalTask */
   systemCriticalTaskHandle = osThreadNew(systemCritical, NULL, &systemCriticalTask_attributes);
 
@@ -265,6 +262,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of trqManagerTask */
   trqManagerTaskHandle = osThreadNew(trqManager, NULL, &trqManagerTask_attributes);
+
+  /* creation of stateMachineTask */
+  stateMachineTaskHandle = osThreadNew(stateMachine, NULL, &stateMachineTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

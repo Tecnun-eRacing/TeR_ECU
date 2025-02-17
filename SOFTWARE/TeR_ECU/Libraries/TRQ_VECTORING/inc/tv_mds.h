@@ -10,10 +10,12 @@
 #define INC_TV_MDS_H_
 
 #include "TeR_TRQMANAGER.h"
+#include "TeR_INERTIAL.h"
 #include "TeR_CAN.h" //For controlling TeR vehicle
+#include <math.h>
 //#include "pid.h"
 
-#define DEG2RAD 0.0174533 //Degs to radians
+#define DEG2RAD PI/180.0f //Degs to radians
 /////////////////////////////////////////[Constantes del Vehiculo]/////////////////////////////////////////////////////////////
 
 #define I_ZZ 122.0 //Momento de inercia en eje Z (kg*M^4) (Modelo Juan Gastaminza)

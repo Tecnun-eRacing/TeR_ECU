@@ -6,6 +6,26 @@
  */
 #include <TeR_INERTIAL.h>
 
+
+
+//Sensor Interface Wrappers
+static int32_t imu_write(void *handle, uint8_t reg, const uint8_t *bufp,
+		uint16_t len);
+static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp,
+		uint16_t len);
+static int32_t mag_write(void *handle, uint8_t reg, const uint8_t *bufp,
+		uint16_t len);
+static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp,
+		uint16_t len);
+
+
+
+
+//FreeRtos task
+static const int task_period = 10;
+//Global IMU
+imu_t IMU;
+
 //MARG devices
 stmdev_ctx_t imu;
 stmdev_ctx_t mag;
@@ -23,18 +43,15 @@ static int16_t mag_raw[3];
 static float_t mag_xyz[3];
 
 /* Combined attitude ---------------------------------------------------------*/
-float roll,pitch,yaw;
-
-
 
 void inertial(void *argument) {
-    uint32_t lastTick = osKernelGetTickCount(); // Initialize reference time
+	uint32_t lastTick = osKernelGetTickCount(); // Initialize reference time
 	configIMU();
 	configMAG();
 
 	for (;;) {
-	    lastTick += TASK_PERIOD;
-        osDelayUntil(lastTick);
+		lastTick += task_period;
+		osDelayUntil(lastTick);
 
 		uint8_t reg;
 		/* Read output only if new xl value is available */
@@ -44,12 +61,9 @@ void inertial(void *argument) {
 			/* Read acceleration field data */
 			memset(acc_raw, 0x00, 3 * sizeof(int16_t));
 			asm330lhh_acceleration_raw_get(&imu, acc_raw);
-			acc_xyz[0] = asm330lhh_from_fs2g_to_mg(
-					acc_raw[0])/1000.0;
-			acc_xyz[1] = asm330lhh_from_fs2g_to_mg(
-					acc_raw[1])/1000.0;
-			acc_xyz[2] = asm330lhh_from_fs2g_to_mg(
-					acc_raw[2]/1000.0);
+			acc_xyz[0] = asm330lhh_from_fs2g_to_mg(acc_raw[0]) / 1000.0;
+			acc_xyz[1] = asm330lhh_from_fs2g_to_mg(acc_raw[1]) / 1000.0;
+			acc_xyz[2] = asm330lhh_from_fs2g_to_mg(acc_raw[2] / 1000.0);
 
 		}
 
@@ -59,12 +73,12 @@ void inertial(void *argument) {
 			/* Read angular rate field data */
 			memset(gy_raw, 0x00, 3 * sizeof(int16_t));
 			asm330lhh_angular_rate_raw_get(&imu, gy_raw);
-			a_rate_rpy[0] = asm330lhh_from_fs2000dps_to_mdps(
-					gy_raw[0])/1000.0;
-			a_rate_rpy[1] = asm330lhh_from_fs2000dps_to_mdps(
-					gy_raw[1])/1000.0;
-			a_rate_rpy[2] = asm330lhh_from_fs2000dps_to_mdps(
-					gy_raw[2])/1000.0;
+			a_rate_rpy[0] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[0])
+					/ 1000.0;
+			a_rate_rpy[1] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[1])
+					/ 1000.0;
+			a_rate_rpy[2] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[2])
+					/ 1000.0;
 		}
 
 		//-----------------------------------------------------------------------------------------------------//
@@ -74,16 +88,28 @@ void inertial(void *argument) {
 		if (reg) {
 			memset(mag_raw, 0x00, 3 * sizeof(int16_t));
 			lis3mdl_magnetic_raw_get(&mag, mag_raw);
-			mag_xyz[0] = 1000
-					* lis3mdl_from_fs16_to_gauss(mag_raw[0]);
-			mag_xyz[1] = 1000
-					* lis3mdl_from_fs16_to_gauss(mag_raw[1]);
-			mag_xyz[2] = 1000
-					* lis3mdl_from_fs16_to_gauss(mag_raw[2]);
+			mag_xyz[0] = 1000 * lis3mdl_from_fs16_to_gauss(mag_raw[0]);
+			mag_xyz[1] = 1000 * lis3mdl_from_fs16_to_gauss(mag_raw[1]);
+			mag_xyz[2] = 1000 * lis3mdl_from_fs16_to_gauss(mag_raw[2]);
 		}
+		//Fill up the IMU struct
+		IMU.a_x = acc_xyz[0];
+		IMU.a_y = acc_xyz[1];
+		IMU.a_z = acc_xyz[2];
+		// Angular Rates
+		IMU.w_x = a_rate_rpy[0];
+		IMU.w_y = a_rate_rpy[1];
+		IMU.w_z = a_rate_rpy[2];
+
 		//Process attitude in euler angles
-	    compFilter(a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0], acc_xyz[1], acc_xyz[2], mag_xyz[0], mag_xyz[1], mag_xyz[2], &roll, &pitch, &yaw);
-	    printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", roll, pitch, yaw, a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0], acc_xyz[1], acc_xyz[2]);
+		compFilter(IMU.w_x, IMU.w_y, IMU.w_z, IMU.a_x,
+				IMU.a_y, IMU.a_z, mag_xyz[0], mag_xyz[1], mag_xyz[2],
+				&IMU.roll, &IMU.pitch, &IMU.yaw);
+
+		//For viewer usage
+		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", IMU.roll,  IMU.pitch,
+				 IMU.yaw, a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0],
+				acc_xyz[1], acc_xyz[2]);
 
 	}
 }
@@ -167,8 +193,7 @@ static int32_t imu_write(void *handle, uint8_t reg, const uint8_t *bufp,
 	return 0;
 }
 
-static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len) {
+static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len) {
 	return HAL_I2C_Mem_Read(handle, ASM330LHH_I2C_ADD_L, reg,
 	I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
 }
@@ -180,9 +205,31 @@ static int32_t mag_write(void *handle, uint8_t reg, const uint8_t *bufp,
 	return 0;
 }
 
-static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len) {
+static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len) {
 	return HAL_I2C_Mem_Read(handle, LIS3MDL_I2C_ADD_L, reg,
 	I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
+}
+
+//-------------------------------------------------[Filtering Functions]------------------------------------------------//
+
+// Function to update roll, pitch, yaw using complementary filter
+void compFilter(float gx, float gy, float gz, float ax, float ay, float az,
+		float mx, float my, float mz, float *roll, float *pitch, float *yaw) {
+	// Convert gyroscope degrees/sec to radians/sec
+	gx *= M_PI / 180.0f;
+	gy *= M_PI / 180.0f;
+	gz *= M_PI / 180.0f;
+
+	// Compute roll and pitch from accelerometer (gravity vector)
+	float accelRoll = atan2f(ay, az) * 180.0f / M_PI;
+	float accelPitch = atan2f(-ax, sqrtf(ay * ay + az * az)) * 180.0f / M_PI;
+
+	// Integrate gyroscope data
+	*roll = ALPHA * (*roll + gx * DT) + (1 - ALPHA) * accelRoll;
+	*pitch = ALPHA * (*pitch + gy * DT) + (1 - ALPHA) * accelPitch;
+
+	// Compute yaw from magnetometer (only needed if magnetometer is used)
+	float magYaw = atan2f(-my, mx) * 180.0f / M_PI;
+	*yaw = ALPHA * (*yaw + gz * DT) + (1 - ALPHA) * magYaw;
 }
 

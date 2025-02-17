@@ -10,11 +10,11 @@
 #ifndef INC_TER_STATEMACHINE_H_
 #define INC_TER_STATEMACHINE_H_
 
+#include <TeR_REFRIMANAGER.h>
 #include "stm32f4xx_hal.h"
 #include "main.h"
 #include "TeR_CAN.h"
 #include "TeR_TRQMANAGER.h"
-#include "TeR_REFRI.h"
 #include "TeR_CONSTANTS.h"
 #include "TeR_UTILS.h"
 //-------------------------[Asignacion de entradas Estandar]--------------------------//
@@ -34,7 +34,6 @@ typedef enum {
 	DRIVING //Se permite el movimiento del vehiculo
 } state_t; //Estados
 
-#define TASK_PERIOD 2; //Runs every 2 ms
 
 void stateMachine(void *argument); //Task
 state_t evalState(void); //Evalua en que estado se encuentra el coche

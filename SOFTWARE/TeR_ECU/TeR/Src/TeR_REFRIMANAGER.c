@@ -5,7 +5,7 @@
  *      Author: ozuba
  */
 
-#include "TeR_REFRI.h"
+#include "TeR_REFRIMANAGER.h"
 
 persist_t REFRI;
 

@@ -9,12 +9,14 @@
 #define INC_TER_SCS_H_
 
 #include <string.h>
-
+#include "main.h"
 #include "stm32f4xx_hal.h"
 #include "TeR_CAN.h"
 
 #define SCS {TER_APPS_FRAME_ID} //Añadir aqui las señales criticas
 #define SCS_TIMEOUT 600  //Define el tiempo en unidades del timer (ms) que una scs puede desviarse como maximo
+
+
 
 //Publicas
 uint8_t initSCS(TIM_HandleTypeDef *timBase); // Takes a timebase (Timer@1khz) and a checking interrupt

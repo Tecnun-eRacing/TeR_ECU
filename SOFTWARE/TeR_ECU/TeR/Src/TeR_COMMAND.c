@@ -29,7 +29,6 @@ uint8_t command(struct ter_command_t command) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-
 	//Preinicializamos la respuesta
 	struct ter_response_t response;
 	response.cmd = command.cmd;
