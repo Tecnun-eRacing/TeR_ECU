@@ -85,8 +85,8 @@ state_t evalState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
 	TeR.status.sl = checkPersistance(&SL,
-			HAL_GPIO_ReadPin(DIN1_GPIO_Port, DIN0_Pin), 500);// Leemos el estado de la safety
-	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);	// Leemos el estado del BSPD
+			HAL_GPIO_ReadPin(DIN0_GPIO_Port, DIN0_Pin), 500);// Leemos el estado de la safety
+	TeR.status.bspd = HAL_GPIO_ReadPin(DIN1_GPIO_Port, DIN1_Pin);	// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
@@ -193,7 +193,8 @@ void stateLoop(void) {
 			//Handle Invalid state
 			break;
 		}
-		TeR.status.state = state; // seteamos aqui el estado porque como la gestion del torque es una task se desincroniza
+		TeR.status.state = state;
+
 	}
 
 }
