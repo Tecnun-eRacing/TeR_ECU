@@ -16,6 +16,7 @@ float iMax = 1; // limitado a mas o menos 60 grados por segundo (1 rad/s 60 grad
 
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
 float yawRef(float steer, float vx) { //STEER EN RADIANES
+	//girar izq es positivo, realmente es el angulo de giro mediodel modelo bici
 	steer = (steer < STEER_DEADZONE && steer > -STEER_DEADZONE) ? 0 : steer; // check if steering angle is within the defined deadzone
 	return (steer * DEG2RAD * vx) / ((L_FRONT + L_REAR) + K_U * (vx * vx)); //unidades rad/seg
 }

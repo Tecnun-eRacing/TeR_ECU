@@ -10,7 +10,6 @@
 #ifndef INC_TER_STATEMACHINE_H_
 #define INC_TER_STATEMACHINE_H_
 
-#include <TeR_REFRIMANAGER.h>
 #include "stm32f4xx_hal.h"
 #include "main.h"
 #include "TeR_CAN.h"

@@ -240,14 +240,7 @@ void mainCanTx(void *argument) {
 				ter_wheel_info_pack(TxData, &TeR.wheelInfo, TxHeader.DLC);
 				break;
 
-			case 2:
-				TxHeader.StdId = TER_DYNAMIC_CONFIG_FRAME_ID;
-				TxHeader.DLC = TER_DYNAMIC_CONFIG_LENGTH;
-				ter_dynamic_config_pack(TxData, &TeR.dynamicConfig,
-						TxHeader.DLC);
-				break;
-
-			case 3:
+			case 4:
 				TxHeader.StdId = TER_INVERTER_INFO_FRAME_ID;
 				TxHeader.DLC = TER_INVERTER_INFO_LENGTH;
 				ter_inverter_info_pack(TxData, &TeR.invInfo, TxHeader.DLC);
@@ -264,7 +257,6 @@ void mainCanTx(void *argument) {
 
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
-	uint32_t errorCounter = 0; // debemos inicializar ! toma valor random, mira abajo
 	canMsg_t msg; // tipo de variable que almacena id, datos y DLC del mensaje recibido en la interrupcion
 	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
@@ -306,6 +298,10 @@ void canRx(void *argument) {
 
 			case TER_LV_STATUS_FRAME_ID:
 				ter_lv_status_unpack(&TeR.lvbms, msg.data, msg.DLC);
+				break;
+
+			case TER_ECU_CONFIG_FRAME_ID:
+				ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
 				break;
 
 				/* ---------------------------[INVERTER]-------------------------- */
@@ -374,12 +370,7 @@ void canRx(void *argument) {
 			}
 			osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
 		} else {
-			errorCounter++;
-			//if(algo)
-			//osThreadSetPriority(thread_id, priority); podriamos poner en prioridad alta a la tarea de envio, para asegurar que mandaremos el coche a off
-			//osEventFlagsSet(ef_id, flags); podriamos despertar a una tarea de shutdown de emergencia del vehiculo
-			//podriamos irnos a command de apagado del coche
-			//abrir safety line
+			printf("Couldnt Adquire the TeR structure Mutex");
 		}
 	}
 }

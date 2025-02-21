@@ -149,22 +149,6 @@ void stateLoop(void) {
 			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
 			TER_COMMAND_ONOFF_ON_CHOICE);
 
-			//Configura el driving mode
-			struct ter_command_t cmdMsg;
-			ter_command_init(&cmdMsg);
-			cmdMsg.cmd = TER_COMMAND_CMD_SET_LIMITS_CHOICE;
-			cmdMsg.trq_limit = 150;
-			cmdMsg.kw_limit = 40;
-			cmdMsg.speed_limit = 50;
-			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
-
-			ter_command_init(&cmdMsg);
-			cmdMsg.cmd = TER_COMMAND_CMD_SET_DYNAMIC_CONFIG_CHOICE;
-			cmdMsg.cfg_limiter = TER_DYNAMIC_CONFIG_LIMITER_LIMIT_TORQUE_CHOICE;
-			cmdMsg.cfg_mode = TER_DYNAMIC_CONFIG_MODE_LINEAL_CHOICE;
-			cmdMsg.cfg_traction_control =
-			TER_DYNAMIC_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
-			command(cmdMsg); //Llama a la interpretación del comando (Se lo pasa por copia)
 			break;
 		case DRIVING:
 			startSCS(); //activamos el sistema de señales críticas del vehículo

@@ -6,20 +6,6 @@
  */
 #include "TeR_COMMAND.h"
 
-/*Implementacion FreeRTOS Piero
- *
- * - Un Software Timer que se encarga de desactivar el beep pasados 500 ticks, simplemente para evitar halting en la tarea que llama a beep
- *
- */
-
-
-
-//FreeRTOS dependencies
-void beepCallback(void *argument) { // esto es el callback del software timer del beep, usamos un timer para no bloquear tareas debido al delay del timer
-    // Reset the GPIO pin to turn off the beep
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-}
-extern osTimerId_t beepTimerHandle; // Handle del software timer
 
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
@@ -85,78 +71,8 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-		osTimerStart(beepTimerHandle, 500); //el timer va a llamar su callback en 500 ticks
-		break;
-
-	case TER_COMMAND_CMD_SET_DYNAMIC_CONFIG_CHOICE:
-		trqPipeline_t conf;
-		if (TeR.status.state < DRIVING) {
-			//Limiters
-			switch (command.cfg_limiter) {
-			case TER_DYNAMIC_CONFIG_LIMITER_LIMIT_TORQUE_CHOICE:
-				conf.limiter = &limitTorque; //Configura el limiter al torque
-				break;
-
-			case TER_DYNAMIC_CONFIG_LIMITER_LIMIT_MECH_PWR_CHOICE:
-				conf.limiter = &limitMechPWR; //Configura el limiter al torque
-				break;
-
-			default:
-				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;
-				break;
-			}
-			switch (command.cfg_mode) {			//Mode
-
-			case TER_DYNAMIC_CONFIG_MODE_LINEAL_CHOICE:
-				conf.drivingMode = &lineal; //Configura el limiter al torque
-				break;
-
-			default:
-				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;
-				break;
-
-			}
-			switch (command.cfg_traction_control) {			//Traction Control
-
-			case TER_DYNAMIC_CONFIG_TRACTION_CONTROL_OFF_CHOICE:
-				conf.tractionControl = &tractionControlOFF; //Configura el limiter al torque
-				break;
-
-			default:
-				response.code = TER_RESPONSE_CODE_OUT_OF_RANGE_CHOICE;
-				break;
-
-			}
-		} else {
-			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
-		}
-		if (response.code == TER_RESPONSE_CODE_OK_CHOICE) { // Estaba en rango
-			TeR.dynamicConfig.limiter = command.cfg_limiter;
-			TeR.dynamicConfig.mode = command.cfg_mode;
-			TeR.dynamicConfig.traction_control = command.cfg_traction_control;
-			DriveConfig = conf; //Solo si esta bien se copia al struct de pipeline
-		}
-
-		break;
-
-	case TER_COMMAND_CMD_SET_LIMITS_CHOICE:
-		if (ter_command_trq_limit_is_in_range(command.trq_limit)) {
-			TeR.dynamicConfig.trq_limit = command.trq_limit;
-		}
-		if (ter_command_kw_limit_is_in_range(command.kw_limit)) {
-			TeR.dynamicConfig.kw_limit = command.kw_limit;
-		}
-		if (ter_command_speed_limit_is_in_range(command.speed_limit)) {
-			TeR.dynamicConfig.speed_limit = command.speed_limit;
-		}
-		break;
-
-	case TER_COMMAND_CMD_SWITCH_SCS_CHOICE:
-		if (command.onoff) {
-			startSCS();
-		} else { //if disabled enable
-			stopSCS();
-		}
+		osDelay(1000);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 		break;
 
 		/*Sends messages not implemented in this board to the main can if the source is internal*/
@@ -186,6 +102,8 @@ uint8_t easyCommand(uint8_t cmd) {
 	return command(cmdMsg);
 }
 
+
+//Deprecate, now we use the config struct for switching things
 uint8_t switchCommand(uint8_t cmd, uint8_t onOff) {
 	struct ter_command_t cmdMsg;
 	ter_command_init(&cmdMsg);

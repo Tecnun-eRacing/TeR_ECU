@@ -80,8 +80,6 @@ uint8_t loadParams(trqPipeline_t* config); //
 
 //Basic limiters
 trq_t limitTorque(void);
-trq_t limitMechPWR(void);
-
 
 //Basic modes
 trqMap_t lineal(trq_t limit);

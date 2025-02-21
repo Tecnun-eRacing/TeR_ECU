@@ -6,9 +6,7 @@
  */
 //Modulo que gestiona los comandos del vehiculo, contiene la función command
 #include "TeR_CAN.h" //Necesario para la interacción expone los can en uso
-#include "TeR_TRQMANAGER.h" //Para configurar el torqueManager
 #include "TeR_STATEMACHINE.h" //Para los estados
-#include "TeR_SCS.h" //Activation/Deactivation
 
 
 

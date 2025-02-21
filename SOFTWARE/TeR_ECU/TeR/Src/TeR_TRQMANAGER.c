@@ -7,7 +7,7 @@
  */
 
 #include "TeR_TRQMANAGER.h"
-const static task_period = 10; // Task frequency 100hz
+const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -33,6 +33,19 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			TeR.trqReqRight.torque_nm_req = trqToWheels.rRight;
 
 		} else {
+			//Config the driving pipeline if not running
+			switch(TeR.config.limiter){
+
+			case TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE:
+				DriveConfig.limiter = &limitTorque;
+			break;
+
+
+
+
+			}
+
+
 			//Torque Zero safestate
 			TeR.trqReqLeft.torque_nm_req = 0;
 			TeR.trqReqRight.torque_nm_req = 0;
@@ -44,32 +57,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 // void -> trq_t
 //Par Máximo constante
 trq_t limitTorque(void) {
-	return (trq_t) TeR.dynamicConfig.trq_limit; //Devuelve el valor configurado
-}
-
-//Potencia mecanica constante
-trq_t limitMechPWR(void) {
-	int32_t meanRPM = (TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rl_rpm) / 2; //RPMs medias
-	if (meanRPM > 0) { //Estamos moviendonos se estima el torque desarrollable
-		return (trq_t) (TeR.dynamicConfig.kw_limit * ELEC2MECH_EFF) / meanRPM; //Devolvemos la potencia desarrollable limitada en potencia
-	} else if (meanRPM == 0) { //Estamos quietos luego se devuelve la limitación de torque máximo
-		return (trq_t) TeR.dynamicConfig.trq_limit;
-	}
-	return 0;
-}
-
-//Velocidad máxima
-trq_t limitSpeed(void) {
-//Reduce el torque que puedes dar conforme te acercas al valor de speed (Puede generar problematica oscilatoria)
-//Velocidad aumenta -> torque dismunuye -> Velocidad Disminuye-> Torque aumenta
-//Usar PID
-
-	return 0;
-}
-
-//Limit Electrical Power (Dato de los Inverters Controller)
-trq_t limitElecPWR(void) {
-	return 0;
+	return (trq_t) TeR.config.trq_limit; //Devuelve el valor configurado
 }
 
 //------------------------------------------------[Basic Driving Modes]------------------------------------------------//

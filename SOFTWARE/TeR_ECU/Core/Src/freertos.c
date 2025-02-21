@@ -127,11 +127,6 @@ osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
 };
-/* Definitions for beepTimer */
-osTimerId_t beepTimerHandle;
-const osTimerAttr_t beepTimer_attributes = {
-  .name = "beepTimer"
-};
 /* Definitions for scsTimer */
 osTimerId_t scsTimerHandle;
 const osTimerAttr_t scsTimer_attributes = {
@@ -158,7 +153,6 @@ extern void leds(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
-extern void beepCallback(void *argument);
 extern void scsCallback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
@@ -217,9 +211,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
-  /* creation of beepTimer */
-  beepTimerHandle = osTimerNew(beepCallback, osTimerOnce, NULL, &beepTimer_attributes);
-
   /* creation of scsTimer */
   scsTimerHandle = osTimerNew(scsCallback, osTimerPeriodic, NULL, &scsTimer_attributes);
 
