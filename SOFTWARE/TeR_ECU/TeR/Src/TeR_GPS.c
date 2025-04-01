@@ -42,6 +42,7 @@ void gps(void *argument) {
 
 	osDelay(100);
 	for (;;) {
+		osDelay(0xFFFFFFFF);
 		//GPS test
 		osDelay(100);
 		poll_ubx(&gps_d, 0x01, 0x07, &pvt, sizeof(pvt)); //Continously poll for nav data

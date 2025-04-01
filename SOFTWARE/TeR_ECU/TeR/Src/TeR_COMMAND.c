@@ -58,7 +58,7 @@ uint8_t command(struct ter_command_t command) {
 
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
-		if (TeR.status.state == PRECHARGED && TeR.bpps.bpps > 4) { //Pone el coche en modo driving y añadir freno
+		if (TeR.status.state == PRECHARGED) { //Pone el coche en modo driving y añadir freno
 
 		//Permite el paso al estado drive
 			TeR.status.r2_d = 1;

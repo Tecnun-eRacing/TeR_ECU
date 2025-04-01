@@ -84,7 +84,7 @@ state_t evalState(void) {
 	state_t status = WAIT_SL; //Iniciamos en el estado 0
 	//Lecturas
 	TeR.status.sl = checkPersistance(&SL,
-			HAL_GPIO_ReadPin(TSMS_GPIO_Port, TSMS_Pin), 500);// Leemos el estado de la safety
+			HAL_GPIO_ReadPin(DIN1_GPIO_Port, DIN0_Pin), 500);// Leemos el estado de la safety
 	TeR.status.bspd = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);	// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
@@ -119,8 +119,6 @@ void stateLoop(void) {
 			printf("TeR is Waiting for Safety Line");
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
-			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-			TER_COMMAND_ONOFF_OFF_CHOICE);
 			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
@@ -146,11 +144,13 @@ void stateLoop(void) {
 			TeR.appReqRight.app_state_req = 2;
 
 			//Arranca la refri
-			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-			TER_COMMAND_ONOFF_ON_CHOICE);
 
 			break;
 		case DRIVING:
+			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
+			TeR.config.trq_limit = 180;
+			TeR.config.driving_mode = TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
+			TeR.config.traction_control = TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);

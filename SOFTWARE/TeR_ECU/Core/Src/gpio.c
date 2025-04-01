@@ -58,27 +58,27 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SYS_LED_Pin|IMU_LED_Pin|SC_EN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin */
+  /*Configure GPIO pins : DOUT1_Pin DOUT0_Pin DOUT3_Pin DOUT2_Pin */
   GPIO_InitStruct.Pin = DOUT1_Pin|DOUT0_Pin|DOUT3_Pin|DOUT2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin */
+  /*Configure GPIO pins : DIN2_Pin DIN1_Pin DIN0_Pin DIN3_Pin */
   GPIO_InitStruct.Pin = DIN2_Pin|DIN1_Pin|DIN0_Pin|DIN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin PBPin */
+  /*Configure GPIO pins : SYS_LED_Pin IMU_LED_Pin SC_EN_Pin */
   GPIO_InitStruct.Pin = SYS_LED_Pin|IMU_LED_Pin|SC_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PtPin */
+  /*Configure GPIO pin : ERR_LED_Pin */
   GPIO_InitStruct.Pin = ERR_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;

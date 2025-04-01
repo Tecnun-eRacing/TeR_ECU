@@ -11,7 +11,6 @@ const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
-
 trqPipeline_t DriveConfig; //Configuración en uso
 extern osThreadId_t trqManagerTaskHandle; // thread id of trqManager task
 
@@ -34,17 +33,24 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 
 		} else {
 			//Config the driving pipeline if not running
-			switch(TeR.config.limiter){
+			switch (TeR.config.limiter) {
 
 			case TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE:
 				DriveConfig.limiter = &limitTorque;
-			break;
-
-
-
-
+				break;
 			}
+			switch (TeR.config.driving_mode) {
 
+			case TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE:
+				DriveConfig.drivingMode = &lineal;
+				break;
+			}
+			switch (TeR.config.traction_control) {
+
+			case TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE:
+				DriveConfig.tractionControl= &tractionControlOFF;
+				break;
+			}
 
 			//Torque Zero safestate
 			TeR.trqReqLeft.torque_nm_req = 0;
@@ -69,8 +75,6 @@ trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas
 	return trqMap;
 }
 
-
-
 //------------------------------------------------[Basic traction Control]------------------------------------------------//
 // trqMap_t -> trqMap_t
 trqMap_t tractionControlOFF(trqMap_t in) {
@@ -87,8 +91,7 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper func
 		return in; //return 0 torque as negative torque is being requested with below security speed
 	}
 
-	maxNegTrq =
-			maxNegTrq > limit ? limit : maxNegTrq; //check if negative allowance is in limit and if not clamp it (not necessary)
+	maxNegTrq = maxNegTrq > limit ? limit : maxNegTrq; //check if negative allowance is in limit and if not clamp it (not necessary)
 
 	// 2) check if negative torque is being requested and between is betweeen allowedNegativeTorque
 	if (in.rLeft <= -maxNegTrq / 2) { // if torque exceeds allowance
