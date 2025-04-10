@@ -148,14 +148,14 @@ void stateLoop(void) {
 			break;
 		case DRIVING:
 			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-			TeR.config.trq_limit = 180;
+			TeR.config.trq_limit = 40;
 			TeR.config.driving_mode = TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
 			TeR.config.traction_control = TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
-			osDelay(2000); //EV 4.12.1, delay para el sonido
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // apagamos la bocina y el coche ya puede acelerar
+			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
+			osDelay(1000);
+			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
 			break;
 		default:
 			//Handle Invalid state

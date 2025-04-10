@@ -70,9 +70,9 @@ uint8_t command(struct ter_command_t command) {
 		break;
 
 	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
 		osDelay(1000);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
 		break;
 
 		/*Sends messages not implemented in this board to the main can if the source is internal*/

@@ -7,6 +7,8 @@
  */
 
 #include "TeR_TRQMANAGER.h"
+#include "tv_mds.h"
+
 const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
@@ -43,6 +45,10 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 
 			case TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE:
 				DriveConfig.drivingMode = &lineal;
+				break;
+
+			case TER_ECU_CONFIG_DRIVING_MODE_TORQUE_VECTORING_CHOICE:
+				DriveConfig.drivingMode = &trqVectoring;
 				break;
 			}
 			switch (TeR.config.traction_control) {

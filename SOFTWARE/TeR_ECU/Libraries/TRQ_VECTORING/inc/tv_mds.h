@@ -43,7 +43,7 @@
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
-trqMap_t trqDistribution(trq_t limit);
+trqMap_t trqVectoring(trq_t limit);
 uint8_t tv_initPID(float Kp,float Ki, float Kd,float iMax);//wrapper function
 uint8_t tv_deInitPID(void);
 uint8_t areGainsInRange(float Kp, float Ki, float Kd);
