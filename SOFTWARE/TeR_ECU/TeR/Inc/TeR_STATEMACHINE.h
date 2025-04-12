@@ -16,6 +16,7 @@
 #include "TeR_TRQMANAGER.h"
 #include "TeR_CONSTANTS.h"
 #include "TeR_UTILS.h"
+#include "TeR_CONFIG.h"
 //-------------------------[Asignacion de entradas Estandar]--------------------------//
 #define TSMS_GPIO_Port DIN0_GPIO_Port
 #define TSMS_Pin DIN0_Pin

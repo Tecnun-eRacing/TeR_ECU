@@ -47,8 +47,6 @@
  *
  */
 
-
-
 #include "TeR_CAN.h"
 
 /* ---------------------------[Estructuras del CAN]-------------------------- */
@@ -147,7 +145,7 @@ void invCanTx(void *argument) {
 	TxHeader.RTR = CAN_RTR_DATA;
 	//Van los 3 mensajes de golpe pq justo nos caben en la fifo a la vez y el inverter los requiere
 	for (;;) {
-		currentTick+=1; //añadimos 2 ticks a el valor actual del tick del kernel
+		currentTick += 1; //añadimos 2 ticks a el valor actual del tick del kernel
 		osDelayUntil(currentTick); //cuando el kernel consiga llegar a el valor actual de currentTick, el kernel desbloqueará la tarea
 		if (HAL_CAN_GetTxMailboxesFreeLevel(invCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (invIndex++) {
@@ -224,8 +222,8 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		currentTick+=10; //añadimos 2 ticks a el valor actual del tick del kernel
-		osDelayUntil(currentTick);// Cuando el kernel consiga llegar a el valor actual de currentTick, desbloqueará la tarea
+		currentTick += 10; //añadimos 2 ticks a el valor actual del tick del kernel
+		osDelayUntil(currentTick); // Cuando el kernel consiga llegar a el valor actual de currentTick, desbloqueará la tarea
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {
 
@@ -302,6 +300,7 @@ void canRx(void *argument) {
 
 			case TER_ECU_CONFIG_FRAME_ID:
 				ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
+				//recieveConfig(TER_ECU_CONFIG_FRAME_ID,&TeR.config);
 				break;
 
 				/* ---------------------------[INVERTER]-------------------------- */

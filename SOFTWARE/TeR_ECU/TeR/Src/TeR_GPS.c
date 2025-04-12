@@ -51,6 +51,7 @@ void gps(void *argument) {
 
 uint8_t gps_read(uint8_t *dest, size_t size) {
 	osEventFlagsSet(uartEventFlags, 0x00); //ensure you turn off the receive flag
+	while (huart1.gState =! HAL_UART_STATE_READY);
 	return HAL_UART_Receive_DMA(&huart1, dest, size);
 }
 uint8_t gps_write(uint8_t *src, size_t size) {

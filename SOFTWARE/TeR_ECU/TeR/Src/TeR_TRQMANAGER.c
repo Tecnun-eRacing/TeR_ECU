@@ -91,7 +91,7 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper function that enables or disables negative torque up to a certain value.
 
 	//1) First check if wheels are spinning at THR speed and negative torque is being requested (avoids backwards speed on wheel)
-	if (TeR.wheelInfo.speed < 20 && (in.rLeft < 0 || in.rRight < 0)) {
+	if (TeR.wheelInfo.speed < 0 && (in.rLeft < 0 || in.rRight < 0)) {
 		in.rLeft = 0;
 		in.rRight = 0;
 		return in; //return 0 torque as negative torque is being requested with below security speed

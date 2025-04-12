@@ -20,7 +20,7 @@
 #include "ubx_msgs.h"
 
 //ubx_device struct handles write and read interfaces for HAL independance
-typedef struct {
+typedef struct __attribute__((packed)){
 	uint8_t (*write)(uint8_t *src, size_t size); //Takes info and sends to device return success
 	uint8_t (*read)(uint8_t *dest, size_t size); //Requests N bytes from device return if data reading request was successfull, remember to set dataRead to 0 here
 	uint8_t (*wait_for_data)(void); //returns 0 if waited succesfully, returns 1 if any error ocurred

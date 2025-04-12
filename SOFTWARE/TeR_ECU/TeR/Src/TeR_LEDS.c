@@ -11,6 +11,7 @@ uint16_t offset;
 void leds(void *argument) {
 
 	for (;;) {
+		osDelay(0xFFFFFFFF);
 		/*
 		 for (uint8_t n = 0; n < N_LEDS; n++) {
 		 strip[n].r = 255;

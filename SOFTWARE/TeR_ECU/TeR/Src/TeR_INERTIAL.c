@@ -124,9 +124,9 @@ void configIMU(void) {
 	osDelay(50);
 
 	asm330lhh_device_id_get(&imu, &whoamI);
-	if (whoamI != ASM330LHH_ID)
-		while (1)
-			;
+	while (whoamI != ASM330LHH_ID){
+		asm330lhh_device_id_get(&imu, &whoamI);
+	}
 	/* Restore default configuration */
 	asm330lhh_reset_set(&imu, PROPERTY_ENABLE);
 

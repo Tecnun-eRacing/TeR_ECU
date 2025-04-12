@@ -63,7 +63,8 @@
 
 //Persistance checker
 persist_t SL;
-
+struct ter_refri_config_t refri;
+uint32_t truco;
 // FreeRTOS dependencies
 const static task_period = 2; // Task frequency
 uint32_t currentTick; // declaramos nuestra variable currentTick como global (para reactualizar su valor al parar la maquina de estados)
@@ -107,41 +108,81 @@ state_t evalState(void) {
 
 void stateLoop(void) {
 	uint8_t prevState = TeR.status.state; //Guarda el estado previo
-	TeR.status.state = evalState(); //Get Current State
-	uint8_t stateChanged = TeR.status.state != prevState ? 1 : 0; //for state setup
+	uint8_t state = evalState(); //Get Current State
+	uint8_t stateChanged = state != prevState ? 1 : 0; //for state setup
 	permaTask(); //Ejecuta las tareas permanentes
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
-		switch (TeR.status.state) {
+		switch (state) {
 		case WAIT_SL:
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
+
+			//			 desactivamos cooling
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
+			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
+			ter_refri_config_init(&refri);
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
+			refri.intensity = 0;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
 			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
+			TeR.status.state = state;
 			break;
 
 		case RDY2PRECH:
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
+			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
+			refri.intensity = 30;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
+			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
 			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
 			TeR.appReqRight.app_state_req = 1;
+			TeR.status.state = state;
 			break;
 
 		case PRECHARGING:
 			//Anounce through USB CDC
 			printf("TeR is Precharging");
+			TeR.status.state = state;
 			break;
 
 		case PRECHARGED:
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
+//			 activamos cooling
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
+			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
+			refri.intensity = 100;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
+			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
 			TeR.appReqRight.app_state_req = 2;
+			TeR.status.state = state;
 
 			//Arranca la refri
 
@@ -149,13 +190,16 @@ void stateLoop(void) {
 		case DRIVING:
 			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
 			TeR.config.trq_limit = 40;
-			TeR.config.driving_mode = TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
-			TeR.config.traction_control = TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
+			TeR.config.driving_mode =
+					TER_ECU_CONFIG_DRIVING_MODE_TORQUE_VECTORING_CHOICE;
+			TeR.config.traction_control =
+					TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
 			osDelay(1000);
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
+			TeR.status.state = state;
 			break;
 		default:
 			//Handle Invalid state
@@ -175,13 +219,16 @@ void permaTask() {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
 	}
 // Proccess Wheel Data
-	TeR.wheelInfo.rl_rpm =
-			((-TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES) * RED_RATIO;
+	TeR.wheelInfo.rl_rpm = ((TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES)
+			* RED_RATIO;
 	TeR.wheelInfo.rr_rpm = (TeR.dqErpmRight.e_machine_speed_erpm / MOTOR_POLES)
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
-	TeR.wheelInfo.speed = 3.6 * ((TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rr_rpm) * PI * WHEEL_RADIUS)/ 60; //Linear velocity of vehicle
+	TeR.wheelInfo.speed =
+			3.6
+					* ((TeR.wheelInfo.rl_rpm + TeR.wheelInfo.rr_rpm) * PI
+							* WHEEL_RADIUS) / 60; //Linear velocity of vehicle
 
 // Bypass Inverter data
 	TeR.invInfo.left_dem = TeR.demLeft.dem; //Dem

@@ -6,7 +6,8 @@
  */
 
 #include "tv_mds.h"
-
+uint8_t angle = 0;
+float dTorque = 0;
 // la velocidad hay que sacarla mejor de otro sitio ya que de la rueda no me mola
 pid_t *tvPid; //Estructura del PID
 float Kp = 0; // temporal, leeremos valores de la estructura TeR
@@ -33,11 +34,11 @@ trqMap_t trqVectoring(trq_t limit) {
 	};
 	//Declares a trqMap
 	trqMap_t trqMap;
-	float dTorque = 0;
+	dTorque = 0;
 
 	//check if car is not at speed, or pedal is not being pressed, if true Reset PID and LINEAR RESPONSE
 	//Not in conditions for Torque Vectoring
-	if (TeR.wheelInfo.speed < ACTSPEED || TeR.apps.apps_av < ACTAPPS) { // if below activation speed or pedal below threshold, return linear response and clear pid error
+	if (TeR.wheelInfo.speed < 0 || TeR.apps.apps_av < 0) { // if below activation speed or pedal below threshold, return linear response and clear pid error
 		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		tvPid->error = 0; //clear P error
@@ -49,19 +50,19 @@ trqMap_t trqVectoring(trq_t limit) {
 	}
 	//Torque Vectoring Available
 	//Torque Vectoring Computation
-	float ref = yawRef(TeR.steer.angle, TeR.wheelInfo.speed);
+	float ref = yawRef(angle, TeR.wheelInfo.rl_rpm);
 	float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a
 	float corr = pid(tvPid, ref, imuYawR); //Computa el lazo y devuelve el valor de correccion
 	dTorque = mz2DeltaTorque(corr); //gets t
 
 	//SAFETY CHECKS
 	//check if dTorque is in allowable range IF NOT CLAMP DTORQUE TO MAX VALUE
-	dTorque = abs(dTorque) > MAX_DELTA_TORQUE ? MAX_DELTA_TORQUE : dTorque;
-
+	dTorque = dTorque > MAX_DELTA_TORQUE ? MAX_DELTA_TORQUE : dTorque;
+	dTorque = dTorque < - MAX_DELTA_TORQUE ? - MAX_DELTA_TORQUE : dTorque;
 	//Fill trqMap structure with dTorque
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5) + dTorque / 2;
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5) - dTorque / 2;
-	trqMap = torqueCheck(trqMap, limit, 0); //no negative torque allowed
+	trqMap = torqueCheck(trqMap, limit, limit); //no negative torque allowed
 	return trqMap; //return tv output
 }
 
