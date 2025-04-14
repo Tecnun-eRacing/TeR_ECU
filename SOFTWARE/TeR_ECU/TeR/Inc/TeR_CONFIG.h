@@ -10,5 +10,5 @@
 #include "TeR_CAN.h"
 
 uint8_t sendConfig(uint32_t frame_id, void *config);
-uint8_t recieveConfig(uint32_t frame_id, void *config);
+void readConfig(uint32_t frame_id, void *config);
 #endif /* INC_TER_CONFIG_H_ */

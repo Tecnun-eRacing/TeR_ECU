@@ -300,7 +300,7 @@ void canRx(void *argument) {
 
 			case TER_ECU_CONFIG_FRAME_ID:
 				ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
-				//recieveConfig(TER_ECU_CONFIG_FRAME_ID,&TeR.config);
+				readConfig(TER_ECU_CONFIG_FRAME_ID,&TeR.config);
 				break;
 
 				/* ---------------------------[INVERTER]-------------------------- */
