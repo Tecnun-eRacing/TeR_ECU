@@ -15,7 +15,7 @@ void servos(void *argument) {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); //start flap
 	for (;;) {
 		osDelay(10);
-		setAngle(flapR.angle + flapL.offset, TIM_CHANNEL_1);
+		setAngle(flapL.angle + flapL.offset, TIM_CHANNEL_1);
 		setAngle(- flapR.angle + flapR.offset, TIM_CHANNEL_2);
 	}
 
