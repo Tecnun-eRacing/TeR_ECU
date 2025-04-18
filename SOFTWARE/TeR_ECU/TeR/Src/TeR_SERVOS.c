@@ -15,8 +15,8 @@ void servos(void *argument) {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); //start flap
 	for (;;) {
 		osDelay(10);
-		setAngle(flapL.angle + flapL.offset, TIM_CHANNEL_1);
-		setAngle(- flapR.angle + flapR.offset, TIM_CHANNEL_2);
+		setAngle(flapL.angle, TIM_CHANNEL_1);
+		setAngle(flapR.angle, TIM_CHANNEL_2);
 	}
 
 }
@@ -26,12 +26,13 @@ void setAngle(uint8_t angle, uint8_t channel) {
 	uint16_t low = incFreq * 0.0005;
 	uint16_t high = incFreq * 0.0025;
 	switch (channel) {
-	case TIM_CHANNEL_1:
-		TIM3->CCR1 = angle * (high - low) / 180.0 + low;
+	case TIM_CHANNEL_1: // left servo
+		TIM3->CCR1 = (angle + flapL.offset)* (high - low) / 180.0 + low;
 		break;
 
-	case TIM_CHANNEL_2:
-		TIM3->CCR2 = angle * (high - low) / 180.0 + low;
+	case TIM_CHANNEL_2: // right servo
+		TIM3->CCR2 = (- angle + flapR.offset) * (high - low) / 180.0 + low;
 		break;
 	}
 }
+

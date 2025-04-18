@@ -119,13 +119,12 @@ void stateLoop(void) {
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
-			//	Desactivamos cooling
+			//	Apagamos refri
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
-
-			ter_refri_config_init(&refri);
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			// reseteamos request de pwm a 0
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 0;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
@@ -152,14 +151,16 @@ void stateLoop(void) {
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
-//			 activamos cooling potencia low
+//			 activamos cooling potencia LOW
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			request de intensidad 30%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 40;
+			refri.intensity = 30;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
 			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
@@ -169,23 +170,17 @@ void stateLoop(void) {
 			TeR.appReqRight.app_state_req = 2;
 			break;
 		case DRIVING:
-			//activamos cooling potencia high
+			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
-			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 100;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
-			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Configuramos modo de conducción
 			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-			TeR.config.trq_limit = 40;
+			TeR.config.trq_limit = 100;
 			TeR.config.driving_mode =
-			TER_ECU_CONFIG_DRIVING_MODE_TORQUE_VECTORING_CHOICE;
+			TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
 			TeR.config.traction_control =
 			TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			startSCS(); //activamos el sistema de señales críticas del vehículo
