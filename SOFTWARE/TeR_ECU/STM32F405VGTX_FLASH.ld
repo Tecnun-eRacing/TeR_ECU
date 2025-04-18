@@ -47,12 +47,17 @@ MEMORY
 {
   CCMRAM    (xrw)    : ORIGIN = 0x10000000,   LENGTH = 64K
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 1024K
+  FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 1024K
 }
 
 /* Sections */
 SECTIONS
 {
+/*BOOTFLAG section*/
+  .no_init (NOLOAD) :
+  {
+      *( .no_init )
+  } > RAM
   /* The startup code into "FLASH" Rom type memory */
   .isr_vector :
   {

@@ -94,7 +94,7 @@ void checkSCS(void) {
 		if (base->Instance->CNT - timestamps[i] > SCS_TIMEOUT) { // SCS Fault
 			lastFailSCS = scsIds[i]; //Guarda la id de la ultima señal problematica, util a modo de debug
 			//easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
-			//HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 0); //OPEN SC
+			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 0); //OPEN SC
 			TeR.apps.apps_av = 0; //Porsiaka
 		}else{
 			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 1);//CLOSE

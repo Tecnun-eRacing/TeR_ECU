@@ -48,7 +48,7 @@
  */
 
 #include "TeR_CAN.h"
-
+volatile uint32_t boot_flag __attribute__((section(".no_init")));
 /* ---------------------------[Estructuras del CAN]-------------------------- */
 //Pointer to timer and can peripheral being used
 CAN_HandleTypeDef *invCAN;
@@ -300,7 +300,17 @@ void canRx(void *argument) {
 
 			case TER_ECU_CONFIG_FRAME_ID:
 				ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
-				readConfig(TER_ECU_CONFIG_FRAME_ID,&TeR.config);
+				//writeConfig(TeR.config); // guardamos la config en la eeprom
+				break;
+			case BOOTER_BOOT_TX_FRAME_ID:
+				struct booter_boot_tx_t boot;
+				booter_boot_tx_init(&boot);
+				booter_boot_tx_unpack(&boot, msg.data, msg.DLC);
+				if ((boot.boot_cmd == BOOTER_BOOT_TX_BOOT_CMD_BOOT_INIT_CHOICE)
+						&& (boot.node_id == BOOTER_BOOT_TX_NODE_ID_ECU_CHOICE)) {
+					boot_flag = 1;
+					HAL_NVIC_SystemReset();
+				}
 				break;
 
 				/* ---------------------------[INVERTER]-------------------------- */

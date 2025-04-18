@@ -30,6 +30,7 @@
 #include "ter.h"
 #include "inverter.h"
 #include "hvbms.h"
+#include "booter.h"
 //UTILIDADES
 #include "TeR_SCS.h" //para el logging de scs
 #include "TeR_COMMAND.h"//Para las llamadas de comando

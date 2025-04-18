@@ -122,6 +122,13 @@ const osThreadAttr_t stateMachineTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for servosTask */
+osThreadId_t servosTaskHandle;
+const osThreadAttr_t servosTask_attributes = {
+  .name = "servosTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -153,6 +160,7 @@ extern void leds(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
+extern void servos(void *argument);
 extern void scsCallback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
@@ -257,6 +265,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of stateMachineTask */
   stateMachineTaskHandle = osThreadNew(stateMachine, NULL, &stateMachineTask_attributes);
 
+  /* creation of servosTask */
+  servosTaskHandle = osThreadNew(servos, NULL, &servosTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -281,7 +292,7 @@ void osRunning(void *argument)
   /* USER CODE BEGIN osRunning */
 	/* Infinite loop */
 	for (;;) {
-		osDelay(500);
+		osDelay(100);
 		HAL_GPIO_TogglePin(SYS_LED_GPIO_Port, SYS_LED_Pin);// Toggle Alive indication
 	}
   /* USER CODE END osRunning */

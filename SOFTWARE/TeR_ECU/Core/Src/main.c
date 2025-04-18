@@ -117,7 +117,7 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  MX_USB_DEVICE_Init();
+	MX_USB_DEVICE_Init();
 
 	initSCS(&htim5); //Arranca las systemCritical signals
 	initCAN(&hcan2, &hcan1); //Arranca los can de inverters y main
@@ -211,8 +211,8 @@ static void MX_NVIC_Init(void)
 
 /* USER CODE BEGIN 4 */
 int _write(int file, char *ptr, int len) {
-    CDC_Transmit_FS((uint8_t *)ptr, len);  // Send data via USB CDC
-    return len;
+	CDC_Transmit_FS((uint8_t*) ptr, len);  // Send data via USB CDC
+	return len;
 }
 /* USER CODE END 4 */
 
