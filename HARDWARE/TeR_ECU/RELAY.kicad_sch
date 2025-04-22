@@ -1340,7 +1340,6 @@
 	(hierarchical_label "SC_OUT"
 		(shape output)
 		(at 135.89 68.58 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1352,7 +1351,6 @@
 	(hierarchical_label "SC_IN"
 		(shape input)
 		(at 138.43 86.36 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1364,7 +1362,6 @@
 	(hierarchical_label "ON{slash}OFF"
 		(shape input)
 		(at 116.84 104.14 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

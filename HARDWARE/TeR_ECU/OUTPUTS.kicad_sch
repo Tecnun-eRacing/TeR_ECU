@@ -993,7 +993,6 @@
 	(hierarchical_label "DO1"
 		(shape input)
 		(at 167.64 66.04 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1005,7 +1004,6 @@
 	(hierarchical_label "DO0"
 		(shape input)
 		(at 93.98 64.77 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1017,7 +1015,6 @@
 	(hierarchical_label "DOUT2"
 		(shape input)
 		(at 198.12 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1029,7 +1026,6 @@
 	(hierarchical_label "DOUT3"
 		(shape input)
 		(at 116.84 92.71 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1041,7 +1037,6 @@
 	(hierarchical_label "DOUT0"
 		(shape input)
 		(at 43.18 57.15 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1053,7 +1048,6 @@
 	(hierarchical_label "DO2"
 		(shape input)
 		(at 248.92 66.04 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1065,7 +1059,6 @@
 	(hierarchical_label "DO3"
 		(shape input)
 		(at 167.64 100.33 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1077,7 +1070,6 @@
 	(hierarchical_label "DOUT1"
 		(shape input)
 		(at 116.84 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
