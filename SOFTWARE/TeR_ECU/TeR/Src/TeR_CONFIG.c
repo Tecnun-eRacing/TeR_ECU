@@ -60,11 +60,9 @@ uint8_t initConfig() { //wrapper functions to not directly interact with library
 }
 
 uint8_t writeConfig(struct ter_ecu_config_t config) {
-	osKernelLock();
 	data.config = config;
 	data.written = 1;
-	EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 250);
-	osKernelUnlock();
+	return EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 250);
 }
 
 void defaultConfig() {

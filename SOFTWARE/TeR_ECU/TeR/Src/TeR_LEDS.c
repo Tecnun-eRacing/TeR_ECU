@@ -7,10 +7,12 @@
 #include "TeR_LEDS.h"
 pxl_t strip[N_LEDS]; // Array to hold image
 uint16_t offset;
+extern osThreadId_t ledsTaskHandle;
 
 void leds(void *argument) {
 
 	for (;;) {
+		osThreadTerminate(ledsTaskHandle);
 		osDelay(0xFFFFFFFF);
 		/*
 		 for (uint8_t n = 0; n < N_LEDS; n++) {

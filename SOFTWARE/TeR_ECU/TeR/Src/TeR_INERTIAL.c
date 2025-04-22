@@ -122,17 +122,22 @@ void configIMU(void) {
 	/* Wait sensor boot time */
 
 	osDelay(50);
+	/* Restore default configuration */
+	//Reset device
+	asm330lhh_reset_set(&imu, PROPERTY_ENABLE);
+	do {
+		asm330lhh_reset_get(&imu, &rst);
+		osDelay(100);
+	} while (rst);
 
 	asm330lhh_device_id_get(&imu, &whoamI);
 	while (whoamI != ASM330LHH_ID){
 		asm330lhh_device_id_get(&imu, &whoamI);
+		osDelay(100);
 	}
-	/* Restore default configuration */
-	asm330lhh_reset_set(&imu, PROPERTY_ENABLE);
 
-	do {
-		asm330lhh_reset_get(&imu, &rst);
-	} while (rst);
+
+
 
 	//Turn on light to indicate IMU is running
 	HAL_GPIO_WritePin(IMU_LED_GPIO_Port, IMU_LED_Pin, 1);
@@ -189,25 +194,25 @@ void configMAG() {
 static int32_t imu_write(void *handle, uint8_t reg, const uint8_t *bufp,
 		uint16_t len) {
 	return HAL_I2C_Mem_Write(handle, ASM330LHH_I2C_ADD_L, reg,
-	I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 1000);
+	I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 100);
 	return 0;
 }
 
 static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len) {
 	return HAL_I2C_Mem_Read(handle, ASM330LHH_I2C_ADD_L, reg,
-	I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
+	I2C_MEMADD_SIZE_8BIT, bufp, len, 100);
 }
 
 static int32_t mag_write(void *handle, uint8_t reg, const uint8_t *bufp,
 		uint16_t len) {
 	return HAL_I2C_Mem_Write(handle, LIS3MDL_I2C_ADD_L, reg,
-	I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 1000);
+	I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 100);
 	return 0;
 }
 
 static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len) {
 	return HAL_I2C_Mem_Read(handle, LIS3MDL_I2C_ADD_L, reg,
-	I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
+	I2C_MEMADD_SIZE_8BIT, bufp, len, 100);
 }
 
 //-------------------------------------------------[Filtering Functions]------------------------------------------------//

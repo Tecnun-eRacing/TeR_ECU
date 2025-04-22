@@ -10,11 +10,11 @@
 #include "stm32f4xx_hal.h"
 #include "cmsis_os2.h"
 typedef struct{
-	uint8_t angle;
-	uint8_t offset;
+	int8_t angle;
+	int8_t offset;
 }flap_t;
 
 
-void setAngle(uint8_t angle,uint8_t channel);
+void setAngle(int8_t angle,uint8_t channel);
 
 #endif /* INC_TER_SERVOS_H_ */
