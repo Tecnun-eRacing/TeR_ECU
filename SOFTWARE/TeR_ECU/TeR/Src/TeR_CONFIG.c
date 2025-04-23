@@ -56,7 +56,7 @@ uint8_t initConfig() { //wrapper functions to not directly interact with library
 	if (data.written == 1) { // if eeprom has been written, copy data to car
 		TeR.config = data.config;
 		return 1;
-	} // if eeprom was not written, default config
+	} // if eeprom was not written or anything when bad (data.written is defaulted 0), default config should be loaded
 	defaultConfig();
 	writeConfig(TeR.config);
 	return 0;

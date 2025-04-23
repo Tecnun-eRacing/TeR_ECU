@@ -68,7 +68,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : DIN2_Pin DIN1_Pin DIN0_Pin DIN3_Pin */
   GPIO_InitStruct.Pin = DIN2_Pin|DIN1_Pin|DIN0_Pin|DIN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SYS_LED_Pin IMU_LED_Pin SC_EN_Pin */

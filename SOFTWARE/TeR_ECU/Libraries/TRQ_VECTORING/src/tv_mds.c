@@ -30,7 +30,7 @@ float mz2DeltaTorque(float alpha) { //Takes PID output (Toca revisar unidades de
 
 trqMap_t trqVectoring(trq_t limit) {
 	if (!tvPid) {// Init pid if not enabled
-		tvPid = initPID(((float)TeR.config.trq_kp/1000.0),((float)TeR.config.trq_ki/1000.0),((float)TeR.config.trq_kd/1000.0),10, 10);
+		tvPid = initPID(((float)TeR.config.trq_kp/1000.0f),((float)TeR.config.trq_ki/1000.0f),((float)TeR.config.trq_kd/1000.0f),10, 10);
 	};
 	//Declares a trqMap
 	trqMap_t trqMap;
