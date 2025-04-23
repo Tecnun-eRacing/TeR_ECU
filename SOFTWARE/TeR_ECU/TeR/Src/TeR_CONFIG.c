@@ -73,7 +73,7 @@ void defaultConfig(void) {
 	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
 	TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
 	TeR.config.r2_d_brake = 4;
-	TeR.config.scs_enable = 1;
+	TeR.config.scs_enable = TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE;
 	TeR.config.traction_control =
 	TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 	TeR.config.trq_kp = 0;

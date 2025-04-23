@@ -170,9 +170,7 @@ void stateLoop(void) {
 			break;
 		}
 		TeR.status.state = state;
-
 	}
-
 }
 
 /* -------------------------[PermaTask]---------------------------- */
