@@ -26,6 +26,8 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
+while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
+	osDelay(5);}// ESPERAR A QUE HAYA SITIO
 	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN)) {
 
 		switch (frame_id) {
@@ -39,8 +41,9 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 
 		}
 		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
-				!= HAL_OK)
-			;
+				!= HAL_OK){
+			osDelay(5); // ESPERAR A ENVIO CORRECTO
+		}
 
 		return 0;
 	}
@@ -48,7 +51,7 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 }
 
 uint8_t initConfig() { //wrapper functions to not directly interact with library
-	EE24_Init(&eeprom, &hi2c1, EE24_ADDRESS_DEFAULT);
+	EE24_Init(&eeprom, &hi2c2, EE24_ADDRESS_DEFAULT);
 	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500);
 	if (data.written == 1) { // if eeprom has been written, copy data to car
 		TeR.config = data.config;
@@ -69,7 +72,7 @@ void defaultConfig() {
 	TeR.config.driving_mode =
 	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
 	TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-	TeR.config.r2_d_brake = 4;
+	TeR.config.r2_d_brake = 0;
 	TeR.config.scs_enable = 1;
 	TeR.config.traction_control =
 	TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;

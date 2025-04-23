@@ -72,7 +72,7 @@ void sendPixel(pxl_t pixel) {
 		else
 			sendData[indx++] = 0b100;  // store 0
 	}
-	HAL_SPI_Transmit(&hspi2, sendData, 24, 1000); //Send pixel through spi
+	//HAL_SPI_Transmit(&hspi2, sendData, 24, 1000); //Send pixel through spi
 }
 
 void generateRainbow(pxl_t *strip, size_t size, uint16_t offset) {

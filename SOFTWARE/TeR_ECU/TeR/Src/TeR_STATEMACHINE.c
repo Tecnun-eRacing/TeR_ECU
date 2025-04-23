@@ -71,7 +71,7 @@ uint32_t currentTick; // declaramos nuestra variable currentTick como global (pa
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
-	//initConfig(); // Arrancar eeprom y cargar configuraciones del sistema
+	initConfig(); // Arrancar eeprom y cargar configuraciones del sistema
 	uint32_t nextTick = osKernelGetTickCount(); // Initialize reference time
 	for (;;) {
 		nextTick += task_period; //Genera el timestamp de la siguiente ejecucion
@@ -86,7 +86,7 @@ state_t evalState(void) {
 	//Lecturas
 	TeR.status.sl = checkPersistance(&SL,
 			HAL_GPIO_ReadPin(DIN0_GPIO_Port, DIN0_Pin), 500);// Leemos el estado de la safety
-	TeR.status.bspd = HAL_GPIO_ReadPin(DIN1_GPIO_Port, DIN1_Pin);	// Leemos el estado del BSPD
+	TeR.status.bspd = HAL_GPIO_ReadPin(DIN1_GPIO_Port, DIN1_Pin);// Leemos el estado del BSPD
 
 	if (TeR.status.sl) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
@@ -176,13 +176,13 @@ void stateLoop(void) {
 			refri.intensity = 100;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
-			//Configuramos modo de conducción
-			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-			TeR.config.trq_limit = 100;
-			TeR.config.driving_mode =
-			TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
-			TeR.config.traction_control =
-			TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
+//			Configuramos modo de conducción
+//			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
+//			TeR.config.trq_limit = 100;
+//			TeR.config.driving_mode =
+//			TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
+//			TeR.config.traction_control =
+//			TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
@@ -203,7 +203,7 @@ void stateLoop(void) {
 
 void permaTask() {
 //BrakeLight
-	if (TeR.bpps.bpps > 4) {
+	if (TeR.bpps.bpps >= TeR.config.r2_d_brake + 1) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);

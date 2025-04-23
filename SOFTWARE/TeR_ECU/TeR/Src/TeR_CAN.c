@@ -300,7 +300,7 @@ void canRx(void *argument) {
 
 			case TER_ECU_CONFIG_FRAME_ID:
 				ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
-				//writeConfig(TeR.config); // guardamos la config en la eeprom
+				writeConfig(TeR.config); // guardamos la config en la eeprom
 				break;
 			case BOOTER_BOOT_TX_FRAME_ID:
 				struct booter_boot_tx_t boot;

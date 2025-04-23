@@ -9,7 +9,7 @@
 #define INC_TER_LEDS_H_
 #include "stm32f405xx.h"
 #include "cmsis_os2.h"
-#include "spi.h"
+//#include "spi.h"
 #include "spawn.h"
 #include "math.h"
 
