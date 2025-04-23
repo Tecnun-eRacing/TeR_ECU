@@ -11,32 +11,34 @@
  *
  */
 /*Implementacion FreeRTOS Piero
- *
- * - Para la ejecución temporizada utilizamos un software timer en modo periodico, ya que nos interesa poder activar/desactivar el checkeo de las scs
- * 		hay otras maneras (bloqueando flags, eventos...) pero lo hacemos asi porque mola
- *
- * - Consiste en una tarea que al ser desbloqueada checkea las scs cada 10 ms y toma las acciones pertinentes
+ * Ultrachill es una task que checkea y listo
  *
  */
 
-
-
-
 //FreeRTOS dependencies
-extern osTimerId_t scsTimerHandle;
 extern osThreadId_t systemCriticalTaskHandle;
-uint32_t counter;
-
-//FreeRTOS Timer Callback for periodic execution
-void scsCallback(void *argument) {
-	osThreadFlagsSet(systemCriticalTaskHandle, 0x01);
-}
+uint8_t prevConfig;
 
 //FreeRTOS TASK
 void systemCritical(void *argument) {
+	prevConfig = TeR.config.scs_enable;
+	if (TeR.config.scs_enable == TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE) { // tomamos acciones pertinentes
+		startSCS();
+	} else {
+		stopSCS();
+	}
+
 	for (;;) {
-		osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
-		checkSCS();
+		osDelay(50);
+		if (prevConfig != TeR.config.scs_enable) { // Ha cambiado la configuracion de las SCS?
+			prevConfig = TeR.config.scs_enable; // actualizar previo estado al actual
+			if (TeR.config.scs_enable == TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE) { // tomamos acciones pertinentes
+				startSCS();
+			} else {
+				stopSCS();
+			}
+		}
+		checkSCS(); // checkeamos las SCS
 	}
 }
 
@@ -58,7 +60,6 @@ uint8_t initSCS(TIM_HandleTypeDef *timBase) {
 }
 
 uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
-	osTimerStart(scsTimerHandle, 10); //arancamos el software timer, period elapsed callback cada 10 ticks.
 	//Resetea a 0 el timer y los timestamps para evitar errores al volver a arrancar
 	memset(&timestamps, 0, sizeof(timestamps));
 	base->Instance->CNT = 0;
@@ -69,7 +70,6 @@ uint8_t startSCS(void) { //Activa la comprobación activa de tiempos
 }
 
 uint8_t stopSCS(void) { //Desactiva la comprobación activa de tiempos
-	osTimerStop(scsTimerHandle); //detenemos el software timer.
 	HAL_TIM_Base_Stop(base); //Congela el timer haciendo que los checks difieran 0 a partir de ahora
 	TeR.status.scs = 0;
 	return 1;
@@ -96,8 +96,8 @@ void checkSCS(void) {
 			//easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
 			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 0); //OPEN SC
 			TeR.apps.apps_av = 0; //Porsiaka
-		}else{
-			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 1);//CLOSE
+		} else {
+			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 1); //CLOSE SCS relay
 		}
 	}
 }

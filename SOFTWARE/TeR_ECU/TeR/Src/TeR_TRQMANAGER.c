@@ -9,6 +9,19 @@
 #include "TeR_TRQMANAGER.h"
 #include "tv_mds.h"
 
+
+/* Esquizofrenia RTOS
+ * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
+ *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
+ * 		 Podriamos usar software timers (se ha probado y es lo mismo), su implementacion sin embargo no es la mas practica, ya que debemos
+ * 		 registrar un callback que mande señales de desbloqueo a los threads, y que estos a su vez esperen a dichas señales,
+ * 		 ademas de que NO garantiza ejecucion temporal precisa, ya que por naturaleza la Daemon Task es de baja prioridad(se puede cambiar) (Reference Manual),
+ * 		 por lo que se ha decidido utilizar la funcion recomendada por el reference manual para ejecuciones temporales precisas
+ *
+ */
+
+
+
 const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
@@ -21,7 +34,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 
 	for (;;) {
 		nextTick += task_period; //Genera el timestamp de la siguiente ejecucion
-		osDelayUntil(nextTick);
+		osDelayUntil(nextTick); // Utilizamos OsDelayUntil porque es la manera recomendada en el reference manual para ejecutar tareas sin desfase temporal
 		//Check if we are driving
 		if (TeR.status.state == DRIVING) {
 			//Execute Pipeline

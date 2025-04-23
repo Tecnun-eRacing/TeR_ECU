@@ -16,5 +16,5 @@ typedef struct{
 uint8_t sendConfig(uint32_t frame_id, void *config);
 uint8_t initConfig();
 uint8_t writeConfig(struct ter_ecu_config_t config);
-void defaultConfig();
+void defaultConfig(void);
 #endif /* INC_TER_CONFIG_H_ */

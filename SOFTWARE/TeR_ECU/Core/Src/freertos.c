@@ -57,13 +57,13 @@ osThreadId_t osRunningTaskHandle;
 const osThreadAttr_t osRunningTask_attributes = {
   .name = "osRunningTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for canRxTask */
 osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
   .name = "canRxTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh5,
 };
 /* Definitions for mainCanTxTask */
@@ -85,7 +85,7 @@ osThreadId_t systemCriticalTaskHandle;
 const osThreadAttr_t systemCriticalTask_attributes = {
   .name = "systemCriticalTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for inertialTask */
 osThreadId_t inertialTaskHandle;
@@ -99,7 +99,7 @@ osThreadId_t ledsTaskHandle;
 const osThreadAttr_t ledsTask_attributes = {
   .name = "ledsTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for gpsTask */
 osThreadId_t gpsTaskHandle;
@@ -112,14 +112,14 @@ const osThreadAttr_t gpsTask_attributes = {
 osThreadId_t trqManagerTaskHandle;
 const osThreadAttr_t trqManagerTask_attributes = {
   .name = "trqManagerTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for stateMachineTask */
 osThreadId_t stateMachineTaskHandle;
 const osThreadAttr_t stateMachineTask_attributes = {
   .name = "stateMachineTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for servosTask */
@@ -133,11 +133,6 @@ const osThreadAttr_t servosTask_attributes = {
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
-};
-/* Definitions for scsTimer */
-osTimerId_t scsTimerHandle;
-const osTimerAttr_t scsTimer_attributes = {
-  .name = "scsTimer"
 };
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
@@ -161,7 +156,6 @@ extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
 extern void servos(void *argument);
-extern void scsCallback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -217,10 +211,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_SEMAPHORES */
 	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
-
-  /* Create the timer(s) */
-  /* creation of scsTimer */
-  scsTimerHandle = osTimerNew(scsCallback, osTimerPeriodic, NULL, &scsTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */

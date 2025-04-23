@@ -27,7 +27,7 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
-	osDelay(5);}// ESPERAR A QUE HAYA SITIO
+	osDelay(2);}// ESPERAR A QUE HAYA SITIO mejor usar osThreadYield
 	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN)) {
 
 		switch (frame_id) {
@@ -42,7 +42,7 @@ while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
 		}
 		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
 				!= HAL_OK){
-			osDelay(5); // ESPERAR A ENVIO CORRECTO
+			osDelay(2); // ESPERAR A ENVIO CORRECTO mejor usar osThreadYield
 		}
 
 		return 0;
@@ -52,7 +52,7 @@ while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
 
 uint8_t initConfig() { //wrapper functions to not directly interact with library
 	EE24_Init(&eeprom, &hi2c2, EE24_ADDRESS_DEFAULT);
-	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500);
+	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 250); // load config struct
 	if (data.written == 1) { // if eeprom has been written, copy data to car
 		TeR.config = data.config;
 		return 1;
@@ -65,21 +65,22 @@ uint8_t initConfig() { //wrapper functions to not directly interact with library
 uint8_t writeConfig(struct ter_ecu_config_t config) {
 	data.config = config;
 	data.written = 1;
-	return EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 250);
+	return EE24_Write(&eeprom, 0, (uint8_t*)&data, sizeof(data), 500);
 }
 
-void defaultConfig() {
+void defaultConfig(void) {
 	TeR.config.driving_mode =
 	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
 	TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-	TeR.config.r2_d_brake = 0;
+	TeR.config.r2_d_brake = 4;
 	TeR.config.scs_enable = 1;
 	TeR.config.traction_control =
 	TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
 	TeR.config.trq_kp = 0;
 	TeR.config.trq_ki = 0;
 	TeR.config.trq_kd = 0;
-	TeR.config.trq_limit = 150;
+	TeR.config.trq_limit = 100;
 	return;
 }
+
 

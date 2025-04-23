@@ -36,7 +36,7 @@
 #define KPMAX 100.0 // arbitrary
 #define KIMAX 100.0
 #define KDMAX 1.0
-#define MAX_DELTA_TORQUE 50
+#define MAX_DELTA_TORQUE 40
 
 
 

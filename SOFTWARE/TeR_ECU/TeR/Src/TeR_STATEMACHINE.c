@@ -46,38 +46,22 @@
  * 		implementado utilizando un One Shoot Software timer para evitar halts en las tareas, ver command) sino porque debemos detener la maquina de estados
  *		para evitar la comanda de par durante el pitido.
  *
- * 		Existen otras maneras de resolver este problema, una de ellas es bloqueando la region de codigo utilizando un evento
- * 		que se libera 2 segundos despues utilizando un one shot timer, osthreadflagswait(), y que el timer lo ponga a set en 2 seg, desbloqueando la region de codigo
- * 		(probado y funciona, pero no quiero que esto sea un lio para entender para alguien nuevo)
- * 		Otra manera seria aislar el torqueManager en otra tarea y despertarla 2 segundos despues utilizando un oneShotTimer
- *
- * - Debido a esta decisión de arquitectura, debemos soltar el mutex antes del delay (para que otras tareas puedan seguir ejecutandose)
- * 		y resincronizar el tiempo del kernel con el valor posterior al delay (no es necesario, pero lo hacemos porque es gratis)
- * 		y posteriormente readquirir el mutex para continuar con la ejecución
- *
- *- La permatask no interesa separarla ya que los datos tienen que estar sync con la maquina de estados, por lo que no ganamos nada separando
- *
- *  - SOLO EJECUTAREMOS CUANDO HAYAMOS PODIDO OBTENER EL MUTEX
- *
  */
 
 //Persistance checker
 persist_t SL;
-struct ter_refri_config_t refri; // refri config struct
+//Refri config struct
+struct ter_refri_config_t refri;
+
 // FreeRTOS dependencies
-const static uint32_t task_period = 2; // Task frequency
-uint32_t currentTick; // declaramos nuestra variable currentTick como global (para reactualizar su valor al parar la maquina de estados)
-// IMPORTANTE: Se utiliza osDelayUntil debido a que es la manera recomendada por FreeRTOS en el reference manual para ejecucion temporal estricta sin desfases
+const static uint32_t task_period = 2; // Task frequency 500 Hz
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
 	initConfig(); // Arrancar eeprom y cargar configuraciones del sistema
-	uint32_t nextTick = osKernelGetTickCount(); // Initialize reference time
 	for (;;) {
-		nextTick += task_period; //Genera el timestamp de la siguiente ejecucion
-		osDelayUntil(nextTick);
+		osDelay(task_period); //osDelay porque no necesitamos ejecución estricta sin desfases en la maquina de estados
 		stateLoop(); //ejecutamos la maquina de estados del vehiculo
-
 	}
 }
 
@@ -156,9 +140,9 @@ void stateLoop(void) {
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
-//			request de intensidad 30%
+//			request de intensidad 40%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 30;
+			refri.intensity = 40;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
@@ -176,14 +160,6 @@ void stateLoop(void) {
 			refri.intensity = 100;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
-//			Configuramos modo de conducción
-//			TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-//			TeR.config.trq_limit = 100;
-//			TeR.config.driving_mode =
-//			TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
-//			TeR.config.traction_control =
-//			TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
-			startSCS(); //activamos el sistema de señales críticas del vehículo
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
 			osDelay(1000);
@@ -244,5 +220,4 @@ void permaTask() {
 	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app != 6); //Distinto de fault state
-	TeR.status.refri = TeR.lvbms.refri_on; // Relay del estado de refri
 }
