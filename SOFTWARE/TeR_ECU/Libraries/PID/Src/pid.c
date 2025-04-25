@@ -16,10 +16,9 @@
  */
 #include "pid.h"
 
-
 pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
 	pid_t *pid; //temporal pointer for init
-	pid = (pid_t*) calloc(1, sizeof(pid)); //Allocates one pid instance Zeroes memory to prevent disaster
+	pid = (pid_t*) calloc(1, sizeof(pid_t)); //Allocates one pid instance Zeroes memory to prevent disaster, ¡sizeof(pid_t)!
 	pid->Kp = Kp;
 	pid->Ki = Ki;
 	pid->Kd = Kd;
@@ -28,8 +27,11 @@ pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
 	return pid;
 }
 
-void deInitPID(pid_t *pid) {
-	free(pid); //Frees memory
+void deInitPID(pid_t **pid) {
+	if (pid && *pid) { // is PID pointing to something meaningfull
+		free(*pid); // safely free that pointer
+		*pid = NULL; // make it point to null (more clear)
+	}
 }
 
 float pid(pid_t *pid, float ref, float feedback) {

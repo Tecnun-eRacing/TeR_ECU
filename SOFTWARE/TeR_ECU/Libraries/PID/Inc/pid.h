@@ -31,7 +31,7 @@ typedef struct {
 
 
 pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax); //Returns a PID instance in the HEAP
-void deInitPID(pid_t* pid); //Frees PID memory
+void deInitPID(pid_t **pid); //Frees PID memory and sets pointer to NULL
 float pid(pid_t *pid, float ref, float feedback); //Calculates PID response
 
 

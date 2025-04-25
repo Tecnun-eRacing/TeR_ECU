@@ -31,7 +31,7 @@
 
 /////////////////////////////////////////[Seguridad]/////////////////////////////////////////////////////////////
 #define ACTSPEED 5.0
-#define ACTAPPS 10.0
+#define ACTAPPS 20.0
 #define STEER_DEADZONE 3.0 // DEGREES
 #define KPMAX 100.0 // arbitrary
 #define KIMAX 100.0

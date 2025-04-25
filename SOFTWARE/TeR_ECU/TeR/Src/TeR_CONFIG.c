@@ -4,14 +4,14 @@
  *  Created on: Apr 12, 2025
  *      Author: piero
  *
- *      Sistema de configs. en pruebas
+ *      Sistema de configs.
  *
- *      sendConfig(), envia configuracion para un nodo específico por can
+ *      sendConfig(), envia configuracion para un nodo específico por CAN
  *      Sortea por frame ids de configs y lo envia.
- *      tienes que castear el puntero void a la config que quieras, de momento solo refri
+ *      tienes que castear el puntero generico a la config que quieras, de momento solo refri
  *
- *      initConfig(), lee la eeprom, verifica estado y actualiza vector de configuraciones
- *      writeConfig(), escribe TeR.config en la eeprom
+ *      initConfig(), lee la eeprom, verifica estado y actualiza vector de configuraciones, si algo va mal se setea una config default, se llama cada vez que se inicializa la maquina de estados
+ *      writeConfig(), escribe TeR.config en la eeprom, se llama cada vez que se recibe el mensaje de TeR Config
  *
  */
 #include "TeR_CONFIG.h"
@@ -79,7 +79,7 @@ void defaultConfig(void) {
 	TeR.config.trq_kp = 0;
 	TeR.config.trq_ki = 0;
 	TeR.config.trq_kd = 0;
-	TeR.config.trq_limit = 100;
+	TeR.config.trq_limit = 150;
 	return;
 }
 

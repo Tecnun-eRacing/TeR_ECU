@@ -62,6 +62,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 
 			case TER_ECU_CONFIG_DRIVING_MODE_TORQUE_VECTORING_CHOICE:
 				DriveConfig.drivingMode = &trqVectoring;
+				tv_deInitPID(); // si el puntero esta creado, lo libera y lo setea a NULL, si el puntero ya es null, no hace nada. Permite reconfigurar gains al salir de driving
 				break;
 			}
 			switch (TeR.config.traction_control) {

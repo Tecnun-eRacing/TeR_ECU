@@ -45,6 +45,8 @@ typedef struct  {
 	uint8_t data[8];
 }canMsg_t;
 
+
+
 struct TeR_t {
 //Propias
 	struct ter_ter_status_t status;
