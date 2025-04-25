@@ -32,7 +32,7 @@ uint8_t send_ubx(ubx_device_t *device, uint8_t class, uint8_t id,
 		memcpy(&buffer[6], payload, p_size); //Copy the payload
 	}
 	//Calculate and put checksum
-	uint16_t sum = checksum(&buffer[2], sizeof(buffer) - 4);
+	uint16_t sum = checksum(&buffer[2], length - 4);
 	memcpy(&buffer[6 + p_size], &sum, sizeof(sum)); //Copy checksum bytes
 	//send with the callback function
 	return device->write(buffer, length); //Write all
