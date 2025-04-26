@@ -119,8 +119,6 @@ void stateLoop(void) {
 			printf("TeR is Waiting for Safety Line");
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
-			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-			TER_COMMAND_ONOFF_OFF_CHOICE);
 			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
@@ -146,9 +144,6 @@ void stateLoop(void) {
 			TeR.appReqRight.app_state_req = 2;
 
 			//Arranca la refri
-			switchCommand(TER_COMMAND_CMD_SWITCH_REFRI_CHOICE,
-			TER_COMMAND_ONOFF_ON_CHOICE);
-
 			break;
 		case DRIVING:
 			startSCS(); //activamos el sistema de señales críticas del vehículo
