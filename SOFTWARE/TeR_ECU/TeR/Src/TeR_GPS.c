@@ -50,28 +50,33 @@ void gps(void *argument) {
 }
 
 uint8_t gps_read(uint8_t *dest, size_t size) {
-	osEventFlagsSet(uartEventFlags, 0x00); //ensure you turn off the receive flag
-	while (huart1.gState != HAL_UART_STATE_READY){
-		osDelay(10);
+	osEventFlagsClear(uartEventFlags, UART_RX_FLAG); // CLEAR UART FLAG
+	if (HAL_UART_GetState(&huart1) != HAL_UART_STATE_READY) { // is the periferial ready to Recieve?
+		return 1; // recepcion DMA no esta lista
 	}
 	return HAL_UART_Receive_DMA(&huart1, dest, size);
 }
+
 uint8_t gps_write(uint8_t *src, size_t size) {
-	while (huart1.gState != HAL_UART_STATE_READY){
-		osDelay(10);
+	// Uart ocupado?
+	if (HAL_UART_GetState(&huart1) != HAL_UART_STATE_READY) { // is the periferial ready to Tranmit?
+		return 1; // transmision no esta lista
 	}
-	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea
+	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea, si esta lista mandamos
 }
 
 uint8_t gps_wait_for_data(void) {
 	//Makes the os able to do other tasks while waiting for gps data
-	if (osEventFlagsWait(uartEventFlags, 0x01, osFlagsWaitAny, 1000) == 0x01) {
+	if (osEventFlagsWait(uartEventFlags, UART_RX_FLAG, osFlagsWaitAll,
+			1000) == UART_RX_FLAG) {
 		return 0; //Data is available
-	}else{
+	} else {
 		return 1; //Timeouted
 	}
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	osEventFlagsSet(uartEventFlags, 0x01); //Set the data received to 1
+	if (huart == &huart1) { // only set flag when is our uart
+		osEventFlagsSet(uartEventFlags, UART_RX_FLAG); //Set the data received to 1
+	}
 }
 

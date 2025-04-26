@@ -14,6 +14,8 @@
 #include "usbd_cdc_if.h"
 #include "cmsis_os2.h"
 #include "ubx.h"
+//UART FLAG
+#define UART_RX_FLAG  (0x01U)
 //Task
 void gps(void *argument);
 //IO abstraction
