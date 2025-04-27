@@ -50,12 +50,12 @@ void gps(void *argument) {
 }
 
 uint8_t gps_read(uint8_t *dest, size_t size) {
-	osEventFlagsClear(uartEventFlags, UART_RX_FLAG); // CLEAR UART FLAG
+	osEventFlagsClear(uartEventFlags, UART_RX_FLAG); // CLEAR UART FLAG, not really necessary as eventflagswait clears it by default
 	return HAL_UART_Receive_DMA(&huart1, dest, size);
 }
 
 uint8_t gps_write(uint8_t *src, size_t size) {
-	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea, si esta lista mandamos
+	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea
 }
 
 uint8_t gps_wait_for_data(void) {

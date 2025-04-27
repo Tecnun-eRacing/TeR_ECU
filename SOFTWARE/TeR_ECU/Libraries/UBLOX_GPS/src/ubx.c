@@ -3,6 +3,9 @@
  *
  *  Created on: Jan 29, 2025
  *      Author: ozuba
+ *
+ *      sizeof(buffer), being buffer a VLA (variable length array) is calculated at runtime
+ *      be careful with stack size
  */
 
 #include "ubx.h"
@@ -43,8 +46,8 @@ uint8_t poll_ubx(ubx_device_t *device, uint8_t class, uint8_t id,
 	//Prepare reception
 	uint32_t length = 6 + p_size + 2;
 	uint8_t buffer[length]; //VLA with Preambles class, id, length and checksum;
-	//Start background listen
-	if (device->read(buffer, length)) { // este orden esta al reves?
+	//Start background listen (enables DMA listening)
+	if (device->read(buffer, length)) {
 		return 1; //return error
 	}
 	//Send message request
