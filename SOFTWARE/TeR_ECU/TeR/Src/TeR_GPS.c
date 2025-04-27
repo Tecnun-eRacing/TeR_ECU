@@ -40,7 +40,7 @@ void gps(void *argument) {
 	//Configura modo automotive
 	send_ubx(&gps_d, 0x06, 0x00, &nav5, sizeof(nav5));
 
-	osDelay(100);
+	osDelay(500);
 	for (;;) {
 		//GPS test
 		osDelay(100);
@@ -51,17 +51,10 @@ void gps(void *argument) {
 
 uint8_t gps_read(uint8_t *dest, size_t size) {
 	osEventFlagsClear(uartEventFlags, UART_RX_FLAG); // CLEAR UART FLAG
-	if (HAL_UART_GetState(&huart1) != HAL_UART_STATE_READY) { // is the periferial ready to Recieve?
-		return 1; // recepcion DMA no esta lista
-	}
 	return HAL_UART_Receive_DMA(&huart1, dest, size);
 }
 
 uint8_t gps_write(uint8_t *src, size_t size) {
-	// Uart ocupado?
-	if (HAL_UART_GetState(&huart1) != HAL_UART_STATE_READY) { // is the periferial ready to Tranmit?
-		return 1; // transmision no esta lista
-	}
 	return HAL_UART_Transmit(&huart1, src, size, 100); //deactivate nmea, si esta lista mandamos
 }
 

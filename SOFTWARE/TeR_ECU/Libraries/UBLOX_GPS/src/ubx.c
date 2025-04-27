@@ -32,7 +32,7 @@ uint8_t send_ubx(ubx_device_t *device, uint8_t class, uint8_t id,
 		memcpy(&buffer[6], payload, p_size); //Copy the payload
 	}
 	//Calculate and put checksum
-	uint16_t sum = checksum(&buffer[2], length - 4);
+	uint16_t sum = checksum(&buffer[2], sizeof(buffer) - 4);
 	memcpy(&buffer[6 + p_size], &sum, sizeof(sum)); //Copy checksum bytes
 	//send with the callback function
 	return device->write(buffer, length); //Write all
@@ -44,7 +44,7 @@ uint8_t poll_ubx(ubx_device_t *device, uint8_t class, uint8_t id,
 	uint32_t length = 6 + p_size + 2;
 	uint8_t buffer[length]; //VLA with Preambles class, id, length and checksum;
 	//Start background listen
-	if (device->read(buffer, length)) {
+	if (device->read(buffer, length)) { // este orden esta al reves?
 		return 1; //return error
 	}
 	//Send message request
