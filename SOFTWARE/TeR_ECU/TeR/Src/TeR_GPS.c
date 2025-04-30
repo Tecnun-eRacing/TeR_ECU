@@ -12,13 +12,18 @@ osEventFlagsId_t uartEventFlags;
 
 ubx_nav_pvt_t pvt;
 ubx_device_t gps_d;
+// UART1RXCallback function (private)
+void uart1RxCallback(UART_HandleTypeDef *huart);
 
 void gps(void *argument) {
-	uartEventFlags = osEventFlagsNew(NULL);
-
+	uartEventFlags = osEventFlagsNew(NULL); // Event definition
+	//Assing function pointers to gps_d structure
 	gps_d.write = &gps_write;
 	gps_d.read = &gps_read;
 	gps_d.wait_for_data = &gps_wait_for_data;
+	//Enable UART1RXCallback
+	HAL_UART_RegisterCallback(&huart1, HAL_UART_RX_COMPLETE_CB_ID,
+			uart1RxCallback);
 
 	//Prepare ubx to disable nmea
 	ubx_cfg_prt p_cfg;
@@ -67,9 +72,13 @@ uint8_t gps_wait_for_data(void) {
 		return 1; //Timeouted
 	}
 }
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart == &huart1) { // only set flag when is our uart
-		osEventFlagsSet(uartEventFlags, UART_RX_FLAG); //Set the data received to 1
-	}
+// Existe la posibilidad de que la recepción salte ANTES de la declaracion del evento, lo paso a callbacks todo y queda mas fino
+/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+ if (huart == &huart1) { // only set flag when is our uart
+ osEventFlagsSet(uartEventFlags, UART_RX_FLAG); //Set the data received to 1
+ }
+ }*/
+void uart1RxCallback(UART_HandleTypeDef *huart) {
+	osEventFlagsSet(uartEventFlags, UART_RX_FLAG); //Set the data received to 1
 }
 

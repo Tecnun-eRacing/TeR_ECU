@@ -11,7 +11,7 @@
 // todo: La velocidad hay que sacarla mejor de otro sitio ya que de la ruedas no me mola (torque que se autoafecta a si mismo loop chungo)
 pid_t *tvPid; //Estructura del PID
 float dTorque = 0;
-float iMax = 10; // limitado a mas o menos 60 grados por segundo (1 rad/s 60 grad seg aprox)
+float iMax = 10; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
 float looptime = 10; //ms of looptime (same as TeR_TRQMANAGER task
 
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
@@ -40,7 +40,7 @@ trqMap_t trqVectoring(trq_t limit) {
 
 	//check if car is not at speed, or pedal is not being pressed, if true Reset PID and LINEAR RESPONSE
 	//Not in conditions for Torque Vectoring
-	if (TeR.wheelInfo.speed < ACTSPEED || TeR.apps.apps_av < ACTAPPS) { // if below activation speed or pedal below threshold, return linear response and clear pid error
+	if (TeR.wheelInfo.speed < ACTSPEED || TeR.apps.apps_av < ACTAPPS || TeR.steer.angle == 0) { // if below activation speed or pedal below threshold, or steering not turning, return linear response and clear pid error
 		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		tvPid->error = 0; //clear P error
@@ -80,7 +80,7 @@ uint8_t tv_initPID(float Kp, float Ki, float Kd, float iMax) {
 	return 1;
 }
 uint8_t tv_deInitPID(void) {
-	if (tvPid) { // is tvPid pointing to something?
+	if (tvPid) { // is tvPid pointing to something not 0?
 		deInitPID(&tvPid); // if yes free and set to NULL
 	}
 	return 1;

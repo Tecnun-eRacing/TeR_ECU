@@ -28,9 +28,9 @@ pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
 }
 
 void deInitPID(pid_t **pid) {
-	if (pid && *pid) { // is PID pointing to something meaningfull
-		free(*pid); // safely free that pointer
-		*pid = NULL; // make it point to null (more clear)
+	if (pid && *pid) { // is the pointer passed valid, and is pointing to something valid?
+		free(*pid); // safely free that pointer, only if it exists and is not null pointing
+		*pid = NULL; // make it point to null
 	}
 }
 
