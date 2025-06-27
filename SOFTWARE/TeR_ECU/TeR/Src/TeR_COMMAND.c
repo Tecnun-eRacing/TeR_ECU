@@ -26,7 +26,7 @@ uint8_t command(struct ter_command_t command) {
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
 		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
 			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -38,7 +38,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
 		TeR.BmsAppReq.app_state_req =
-		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV__SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
+		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_SHUTDOWN_CHOICE; //Ask for HV_Shutwdow
 		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -49,7 +49,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_RESET_BMS_CHOICE: //Descarga
 		TeR.BmsAppReq.app_state_req =
-		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_RESET_CHOICE; //Ask for HV_Reset
+		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_READY_CHOICE; //Ask for HV_Reset
 		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);

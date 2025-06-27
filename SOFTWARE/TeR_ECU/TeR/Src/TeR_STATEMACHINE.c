@@ -75,7 +75,7 @@ state_t evalState(void) {
 	if (TeR.status.sl) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
 		if (TeR.BmsAppState.app_state_app
-				== HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__PRECHARGE_CHOICE) { // Se está haciendo precarga?
+				== HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__PRECHARGE__READY_CHOICE) { // Se está haciendo precarga?
 			status = PRECHARGING;
 		} else if (TeR.BmsAppState.app_state_app
 				== HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__READY_CHOICE) { // Esta precargado?
