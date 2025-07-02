@@ -6,7 +6,6 @@
  */
 #include "TeR_COMMAND.h"
 
-
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
 	//Buffers volatiles para el envio de lo que toque
@@ -26,7 +25,7 @@ uint8_t command(struct ter_command_t command) {
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
 		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
 			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
@@ -46,21 +45,20 @@ uint8_t command(struct ter_command_t command) {
 
 		break;
 
-
 	case TER_COMMAND_CMD_RESET_BMS_CHOICE: //Descarga
 		TeR.BmsAppReq.app_state_req =
-		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_READY_CHOICE; //Ask for HV_Reset
+				HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
 		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
 		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
 		break;
 
-
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
-		if ((TeR.status.state == PRECHARGED) && (TeR.bpps.bpps >= TeR.config.r2_d_brake)) { //Pone el coche en modo driving y añadir freno
+		if ((TeR.status.state == PRECHARGED)
+				&& (TeR.bpps.bpps >= TeR.config.r2_d_brake)) { //Pone el coche en modo driving y añadir freno
 
-		//Permite el paso al estado drive
+			//Permite el paso al estado drive
 			TeR.status.r2_d = 1;
 			TeR.appReqRight.app_state_req = 4;
 			TeR.appReqLeft.app_state_req = 4;
@@ -81,7 +79,8 @@ uint8_t command(struct ter_command_t command) {
 			TxHeader.StdId = TER_COMMAND_FRAME_ID;
 			TxHeader.DLC = TER_COMMAND_LENGTH;
 			ter_command_pack(TxData, &command, TER_COMMAND_LENGTH);
-			while(HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)!=HAL_OK){
+			while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+					!= HAL_OK) {
 				osDelay(10);
 			};
 			return 0; //Exit function, no result
@@ -103,7 +102,6 @@ uint8_t easyCommand(uint8_t cmd) {
 	cmdMsg.cmd = cmd;
 	return command(cmdMsg);
 }
-
 
 //Deprecate, now we use the config struct for switching things
 uint8_t switchCommand(uint8_t cmd, uint8_t onOff) {
