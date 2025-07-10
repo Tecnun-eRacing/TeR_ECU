@@ -150,14 +150,14 @@ void stateLoop(void) {
 			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
-//			activamos cooling potencia LOW de ACCU
+//			activamos cooling  ACCU
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
 			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			request de intensidad 100%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
-			refri.intensity = 100;
+			refri.intensity_accu = 100;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
