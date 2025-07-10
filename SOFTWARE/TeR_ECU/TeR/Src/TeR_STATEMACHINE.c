@@ -119,6 +119,7 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
+			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
@@ -135,18 +136,32 @@ void stateLoop(void) {
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
-//			 activamos cooling potencia LOW
+//			 activamos cooling potencia LOW de MAIN
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
-//			request de intensidad 40%
+//			request de intensidad 20%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 40;
+			refri.intensity = 20;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
 			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
+//			activamos cooling potencia LOW de ACCU
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
+			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			request de intensidad 100%
+			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
+			refri.intensity = 100;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			modo manual
+			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
+			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Manda el inverter a listo
