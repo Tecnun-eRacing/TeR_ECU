@@ -100,6 +100,8 @@ void stateLoop(void) {
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (state) {
 		case WAIT_SL:
+			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
+			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
@@ -115,11 +117,11 @@ void stateLoop(void) {
 
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
-			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
 			break;
 
 		case RDY2PRECH:
-			easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms de osto
+			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
+			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
