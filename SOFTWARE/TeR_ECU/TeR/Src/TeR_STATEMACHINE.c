@@ -110,9 +110,14 @@ void stateLoop(void) {
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
-			// reseteamos request de pwm a 0
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 0;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
+			//	desactivamos cooling  ACCU
+			ter_refri_config_init(&refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
+			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_OFF_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Security

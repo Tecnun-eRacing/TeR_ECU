@@ -6,6 +6,7 @@
  */
 
 #include "TeR_GPS.h"
+#include "TeR_CAN.h"
 
 //Rtos uart event
 osEventFlagsId_t uartEventFlags;
@@ -48,9 +49,14 @@ void gps(void *argument) {
 	osDelay(500);
 	for (;;) {
 		//GPS test
-		osDelay(0xFFFFFFFF);
+		osDelay(100);
 		poll_ubx(&gps_d, 0x01, 0x07, &pvt, sizeof(pvt)); //Continously poll for nav data
-
+		//Dump gps data to IMU message
+		TeR.latlong.latitude = pvt.lat;
+		TeR.latlong.longitude = pvt.lon;
+		TeR.velbody.v_x = pvt.velN/1000;
+		TeR.velbody.v_y = pvt.velE/1000;
+		TeR.velbody.v_z = pvt.velD/1000;
 	}
 }
 

@@ -97,6 +97,18 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	msg.id = rxHeader.StdId;
 	msg.DLC = rxHeader.DLC;
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
+
+	//Bridge inverter output to our can
+	if(hcan == invCAN && rxHeader.StdId != TER_LV_VOLTAGES_FRAME_ID){//If message comes from the inverter can resend it through our can bus (A prueba de XAVI)
+		CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
+		uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
+		TxHeader.DLC = rxHeader.DLC;
+		TxHeader.StdId = rxHeader.StdId;
+		TxHeader.IDE = CAN_ID_STD;
+		TxHeader.RTR = CAN_RTR_DATA;
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, msg.data, &mailbox); //Envía el mensaje procesado
+	}
+
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
 
@@ -238,11 +250,42 @@ void mainCanTx(void *argument) {
 				ter_wheel_info_pack(TxData, &TeR.wheelInfo, TxHeader.DLC);
 				break;
 
-			case 4:
+			case 2:
 				TxHeader.StdId = TER_INVERTER_INFO_FRAME_ID;
 				TxHeader.DLC = TER_INVERTER_INFO_LENGTH;
 				ter_inverter_info_pack(TxData, &TeR.invInfo, TxHeader.DLC);
 				break;
+
+			case 3:
+				TxHeader.StdId = TER_ANG_RATE_FRAME_ID;
+				TxHeader.DLC = TER_ANG_RATE_LENGTH;
+				ter_ang_rate_pack(TxData, &TeR.angRate, TxHeader.DLC);
+				break;
+
+			case 4:
+				TxHeader.StdId = TER_ACCEL_FRAME_ID;
+				TxHeader.DLC = TER_ACCEL_LENGTH;
+				ter_accel_pack(TxData, &TeR.accel, TxHeader.DLC);
+				break;
+
+			case 5:
+				TxHeader.StdId = TER_GPS_LAT_LONG_FRAME_ID;
+				TxHeader.DLC = TER_GPS_LAT_LONG_LENGTH;
+				ter_gps_lat_long_pack(TxData, &TeR.latlong, TxHeader.DLC);
+				break;
+
+			case 6:
+				TxHeader.StdId = TER_YPR_FRAME_ID;
+				TxHeader.DLC = TER_YPR_LENGTH;
+				ter_ypr_pack(TxData, &TeR.ypr, TxHeader.DLC);
+				break;
+
+			case 7:
+				TxHeader.StdId = TER_VEL_BODY_FRAME_ID;
+				TxHeader.DLC = TER_VEL_BODY_LENGTH;
+				ter_vel_body_pack(TxData, &TeR.velbody, TxHeader.DLC);
+				break;
+
 
 			default: //Esto evita tener que contar mensajes
 				mainIndex = 0; //cualquier otro valor retorna al ultimo mensaje
@@ -288,10 +331,6 @@ void canRx(void *argument) {
 
 			case TER_FRONT_V_FRAME_ID:
 				ter_front_v_unpack(&TeR.speed, msg.data, msg.DLC);
-				break;
-
-			case TER_ANG_RATE_FRAME_ID:
-				ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
 				break;
 
 			case TER_LV_STATUS_FRAME_ID:

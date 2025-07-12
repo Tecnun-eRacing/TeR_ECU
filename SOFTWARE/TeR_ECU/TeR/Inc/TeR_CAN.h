@@ -54,13 +54,19 @@ struct TeR_t {
 	struct ter_inverter_info_t invInfo;
 	struct ter_ecu_config_t config; //El mensaje con todas las configuraciones
 
+	//IMU related
+	struct ter_ang_rate_t angRate; //Angular rate(speed) from imu gyroscope
+	struct ter_accel_t accel; //Acceleration from IMU acceleropmeter
+	struct ter_gps_lat_long_t latlong; //Position from GPS
+	struct ter_ypr_t ypr; //Yaw pitch and roll from sensor fusion
+	struct ter_vel_body_t velbody; //Velbody over NED frame from gps
+
 	//Externas
 	//TER.dbc
 	struct ter_apps_t apps; //Sensor de acelerador
 	struct ter_bpps_t bpps; //Freno
 	struct ter_steer_t steer; //Volante
 	struct ter_front_v_t speed; // FrontAxle Speed
-	struct ter_ang_rate_t angRate; //Angular rate from imu
 	struct ter_lv_status_t lvbms; //Estado del BMS de baja
 
 	//Inverters.dbc

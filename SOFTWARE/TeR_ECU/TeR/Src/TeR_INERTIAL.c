@@ -5,7 +5,7 @@
  *      Author: eracing
  */
 #include <TeR_INERTIAL.h>
-
+#include "TeR_CAN.h"
 
 
 //Sensor Interface Wrappers
@@ -107,9 +107,25 @@ void inertial(void *argument) {
 				&IMU.roll, &IMU.pitch, &IMU.yaw);
 
 		//For viewer usage
-		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", IMU.roll,  IMU.pitch,
-				 IMU.yaw, a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0],
-				acc_xyz[1], acc_xyz[2]);
+		//printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", IMU.roll,  IMU.pitch,
+		//		 IMU.yaw, a_rate_rpy[0], a_rate_rpy[1], a_rate_rpy[2], acc_xyz[0],
+		//		acc_xyz[1], acc_xyz[2]);
+		//Dump to canbus
+		//YPR
+		TeR.ypr.yaw = IMU.yaw*100;
+		TeR.ypr.pitch = IMU.pitch*100;
+		TeR.ypr.roll = IMU.roll*100;
+		//Accelerations
+		TeR.accel.a_x = IMU.a_x*1000;
+		TeR.accel.a_y = IMU.a_y*1000;
+		TeR.accel.a_z = IMU.a_z*1000;
+
+		//Angular Rate
+		TeR.angRate.yaw_rate_z = IMU.w_z*1000;
+		TeR.angRate.pitch_rate_y = IMU.w_y*1000;
+		TeR.angRate.roll_rate_x = IMU.w_x*1000;
+
+
 
 	}
 }
