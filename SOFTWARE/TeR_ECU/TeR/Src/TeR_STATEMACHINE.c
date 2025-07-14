@@ -100,7 +100,6 @@ void stateLoop(void) {
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (state) {
 		case WAIT_SL:
-			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
 			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
@@ -112,12 +111,6 @@ void stateLoop(void) {
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 0;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
-
-			//	desactivamos cooling  ACCU
-			ter_refri_config_init(&refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
-			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_OFF_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Security
@@ -140,6 +133,7 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
+			publishConfig(&TeR.config);
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
@@ -199,7 +193,7 @@ void stateLoop(void) {
 
 void permaTask() {
 //BrakeLight
-	if (TeR.bpps.bpps >= TeR.config.r2_d_brake + 1) {
+	if (TeR.bpps.bpps >= TeR.config.r2_d_brake) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
@@ -222,7 +216,7 @@ void permaTask() {
 
 	TeR.invInfo.left_motor_temp =
 			(uint8_t) inverter_emcu_state_4_left_e_machine_temp_2_deg_c_decode(
-					TeR.tempsLeft.e_machine_temp_2_deg_c);
+					TeR.tempsLeft.e_machine_temp_1_deg_c);
 	TeR.invInfo.right_motor_temp =
 			(uint8_t) inverter_emcu_state_4_right_e_machine_temp_2_deg_c_decode(
 					TeR.tempsRight.e_machine_temp_2_deg_c);

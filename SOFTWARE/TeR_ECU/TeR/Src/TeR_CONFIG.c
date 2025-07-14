@@ -26,8 +26,9 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
-while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
-	osDelay(2);}// ESPERAR A QUE HAYA SITIO mejor usar osThreadYield
+	while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0) {
+		osDelay(RETRY_TIMEOUT);
+	} // ESPERAR A QUE HAYA SITIO mejor usar osThreadYield
 	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN)) {
 
 		switch (frame_id) {
@@ -38,11 +39,12 @@ while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
 			TxHeader.DLC = TER_REFRI_CONFIG_LENGTH;
 			ter_refri_config_pack(TxData, &refri_config, TxHeader.DLC);
 			break;
-
+		default:
+			return 1;
 		}
 		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
-				!= HAL_OK){
-			osDelay(2); // ESPERAR A ENVIO CORRECTO mejor usar osThreadYield
+				!= HAL_OK) {
+			osDelay(RETRY_TIMEOUT);
 		}
 
 		return 0;
@@ -52,35 +54,79 @@ while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0){
 
 uint8_t initConfig() { //wrapper functions to not directly interact with library
 	EE24_Init(&eeprom, &hi2c2, EE24_ADDRESS_DEFAULT);
-	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 250); // load config struct
+	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500); // load config struct
 	if (data.written == 1) { // if eeprom has been written, copy data to car
 		TeR.config = data.config;
 		return 1;
 	} // if eeprom was not written or anything when bad (data.written is defaulted 0), default config should be loaded
-	defaultConfig();
+	defaultConfig(&TeR.config);
 	writeConfig(TeR.config);
 	return 0;
 }
 
 uint8_t writeConfig(struct ter_ecu_config_t config) {
-	data.config = config;
+
+	if (config.entry == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) {
+		switch (config.eeprom) {
+		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_CHOICE:
+			defaultConfig(&config); //reset config to predetermined values
+			break;
+		case TER_ECU_CONFIG_EEPROM_READ_CHOICE:
+			publishConfig(&config);
+		}
+	}
+	TeR.config = config;
+	data.config = TeR.config;
 	data.written = 1;
-	return EE24_Write(&eeprom, 0, (uint8_t*)&data, sizeof(data), 500);
+	return EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500);
 }
 
-void defaultConfig(void) {
-	TeR.config.driving_mode =
+void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config struct to default
+	config->entry = TER_ECU_CONFIG_ENTRY_SCS_ENABLE_CHOICE; // para evitar bucle de reset de eeprom, seteamos entry a un valor por defecto (por definir en .dbc)
+	config->driving_mode =
 	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
-	TeR.config.limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
-	TeR.config.r2_d_brake = 4;
-	TeR.config.scs_enable = TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE;
-	TeR.config.traction_control =
+	config->limiter = TER_ECU_CONFIG_LIMITER_TORQUE_CHOICE;
+	config->r2_d_brake = 5;
+	config->scs_enable = TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE;
+	config->traction_control =
 	TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE;
-	TeR.config.trq_kp = 0;
-	TeR.config.trq_ki = 0;
-	TeR.config.trq_kd = 0;
-	TeR.config.trq_limit = 150;
+	config->trq_kp = 0;
+	config->trq_ki = 0;
+	config->trq_kd = 0;
+	config->trq_limit = 100;
+	config->flap_enable = TER_ECU_CONFIG_FLAP_ENABLE_ON_CHOICE;
+	config->flap_l_offset = -8;
+	config->flap_r_offset = 65;
+	config->flap_l_reverse = TER_ECU_CONFIG_FLAP_L_REVERSE_NORMAL_CHOICE;
+	config->flap_r_reverse = TER_ECU_CONFIG_FLAP_R_REVERSE_REVERSE_CHOICE;
+	config->flap_pedal_setpoint = 90;
 	return;
 }
 
+uint8_t publishConfig(struct ter_ecu_config_t *config) {
+	//Buffers volatiles para el envío
+	uint8_t TxData[8]; //Buffer para datos de envio
+	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
+	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.StdId = TER_ECU_CONFIG_FRAME_ID;
+	TxHeader.DLC = TER_ECU_CONFIG_LENGTH;
+	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config;
+	for (uint8_t i = 0; i < NB_ENTRIES; i++) {
+		while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0) {
+			osDelay(RETRY_TIMEOUT); // esperar hasta que haya sitio
+		}
+		if (i == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) { //pa que voy a mandar esto
+			continue;
+		}
+		ecu_config.entry = i;
+		ter_ecu_config_pack(TxData, &ecu_config, TxHeader.DLC);
+		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+				!= HAL_OK) {
+			osDelay(RETRY_TIMEOUT);
+		}
+	}
+	return 0;
+}
 

@@ -10,10 +10,12 @@
 #include "stm32f4xx_hal.h"
 #include "cmsis_os2.h"
 typedef struct{
-	int8_t angle;
-	int8_t offset;
+	int16_t angle;
 }flap_t;
 
+#define SERVO_MIN_PULSE_SEC 0.0005
+#define SERVO_MAX_PULSE_SEC 0.0025
+#define SERVO_MAX_ANGLE     180.0
 
 void setAngle(int8_t angle,uint8_t channel);
 
