@@ -193,7 +193,7 @@ void stateLoop(void) {
 
 void permaTask() {
 //BrakeLight
-	if (TeR.bpps.bpps >= TeR.config.r2_d_brake) {
+	if (TeR.bpps.bpps * 0.01 >= TeR.config.r2_d_brake) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
