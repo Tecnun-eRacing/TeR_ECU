@@ -22,7 +22,6 @@ uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax) {
 	return 1; //Tenemos Error pero no hemos superado maxTime
 }
 
-
 // Mapea un intervalo
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max) {
@@ -34,4 +33,13 @@ int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 //Mapear si estamos en rango seguro
 	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	return val;
+}
+
+// Integrate function for inverter protection
+void integrate(float value, float* accumulator, float T) {
+	*accumulator += (T*value * value) * ((value >= 0) ? 1 : -1); //x^2 * sign(x)*dt
+	if(*accumulator <= 0 ){ //Prevent negative integral
+		*accumulator = 0;// Saturate to 0
+	}
+
 }

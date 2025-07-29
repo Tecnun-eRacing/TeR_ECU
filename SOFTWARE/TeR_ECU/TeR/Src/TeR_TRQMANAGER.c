@@ -9,7 +9,6 @@
 #include "TeR_TRQMANAGER.h"
 #include "tv_mds.h"
 
-
 /* Esquizofrenia RTOS
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
  *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
@@ -20,14 +19,19 @@
  *
  */
 
-
-
 const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
 trqPipeline_t DriveConfig; //Configuración en uso
 extern osThreadId_t trqManagerTaskHandle; // thread id of trqManager task
+
+uint32_t overdriveTimestamp; //For limiting 2min peak current
+uint8_t overdriveFlag; //Is 1 when we are in overdrive mode
+
+//Overdrive accumulators
+float Raccumulator;
+float Laccumulator;
 
 void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la comanda
 	uint32_t nextTick = osKernelGetTickCount(); // Initialize reference time
@@ -68,7 +72,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			switch (TeR.config.traction_control) {
 
 			case TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE:
-				DriveConfig.tractionControl= &tractionControlOFF;
+				DriveConfig.tractionControl = &tractionControlOFF;
 				break;
 			}
 
@@ -104,6 +108,21 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 //MANDATORY USE IN EACH DRIVINGMODE
 trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper function that enables or disables negative torque up to a certain value.
 
+	//0) Overdrive Mode
+	//Overdrive mode  (When Inverter Current is over 100deg log the timestamp)
+	//With KT=0.54 100Arms-> 54Nm
+
+	//Evaluate the integral
+
+	integrate((in.rLeft - 54.0f) , &Laccumulator, task_period/1000.0);
+	integrate((in.rRight - 54.0f), &Raccumulator, task_period/1000.0);
+
+	// Check if any of the inverters exceeds the accumulator limit (Squared limit times the period of the overdrive)
+	if(Laccumulator > 54*54*60 || Raccumulator > 54*54*60){
+		easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Shutdown the HVBMS (Open contactors)
+	}
+
+
 	//1) First check if wheels are spinning at THR speed and negative torque is being requested (avoids backwards speed on wheel)
 	if (TeR.wheelInfo.speed < 0 && (in.rLeft < 0 || in.rRight < 0)) {
 		in.rLeft = 0;
@@ -128,6 +147,7 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper func
 	if (in.rRight > limit / 2) {
 		in.rRight = limit / 2;
 	}
+
 	return in;
 }
 
