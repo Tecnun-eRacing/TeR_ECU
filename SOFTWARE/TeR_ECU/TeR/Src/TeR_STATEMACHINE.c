@@ -105,7 +105,7 @@ void stateLoop(void) {
 		switch (state) {
 		case WAIT_SL:
 			publishConfig(&TeR.config);
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) { //ayuda porfavor deja de soldar los contactores, de verdad no es gracioso
 				easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			}
 			//Anounce through USB CDC
