@@ -94,16 +94,29 @@ void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config 
 	config->trq_ki = 0;
 	config->trq_kd = 0;
 	config->trq_limit = 100;
-	config->flap_enable = TER_ECU_CONFIG_FLAP_ENABLE_ON_CHOICE;
+	config->flap_enable = TER_ECU_CONFIG_FLAP_ENABLE_OFF_CHOICE;
 	config->flap_l_offset = -8;
 	config->flap_r_offset = 65;
 	config->flap_l_reverse = TER_ECU_CONFIG_FLAP_L_REVERSE_NORMAL_CHOICE;
 	config->flap_r_reverse = TER_ECU_CONFIG_FLAP_R_REVERSE_REVERSE_CHOICE;
 	config->flap_pedal_setpoint = 90;
+	config->regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
+	config->regen_max_cell_temp = 45;
+	config->regen_max_cell_volt = 4000;
+	config->regen_max_trq = 15;
+	config->regen_thr_speed = 10;
+	config->regen_max_current = 60;
+	config->regen_thr_rpm = 10;
+	config->regen_trq_slope = 1;
+	config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
+	config->regen_max_positive_trq_thr = 5;
 	return;
 }
 
 uint8_t publishConfig(struct ter_ecu_config_t *config) {
+	if (data.written != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion, evitamos exponer junk en el arranque
+		return 1;
+	}
 	//Buffers volatiles para el envío
 	uint8_t TxData[8]; //Buffer para datos de envio
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión

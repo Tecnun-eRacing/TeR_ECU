@@ -22,7 +22,6 @@ uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax) {
 	return 1; //Tenemos Error pero no hemos superado maxTime
 }
 
-
 // Mapea un intervalo
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max) {
@@ -34,4 +33,17 @@ int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 //Mapear si estamos en rango seguro
 	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	return val;
+}
+uint8_t read_btn(uint8_t *lock, uint8_t read) {
+	if (osKernelGetTickCount() < 3000) {
+		return 0;
+	}
+	if (*lock && read) { //Si bloquado y boton == 1, devuelvo 0
+		return 0;
+	}
+	//Si no hay lock o no estaba a 1 actualizo
+	//bloqueo si pulsado
+	//No hago nada sin no pulsado
+	*lock = read;
+	return read;
 }

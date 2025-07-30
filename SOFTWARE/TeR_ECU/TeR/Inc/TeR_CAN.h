@@ -68,6 +68,7 @@ struct TeR_t {
 	struct ter_steer_t steer; //Volante
 	struct ter_front_v_t speed; // FrontAxle Speed
 	struct ter_lv_status_t lvbms; //Estado del BMS de baja
+	struct ter_btn_t buttons; // botones del volante
 
 	//Inverters.dbc
 	//Enviados
@@ -101,6 +102,9 @@ struct TeR_t {
 	struct hvbms_bms_rx_ctrl_1_t BmsAppReq; //Comanda estado BMS
 	//Recibidos
 	struct hvbms_bms_tx_state_3_t BmsAppState; //Estado BMS
+	struct hvbms_bms_tx_state_6_t BmsCellsVolt; // tensiones media min y max de celdas
+	struct hvbms_bms_tx_state_9_t BmsCellsTemp; // temperaturas media min y max de celdas
+	struct hvbms_bms_tx_state_4_t BmsCurrent; // corriente del bms
 
 };
 

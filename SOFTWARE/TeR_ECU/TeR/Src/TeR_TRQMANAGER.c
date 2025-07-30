@@ -9,7 +9,6 @@
 #include "TeR_TRQMANAGER.h"
 #include "tv_mds.h"
 
-
 /* Esquizofrenia RTOS
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
  *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
@@ -20,9 +19,7 @@
  *
  */
 
-
-
-const static int task_period = 10; // Task frequency 100hz
+const static int task_period = 2; // Task frequency 500hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -68,7 +65,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			switch (TeR.config.traction_control) {
 
 			case TER_ECU_CONFIG_TRACTION_CONTROL_OFF_CHOICE:
-				DriveConfig.tractionControl= &tractionControlOFF;
+				DriveConfig.tractionControl = &tractionControlOFF;
 				break;
 			}
 
@@ -92,7 +89,7 @@ trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas
 	trqMap_t trqMap;
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
-	return trqMap;
+	return torqueCheck(trqMap, limit, TeR.config.regen_max_trq);
 }
 
 //------------------------------------------------[Basic traction Control]------------------------------------------------//
@@ -101,19 +98,56 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 	return in;
 }
 
-//MANDATORY USE IN EACH DRIVINGMODE
-trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper function that enables or disables negative torque up to a certain value.
+//MANDATORY USE IN EACH DRIVINGMODE also controls the regen
+trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
+	if (regen_allowed(in)) {
+		switch (TeR.config.regen_mode) {
+		case TER_ECU_CONFIG_REGEN_MODE_BPPS_CHOICE: {
+			int8_t trq = map(TeR.bpps.bpps * TeR.config.regen_trq_slope, 0,
+					ter_bpps_bpps_encode(MAX_BPPS_VALUE), 0, TeR.config.regen_max_trq); //mapeamos el pedal de freno como una recta de slope configurable y clampeo para diferente valor
+			trq = -abs(trq / 2); // negativo porque queremos regenerar
+			in.rLeft = trq;
+			in.rRight = trq;
+			if (in.rLeft > 0 || in.rRight > 0) { // esquizofrenia por si de alguna forma se vuelve positivo, rayo cosmico
+				in.rLeft = 0;
+				in.rRight = 0;
+			}
 
-	//1) First check if wheels are spinning at THR speed and negative torque is being requested (avoids backwards speed on wheel)
-	if (TeR.wheelInfo.speed < 0 && (in.rLeft < 0 || in.rRight < 0)) {
-		in.rLeft = 0;
-		in.rRight = 0;
+			break;
+		}
+		case TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE: {
+			int8_t trq = TeR.config.regen_max_trq;
+			trq = -abs(trq / 2);
+			in.rLeft = trq;
+			in.rRight = trq;
+			if (trq > 0) {
+				trq = 0;
+			}
+			break;
+		}
+		}
+	}
+
+//1) First check if negative torque is being requested (avoids backwards spinning of the wheels)
+	if (in.rLeft < 0 || in.rRight < 0) {
+		if (TeR.wheelInfo.rl_rpm < TeR.config.regen_thr_rpm) {
+			in.rLeft = 0;
+			in.rRight = 0;
+		}
+		if (TeR.wheelInfo.rr_rpm < TeR.config.regen_thr_rpm) {
+			in.rRight = 0;
+			in.rLeft = 0;
+		}
+		if (TeR.wheelInfo.speed < TeR.config.regen_thr_speed) {
+			in.rRight = 0;
+			in.rLeft = 0;
+		}
 		return in; //return 0 torque as negative torque is being requested with below security speed
 	}
 
 	maxNegTrq = maxNegTrq > limit ? limit : maxNegTrq; //check if negative allowance is in limit and if not clamp it (not necessary)
 
-	// 2) check if negative torque is being requested and between is betweeen allowedNegativeTorque
+// 2) check if negative torque is being requested and between is betweeen allowedNegativeTorque
 	if (in.rLeft <= -maxNegTrq / 2) { // if torque exceeds allowance
 		in.rLeft = -maxNegTrq / 2; //clamp to allowance
 	}
@@ -121,7 +155,7 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper func
 		in.rRight = -maxNegTrq / 2; //clamp to allowance
 	}
 
-	//3) check if requested torque exceds limit (negative torque excess is taken into account in step 2)
+//3) check if requested torque exceds limit (negative torque excess is taken into account in step 2)
 	if (in.rLeft > limit / 2) {
 		in.rLeft = limit / 2;
 	}
@@ -129,5 +163,28 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) { //wrapper func
 		in.rRight = limit / 2;
 	}
 	return in;
+}
+
+uint8_t regen_allowed(trqMap_t in) { // 0 ok 1 not ok
+	if (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) {
+		if ((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2)
+				&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)) { // no le estamos pidiendo suficiente torque al coche
+			if (hvbms_bms_tx_state_6_cell_max_v_decode(
+					TeR.BmsCellsVolt.cell_min_v)
+					< TeR.config.regen_max_cell_volt) {
+				if (hvbms_bms_tx_state_9_cell_temp_max_deg_c_decode(
+						TeR.BmsCellsTemp.cell_temp_max_deg_c)
+						< TeR.config.regen_max_cell_temp) {
+					if (hvbms_bms_tx_state_4_curr_2_x10_a_decode(
+							TeR.BmsCurrent.curr_2_x10_a)
+							> -TeR.config.regen_max_current) {
+						return 1; // si y solo si se cumplen las condiciones de regen, retornamos 0
+					}
+				}
+			}
+		}
+	}
+	//TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //si no se ha cumplido alguna condicion, desactivamos la regen por seguridad (el piloto podra reactivarla)
+	return 0; // no se ha cumplido alguna cosa, retornamos 0
 }
 

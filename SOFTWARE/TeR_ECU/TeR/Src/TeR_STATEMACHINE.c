@@ -52,6 +52,10 @@
 persist_t SL;
 //Refri config struct
 struct ter_refri_config_t refri;
+uint8_t rButton;
+uint8_t lButton;
+uint8_t cButton;
+uint8_t regenButton;
 
 // FreeRTOS dependencies
 const static uint32_t task_period = 2; // Task frequency 500 Hz
@@ -100,17 +104,17 @@ void stateLoop(void) {
 	if (stateChanged) { // Handles setup conditions for the new state
 		switch (state) {
 		case WAIT_SL:
+			publishConfig(&TeR.config);
+			for(int i =0; i < 10; i++){
 			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
+			}
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
-			//	Apagamos refri
+			//	Apagamos refri ventis bombas
 			ter_refri_config_init(&refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
-			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 0;
+			refri.intensity = 20;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Security
@@ -118,6 +122,7 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
+			publishConfig(&TeR.config);
 			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
 			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			//Anounce through USB CDC
@@ -144,7 +149,7 @@ void stateLoop(void) {
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			request de intensidad 20%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 20;
+			refri.intensity = 40;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
@@ -192,8 +197,31 @@ void stateLoop(void) {
 /* -------------------------[PermaTask]---------------------------- */
 
 void permaTask() {
+	//limitation handling
+		if (read_btn(&rButton, TeR.buttons.el) && !TeR.buttons.eb) {
+			if (TeR.config.trq_limit + 10 <= 180) {
+				TeR.config.trq_limit += 10;
+			} else {
+				TeR.config.trq_limit = 180;
+			}
+			publishConfig(&TeR.config);
+		}
+		if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
+			publishConfig(&TeR.config);
+			if (TeR.config.trq_limit - 10 >= 60) {
+				TeR.config.trq_limit -= 10;
+			} else {
+				TeR.config.trq_limit = 60;
+			}
+			publishConfig(&TeR.config);
+	}
+		if(read_btn(&regenButton,TeR.buttons.b3)){
+			TeR.config.regen_enable = (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ? TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE : TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
+		publishConfig(&TeR.config);
+		}
+
 //BrakeLight
-	if (TeR.bpps.bpps * 0.01 >= TeR.config.r2_d_brake) {
+	if (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
 	} else {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_RESET);
@@ -235,3 +263,4 @@ void permaTask() {
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app != 6); //Distinto de fault state
 }
+

@@ -352,6 +352,10 @@ void canRx(void *argument) {
 				}
 				break;
 
+			case TER_BTN_FRAME_ID:
+				ter_btn_unpack(&TeR.buttons, msg.data, msg.DLC);
+				break;
+
 				/* ---------------------------[INVERTER]-------------------------- */
 
 			case INVERTER_EMCU_STATE_2_RIGHT_FRAME_ID:
@@ -409,6 +413,18 @@ void canRx(void *argument) {
 			case HVBMS_BMS_TX_STATE_3_FRAME_ID:
 				hvbms_bms_tx_state_3_unpack(&TeR.BmsAppState, msg.data,
 						msg.DLC);
+				break;
+
+			case HVBMS_BMS_TX_STATE_6_FRAME_ID:
+				hvbms_bms_tx_state_6_unpack(&TeR.BmsCellsVolt,msg.data,msg.DLC);
+				break;
+
+			case HVBMS_BMS_TX_STATE_9_FRAME_ID:
+				hvbms_bms_tx_state_9_unpack(&TeR.BmsCellsTemp,msg.data,msg.DLC);
+				break;
+
+			case HVBMS_BMS_TX_STATE_4_FRAME_ID:
+				hvbms_bms_tx_state_4_unpack(&TeR.BmsCurrent,msg.data,msg.DLC);
 				break;
 				/* ---------------------------[Default]-------------------------- */
 
