@@ -100,13 +100,13 @@ void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config 
 	config->flap_l_reverse = TER_ECU_CONFIG_FLAP_L_REVERSE_NORMAL_CHOICE;
 	config->flap_r_reverse = TER_ECU_CONFIG_FLAP_R_REVERSE_REVERSE_CHOICE;
 	config->flap_pedal_setpoint = 90;
-	config->regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
+	config->regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //defaulted off
 	config->regen_max_cell_temp = 45;
 	config->regen_max_cell_volt = 4000;
-	config->regen_max_trq = 15;
+	config->regen_max_trq = 10;
 	config->regen_thr_speed = 10;
-	config->regen_max_current = 60;
-	config->regen_thr_rpm = 10;
+	config->regen_max_current = 40;
+	config->regen_thr_rpm = 8;
 	config->regen_trq_slope = 1;
 	config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
 	config->regen_max_positive_trq_thr = 5;

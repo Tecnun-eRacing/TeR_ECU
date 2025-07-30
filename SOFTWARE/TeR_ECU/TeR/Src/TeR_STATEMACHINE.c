@@ -105,8 +105,8 @@ void stateLoop(void) {
 		switch (state) {
 		case WAIT_SL:
 			publishConfig(&TeR.config);
-			for(int i =0; i < 10; i++){
-			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
+			for (int i = 0; i < 10; i++) {
+				easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			}
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
@@ -197,28 +197,7 @@ void stateLoop(void) {
 /* -------------------------[PermaTask]---------------------------- */
 
 void permaTask() {
-	//limitation handling
-		if (read_btn(&rButton, TeR.buttons.el) && !TeR.buttons.eb) {
-			if (TeR.config.trq_limit + 10 <= 180) {
-				TeR.config.trq_limit += 10;
-			} else {
-				TeR.config.trq_limit = 180;
-			}
-			publishConfig(&TeR.config);
-		}
-		if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
-			publishConfig(&TeR.config);
-			if (TeR.config.trq_limit - 10 >= 60) {
-				TeR.config.trq_limit -= 10;
-			} else {
-				TeR.config.trq_limit = 60;
-			}
-			publishConfig(&TeR.config);
-	}
-		if(read_btn(&regenButton,TeR.buttons.b3)){
-			TeR.config.regen_enable = (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ? TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE : TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-		publishConfig(&TeR.config);
-		}
+	buttonHandler();
 
 //BrakeLight
 	if (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) {
@@ -262,5 +241,35 @@ void permaTask() {
 	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app != 6); //Distinto de fault state
+}
+
+void buttonHandler() {
+	//limitation handling
+	if (read_btn(&rButton, TeR.buttons.el) && !TeR.buttons.eb) {
+		if (TeR.config.trq_limit + 10 <= 180) {
+			TeR.config.trq_limit += 10;
+		} else {
+			TeR.config.trq_limit = 180;
+		}
+		publishConfig(&TeR.config);
+	}
+	if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
+		publishConfig(&TeR.config);
+		if (TeR.config.trq_limit - 10 >= 60) {
+			TeR.config.trq_limit -= 10;
+		} else {
+			TeR.config.trq_limit = 60;
+		}
+		publishConfig(&TeR.config);
+	}
+	if (read_btn(&regenButton, TeR.buttons.b3)) {
+		TeR.config.regen_enable =
+				(TeR.config.regen_enable
+						== TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ?
+						TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE :
+						TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
+		publishConfig(&TeR.config);
+	}
+
 }
 

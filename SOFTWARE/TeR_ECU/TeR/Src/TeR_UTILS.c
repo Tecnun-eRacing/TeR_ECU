@@ -35,7 +35,7 @@ int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 	return val;
 }
 uint8_t read_btn(uint8_t *lock, uint8_t read) {
-	if (osKernelGetTickCount() < 3000) {
+	if (osKernelGetTickCount() < 3000) { // esto es para que no pueda tocar nada sin querer en el arranque, 3 segundos
 		return 0;
 	}
 	if (*lock && read) { //Si bloquado y boton == 1, devuelvo 0

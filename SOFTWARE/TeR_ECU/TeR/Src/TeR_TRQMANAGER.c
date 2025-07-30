@@ -184,7 +184,7 @@ uint8_t regen_allowed(trqMap_t in) { // 0 ok 1 not ok
 			}
 		}
 	}
-	//TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //si no se ha cumplido alguna condicion, desactivamos la regen por seguridad (el piloto podra reactivarla)
+	TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //si no se ha cumplido alguna condicion, desactivamos la regen por seguridad (el piloto podra reactivarla)
 	return 0; // no se ha cumplido alguna cosa, retornamos 0
 }
 
