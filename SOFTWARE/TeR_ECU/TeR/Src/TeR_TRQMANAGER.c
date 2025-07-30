@@ -104,7 +104,8 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 		switch (TeR.config.regen_mode) {
 		case TER_ECU_CONFIG_REGEN_MODE_BPPS_CHOICE: {
 			int8_t trq = map(TeR.bpps.bpps * TeR.config.regen_trq_slope, 0,
-					ter_bpps_bpps_encode(MAX_BPPS_VALUE), 0, TeR.config.regen_max_trq); //mapeamos el pedal de freno como una recta de slope configurable y clampeo para diferente valor
+					ter_bpps_bpps_encode(MAX_BPPS_VALUE), 0,
+					TeR.config.regen_max_trq); //mapeamos el pedal de freno como una recta de slope configurable y clampeo para diferente valor
 			trq = -abs(trq / 2); // negativo porque queremos regenerar
 			in.rLeft = trq;
 			in.rRight = trq;
@@ -120,8 +121,9 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 			trq = -abs(trq / 2);
 			in.rLeft = trq;
 			in.rRight = trq;
-			if (trq > 0) {
-				trq = 0;
+			if (in.rLeft > 0 || in.rRight > 0) { // esquizofrenia por si de alguna forma se vuelve positivo, rayo cosmico
+				in.rLeft = 0;
+				in.rRight = 0;
 			}
 			break;
 		}
