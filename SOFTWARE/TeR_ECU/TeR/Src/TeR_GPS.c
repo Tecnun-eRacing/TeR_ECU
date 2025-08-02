@@ -49,7 +49,7 @@ void gps(void *argument) {
 	osDelay(500);
 	for (;;) {
 		//GPS test
-		osDelay(100);
+		osDelay(0xFFFFFFFF);
 		poll_ubx(&gps_d, 0x01, 0x07, &pvt, sizeof(pvt)); //Continously poll for nav data
 		//Dump gps data to IMU message
 		TeR.latlong.latitude = pvt.lat;

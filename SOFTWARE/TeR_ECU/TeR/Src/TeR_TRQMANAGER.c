@@ -167,7 +167,7 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 	return in;
 }
 
-uint8_t regen_allowed(trqMap_t in) { // 0 ok 1 not ok
+uint8_t regen_allowed(trqMap_t in) { // 1 ok 0 not ok
 	if (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) {
 		if ((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2)
 				&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)) { // no le estamos pidiendo suficiente torque al coche
@@ -185,8 +185,12 @@ uint8_t regen_allowed(trqMap_t in) { // 0 ok 1 not ok
 				}
 			}
 		}
+		else{
+			return 0; //pilot is requesting positive trq
+		}
 	}
-	TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //latch disable regen (responsability of driver to re-enable it)
+	//TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //latch disable regen (responsability of driver to re-enable it)
+	//publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
 	return 0; // no se ha cumplido alguna cosa, retornamos 0
 }
 
