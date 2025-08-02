@@ -424,7 +424,7 @@ void canRx(void *argument) {
 				break;
 
 			case HVBMS_BMS_TX_STATE_4_FRAME_ID:
-				hvbms_bms_tx_state_4_unpack(&TeR.BmsCurrent,msg.data,msg.DLC);
+				hvbms_bms_tx_state_4_unpack(&TeR.BmsCurrent,msg.data,sizeof(msg.data)); // si el dbc estuviera bien hecho, esto no tendriamos que hacer
 				break;
 				/* ---------------------------[Default]-------------------------- */
 

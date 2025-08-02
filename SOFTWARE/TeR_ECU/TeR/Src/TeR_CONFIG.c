@@ -72,7 +72,8 @@ uint8_t writeConfig(struct ter_ecu_config_t config) {
 			defaultConfig(&config); //reset config to predetermined values
 			break;
 		case TER_ECU_CONFIG_EEPROM_READ_CHOICE:
-			publishConfig(&config);
+			publishConfig(&config,ALL_CONFIGS);
+			break;
 		}
 	}
 	TeR.config = config;
@@ -102,19 +103,19 @@ void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config 
 	config->flap_pedal_setpoint = 90;
 	config->regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //defaulted off
 	config->regen_max_cell_temp = 45;
-	config->regen_max_cell_volt = 4000;
+	config->regen_max_cell_volt = 3900;
 	config->regen_max_trq = 10;
 	config->regen_thr_speed = 10;
 	config->regen_max_current = 40;
-	config->regen_thr_rpm = 8;
+	config->regen_thr_rpm = 5;
 	config->regen_trq_slope = 1;
 	config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
 	config->regen_max_positive_trq_thr = 5;
 	return;
 }
 
-uint8_t publishConfig(struct ter_ecu_config_t *config) {
-	if (data.written != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion, evitamos exponer junk en el arranque
+uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
+	if (data.written != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion, evitamos exponer junk a la pantalla en el arranque por ejemplo
 		return 1;
 	}
 	//Buffers volatiles para el envío
@@ -126,18 +127,28 @@ uint8_t publishConfig(struct ter_ecu_config_t *config) {
 	TxHeader.StdId = TER_ECU_CONFIG_FRAME_ID;
 	TxHeader.DLC = TER_ECU_CONFIG_LENGTH;
 	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config;
-	for (uint8_t i = 0; i < NB_ENTRIES; i++) {
-		while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0) {
-			osDelay(RETRY_TIMEOUT); // esperar hasta que haya sitio
-		}
-		if (i == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) { //pa que voy a mandar esto
-			continue;
-		}
-		ecu_config.entry = i;
+	if ((config_id != ALL_CONFIGS) && (config_id <= NB_ENTRIES) && (config_id >=0)) { // if user is requesting a specific config, and the config is valid, send specific config
+		ecu_config.entry = config_id;
 		ter_ecu_config_pack(TxData, &ecu_config, TxHeader.DLC);
 		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
 				!= HAL_OK) {
 			osDelay(RETRY_TIMEOUT);
+		}
+
+	} else { // if user requested all configs or requested config is not valid, send all configs
+		for (uint8_t i = 0; i < NB_ENTRIES; i++) {
+			while (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) == 0) {
+				osDelay(RETRY_TIMEOUT); // esperar hasta que haya sitio
+			}
+			if (i == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) { //pa que voy a mandar esto
+				continue;
+			}
+			ecu_config.entry = i;
+			ter_ecu_config_pack(TxData, &ecu_config, TxHeader.DLC);
+			while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+					!= HAL_OK) {
+				osDelay(RETRY_TIMEOUT);
+			}
 		}
 	}
 	return 0;

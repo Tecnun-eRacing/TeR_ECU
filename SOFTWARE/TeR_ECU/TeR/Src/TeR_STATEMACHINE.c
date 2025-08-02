@@ -52,6 +52,7 @@
 persist_t SL;
 //Refri config struct
 struct ter_refri_config_t refri;
+//buttons
 uint8_t rButton;
 uint8_t lButton;
 uint8_t cButton;
@@ -102,9 +103,9 @@ void stateLoop(void) {
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
+		publishConfig(&TeR.config,ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
-			publishConfig(&TeR.config);
 			for (int i = 0; i < 5; i++) { //ayuda porfavor deja de soldar los contactores, de verdad no es gracioso
 				easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			}
@@ -122,7 +123,6 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
-			publishConfig(&TeR.config);
 			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
 			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			//Anounce through USB CDC
@@ -138,7 +138,6 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			publishConfig(&TeR.config);
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
@@ -198,7 +197,6 @@ void stateLoop(void) {
 
 void permaTask() {
 	buttonHandler();
-
 //BrakeLight
 	if (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
@@ -245,22 +243,21 @@ void permaTask() {
 
 void buttonHandler() {
 	//limitation handling
-	if (read_btn(&rButton, TeR.buttons.el) && !TeR.buttons.eb) {
+	if (read_btn(&lButton, TeR.buttons.el) && !TeR.buttons.eb) {
 		if (TeR.config.trq_limit + 10 <= 180) {
 			TeR.config.trq_limit += 10;
 		} else {
 			TeR.config.trq_limit = 180;
 		}
-		publishConfig(&TeR.config);
+		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
-		publishConfig(&TeR.config);
 		if (TeR.config.trq_limit - 10 >= 60) {
 			TeR.config.trq_limit -= 10;
 		} else {
 			TeR.config.trq_limit = 60;
 		}
-		publishConfig(&TeR.config);
+		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
 		TeR.config.regen_enable =
@@ -268,7 +265,7 @@ void buttonHandler() {
 						== TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ?
 						TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE :
 						TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-		publishConfig(&TeR.config);
+		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
 	}
 
 }
