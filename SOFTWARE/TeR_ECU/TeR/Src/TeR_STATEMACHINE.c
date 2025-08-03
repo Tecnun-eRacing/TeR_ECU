@@ -103,11 +103,11 @@ void stateLoop(void) {
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
-		publishConfig(&TeR.config,ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
+		publishConfig(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
-			for (int i = 0; i < 5; i++) { //ayuda porfavor deja de soldar los contactores, de verdad no es gracioso
-				easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
+			for(int i = 0; i < 5; i++){
+			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
 			}
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
@@ -249,7 +249,7 @@ void buttonHandler() {
 		} else {
 			TeR.config.trq_limit = 180;
 		}
-		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
+		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
 		if (TeR.config.trq_limit - 10 >= 60) {
@@ -257,7 +257,7 @@ void buttonHandler() {
 		} else {
 			TeR.config.trq_limit = 60;
 		}
-		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
+		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
 		TeR.config.regen_enable =
@@ -265,7 +265,7 @@ void buttonHandler() {
 						== TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ?
 						TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE :
 						TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-		publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
+		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
 	}
 
 }

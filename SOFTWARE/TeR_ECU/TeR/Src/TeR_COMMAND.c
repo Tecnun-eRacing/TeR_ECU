@@ -29,7 +29,10 @@ uint8_t command(struct ter_command_t command) {
 			TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS precharge action
 			TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 			hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
+			while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+					!= HAL_OK) {
+				osDelay(10);
+			}
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -41,17 +44,23 @@ uint8_t command(struct ter_command_t command) {
 		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
-
+		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+				!= HAL_OK) {
+			osDelay(10);
+		}
 		break;
 
 	case TER_COMMAND_CMD_RESET_BMS_CHOICE: //Descarga
 		TeR.BmsAppReq.app_state_req =
-				HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
+		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
 		TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID; //BMS app_state_req
 		TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
 		hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, TxHeader.DLC);
-		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el mensaje procesado
+		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
+				!= HAL_OK) {
+			osDelay(10);
+		}
+
 		break;
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive

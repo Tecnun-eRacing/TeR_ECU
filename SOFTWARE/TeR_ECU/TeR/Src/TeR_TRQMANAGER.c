@@ -185,12 +185,7 @@ uint8_t regen_allowed(trqMap_t in) { // 1 ok 0 not ok
 				}
 			}
 		}
-		else{
-			return 0; //pilot is requesting positive trq
-		}
 	}
-	//TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE; //latch disable regen (responsability of driver to re-enable it)
-	//publishConfig(&TeR.config,TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
 	return 0; // no se ha cumplido alguna cosa, retornamos 0
 }
 
