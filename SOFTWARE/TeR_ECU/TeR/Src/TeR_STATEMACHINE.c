@@ -120,6 +120,8 @@ void stateLoop(void) {
 
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
+			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
+			TeR.appReqRight.app_state_req = 1;
 			break;
 
 		case RDY2PRECH:
@@ -128,8 +130,8 @@ void stateLoop(void) {
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
-			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
-			TeR.appReqRight.app_state_req = 1;
+			TeR.appReqLeft.app_state_req = 2; //Manda el Inverter a ready
+			TeR.appReqRight.app_state_req = 2;
 			break;
 
 		case PRECHARGING:
