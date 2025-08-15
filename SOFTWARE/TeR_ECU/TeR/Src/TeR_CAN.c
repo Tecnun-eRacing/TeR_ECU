@@ -285,7 +285,11 @@ void mainCanTx(void *argument) {
 				TxHeader.DLC = TER_VEL_BODY_LENGTH;
 				ter_vel_body_pack(TxData, &TeR.velbody, TxHeader.DLC);
 				break;
-
+			case 8:
+				TxHeader.StdId = HVBMS_BMS_RX_CTRL_1_FRAME_ID;
+				TxHeader.DLC = HVBMS_BMS_RX_CTRL_1_LENGTH;
+				hvbms_bms_rx_ctrl_1_pack(TxData,&TeR.BmsAppReq, TxHeader.DLC);
+				break;
 
 			default: //Esto evita tener que contar mensajes
 				mainIndex = 0; //cualquier otro valor retorna al ultimo mensaje

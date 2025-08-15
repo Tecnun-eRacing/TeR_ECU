@@ -106,9 +106,8 @@ void stateLoop(void) {
 		publishConfig(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
-			for(int i = 0; i < 5; i++){
-			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
-			}
+			TeR.BmsAppReq.app_state_req =
+					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
@@ -125,8 +124,8 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
-			//easyCommand(TER_COMMAND_CMD_RESET_BMS_CHOICE); //reset al bms
-			easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // request de apagado
+			TeR.BmsAppReq.app_state_req =
+					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
@@ -140,6 +139,8 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
+			TeR.BmsAppReq.app_state_req =
+					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
@@ -150,7 +151,7 @@ void stateLoop(void) {
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			request de intensidad 20%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 40;
+			refri.intensity = 20;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
@@ -176,6 +177,8 @@ void stateLoop(void) {
 			TeR.appReqRight.app_state_req = 2;
 			break;
 		case DRIVING:
+			TeR.BmsAppReq.app_state_req =
+					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; // mandamos a ready (en teoria es imposible, pero por si pasamos a driving sin pasar por prech)
 			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
@@ -198,7 +201,7 @@ void stateLoop(void) {
 /* -------------------------[PermaTask]---------------------------- */
 
 void permaTask() {
-	buttonHandler();
+	buttonHandler(); // todo TEMPORAL, tiene que ser la pantalla quien gestione los botones, no la ECU
 //BrakeLight
 	if (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) {
 		HAL_GPIO_WritePin(BL_GPIO_Port, BL_Pin, GPIO_PIN_SET);
