@@ -244,7 +244,7 @@ void permaTask() {
 					TeR.tempsRight.pwr_stg_temp_deg_c);
 
 	//Fill in Status Message
-	TeR.status.ams = TeR.BmsAppState.dio1_state; //1 OK
+	TeR.status.ams = TeR.BmsAppState.dio3_state; //1 OK
 	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app != 6); //Distinto de fault state
@@ -269,12 +269,13 @@ void buttonHandler() {
 		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
-		TeR.config.regen_enable =
-				(TeR.config.regen_enable
-						== TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ?
-						TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE :
-						TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
+		TeR.refri_config.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
+		TeR.refri_config.power =
+				(TeR.refri_config.power
+						== TER_REFRI_CONFIG_POWER_ON_CHOICE) ?
+								TER_REFRI_CONFIG_POWER_OFF_CHOICE :
+						TER_REFRI_CONFIG_POWER_ON_CHOICE;
+		sendConfig(TER_REFRI_CONFIG_FRAME_ID, &TeR.refri_config);
 	}
 
 }
