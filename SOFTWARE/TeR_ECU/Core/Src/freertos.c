@@ -70,42 +70,35 @@ const osThreadAttr_t canRxTask_attributes = {
 osThreadId_t mainCanTxTaskHandle;
 const osThreadAttr_t mainCanTxTask_attributes = {
   .name = "mainCanTxTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for invCanTxTask */
 osThreadId_t invCanTxTaskHandle;
 const osThreadAttr_t invCanTxTask_attributes = {
   .name = "invCanTxTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for systemCriticalTask */
 osThreadId_t systemCriticalTaskHandle;
 const osThreadAttr_t systemCriticalTask_attributes = {
   .name = "systemCriticalTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for inertialTask */
 osThreadId_t inertialTaskHandle;
 const osThreadAttr_t inertialTask_attributes = {
   .name = "inertialTask",
-  .stack_size = 512 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for ledsTask */
-osThreadId_t ledsTaskHandle;
-const osThreadAttr_t ledsTask_attributes = {
-  .name = "ledsTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for gpsTask */
 osThreadId_t gpsTaskHandle;
 const osThreadAttr_t gpsTask_attributes = {
   .name = "gpsTask",
-  .stack_size = 512 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for trqManagerTask */
@@ -121,13 +114,6 @@ const osThreadAttr_t stateMachineTask_attributes = {
   .name = "stateMachineTask",
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
-};
-/* Definitions for servosTask */
-osThreadId_t servosTaskHandle;
-const osThreadAttr_t servosTask_attributes = {
-  .name = "servosTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
@@ -151,11 +137,9 @@ extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void systemCritical(void *argument);
 extern void inertial(void *argument);
-extern void leds(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
-extern void servos(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -243,9 +227,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of inertialTask */
   inertialTaskHandle = osThreadNew(inertial, NULL, &inertialTask_attributes);
 
-  /* creation of ledsTask */
-  ledsTaskHandle = osThreadNew(leds, NULL, &ledsTask_attributes);
-
   /* creation of gpsTask */
   gpsTaskHandle = osThreadNew(gps, NULL, &gpsTask_attributes);
 
@@ -254,9 +235,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of stateMachineTask */
   stateMachineTaskHandle = osThreadNew(stateMachine, NULL, &stateMachineTask_attributes);
-
-  /* creation of servosTask */
-  servosTaskHandle = osThreadNew(servos, NULL, &servosTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

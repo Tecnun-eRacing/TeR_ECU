@@ -19,7 +19,7 @@
  *
  */
 
-const static int task_period = 2; // Task frequency 500hz
+const static int task_period = 10; // Task frequency 100hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -100,7 +100,7 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 
 //MANDATORY USE IN EACH DRIVINGMODE also controls the regen
 trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
-	if (regen_allowed(in)) {
+	if (0) {
 		switch (TeR.config.regen_mode) {
 		case TER_ECU_CONFIG_REGEN_MODE_BPPS_CHOICE: {
 			int8_t trq = map(TeR.bpps.bpps * TeR.config.regen_trq_slope, 0,

@@ -99,7 +99,6 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
 
 	//Bridge inverter output to our can
-	if(hcan == invCAN && rxHeader.StdId != TER_LV_VOLTAGES_FRAME_ID){//If message comes from the inverter can resend it through our can bus (A prueba de XAVI)
 		CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
 		uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
 		TxHeader.DLC = rxHeader.DLC;
@@ -107,7 +106,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 		TxHeader.IDE = CAN_ID_STD;
 		TxHeader.RTR = CAN_RTR_DATA;
 		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, msg.data, &mailbox); //Envía el mensaje procesado
-	}
+
 
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
@@ -303,11 +302,8 @@ void mainCanTx(void *argument) {
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
 	canMsg_t msg; // tipo de variable que almacena id, datos y DLC del mensaje recibido en la interrupcion
-	osStatus_t mutexStatus; // variable que almacena el estado de la obtencion del Mutex
 	for (;;) {
 		osMessageQueueGet(rxMsgHandle, &msg, 0U, osWaitForever); // la tarea se desbloquea cuando hay algo en cola
-		mutexStatus = osMutexAcquire(preventRaceHandle, 500); // esperamos MUTEX, si hay timeout, nos iremos al handle sin ejecutar decodificacion
-		if (mutexStatus == osOK) { // solo ejecutamos la recepcion si y solo si tenemos el mutex
 			logSCS(msg.id); //System Critical signal Timestamp, solo cuando podamos ejecutar recepcion
 			switch (msg.id) {
 			//Attend the command
@@ -436,10 +432,6 @@ void canRx(void *argument) {
 				break;
 
 			}
-			osMutexRelease(preventRaceHandle); // liberamos el mutex si y solo si lo teniamos anteriormente
-		} else {
-			printf("Couldnt Adquire the TeR structure Mutex");
-		}
 	}
 }
 

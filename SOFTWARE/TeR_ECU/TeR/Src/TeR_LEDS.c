@@ -12,38 +12,8 @@ extern osThreadId_t ledsTaskHandle;
 void leds(void *argument) {
 
 	for (;;) {
-		osThreadTerminate(ledsTaskHandle);
 		osDelay(0xFFFFFFFF);
-		/*
-		 for (uint8_t n = 0; n < N_LEDS; n++) {
-		 strip[n].r = 255;
-		 strip[n].g = 0;
-		 strip[n].b = 0;
-		 strip[n].a = 0.3;
-		 }
-		 sendStrip(strip, N_LEDS);
-		 osDelay(3000);
-		 for (uint8_t n = 0; n < N_LEDS; n++) {
-		 strip[n].r = 0;
-		 strip[n].g = 255;
-		 strip[n].b = 0;
-		 strip[n].a = 0.3;
-		 }
-		 sendStrip(strip, N_LEDS);
-		 osDelay(3000);
-		 for (uint8_t n = 0; n < N_LEDS; n++) {
-		 strip[n].r = 0;
-		 strip[n].g = 0;
-		 strip[n].b = 255;
-		 strip[n].a = 0.3;
-		 }
-		 sendStrip(strip, N_LEDS);
-		 osDelay(3000);*/
-
-		generateRainbow(strip, N_LEDS, offset); // Generate rainbow with current offset
-		sendStrip(strip, N_LEDS);              // Send the data to the LED strip
-		offset = (offset + 2) % 360;           // Move the gradient
-		osDelay(100);                           // Adjust for animation speed
+	    // Adjust for animation speed
 	}
 }
 

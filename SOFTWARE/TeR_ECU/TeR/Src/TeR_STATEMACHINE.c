@@ -114,7 +114,11 @@ void stateLoop(void) {
 			//	Apagamos refri ventis bombas
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 20;
+			refri.intensity = 0;
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
+			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Security

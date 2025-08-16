@@ -14,7 +14,7 @@ typedef struct{
 	uint8_t written;
 }eeprom_data_t;
 #define NB_ENTRIES 26 //numero de entradas de configuración que hay definidas
-#define RETRY_TIMEOUT 2
+#define RETRY_TIMEOUT 10
 #define ALL_CONFIGS 0xFFFFFFFF
 
 

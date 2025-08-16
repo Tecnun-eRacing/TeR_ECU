@@ -185,13 +185,14 @@ void configMAG() {
 
 	if (whoamI != LIS3MDL_ID)
 		while (1)
-			; /*manage here device not found */
+			osDelay(100); /*manage here device not found */
 
 	/* Restore default configuration */
 	lis3mdl_reset_set(&mag, PROPERTY_ENABLE);
 
 	do {
 		lis3mdl_reset_get(&mag, &rst);
+		osDelay(100);
 	} while (rst);
 
 	/* Enable Block Data Update */
