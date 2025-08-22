@@ -64,7 +64,7 @@ osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
   .name = "canRxTask",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh5,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for mainCanTxTask */
 osThreadId_t mainCanTxTaskHandle;

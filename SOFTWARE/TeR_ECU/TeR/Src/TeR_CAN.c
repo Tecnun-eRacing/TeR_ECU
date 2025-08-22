@@ -233,7 +233,7 @@ void mainCanTx(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
-		currentTick += 10; //añadimos 2 ticks a el valor actual del tick del kernel
+		currentTick += 4; //añadimos 4 ticks a el valor actual del tick del kernel
 		osDelayUntil(currentTick); // Cuando el kernel consiga llegar a el valor actual de currentTick, desbloqueará la tarea
 		if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // Hay un slot para nuestro mensaje
 			switch (mainIndex++) {

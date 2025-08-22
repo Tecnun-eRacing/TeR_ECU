@@ -46,10 +46,11 @@ static float_t mag_xyz[3];
 
 void inertial(void *argument) {
 	uint32_t lastTick = osKernelGetTickCount(); // Initialize reference time
-	configIMU();
-	configMAG();
+	//configIMU();
+	//configMAG();
 
 	for (;;) {
+		osDelay(0xFFFFFFFF);
 		lastTick += task_period;
 		osDelayUntil(lastTick);
 
