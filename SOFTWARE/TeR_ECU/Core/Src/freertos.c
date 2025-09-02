@@ -115,10 +115,27 @@ const osThreadAttr_t stateMachineTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for mainCanTxSchedTask */
+osThreadId_t mainCanTxSchedTaskHandle;
+const osThreadAttr_t mainCanTxSchedTask_attributes = {
+  .name = "mainCanTxSchedTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
+};
+/* Definitions for mainCanTxQueue */
+osMessageQueueId_t mainCanTxQueueHandle;
+const osMessageQueueAttr_t mainCanTxQueue_attributes = {
+  .name = "mainCanTxQueue"
+};
+/* Definitions for invCanTxQueue */
+osMessageQueueId_t invCanTxQueueHandle;
+const osMessageQueueAttr_t invCanTxQueue_attributes = {
+  .name = "invCanTxQueue"
 };
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
@@ -140,6 +157,7 @@ extern void inertial(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
+extern void mainCanTxSched(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -204,6 +222,12 @@ void MX_FREERTOS_Init(void) {
   /* creation of rxMsg */
   rxMsgHandle = osMessageQueueNew (128, sizeof(canMsg_t), &rxMsg_attributes);
 
+  /* creation of mainCanTxQueue */
+  mainCanTxQueueHandle = osMessageQueueNew (128, sizeof(canMsg_t), &mainCanTxQueue_attributes);
+
+  /* creation of invCanTxQueue */
+  invCanTxQueueHandle = osMessageQueueNew (128, sizeof(canMsg_t), &invCanTxQueue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -235,6 +259,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of stateMachineTask */
   stateMachineTaskHandle = osThreadNew(stateMachine, NULL, &stateMachineTask_attributes);
+
+  /* creation of mainCanTxSchedTask */
+  mainCanTxSchedTaskHandle = osThreadNew(mainCanTxSched, NULL, &mainCanTxSchedTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

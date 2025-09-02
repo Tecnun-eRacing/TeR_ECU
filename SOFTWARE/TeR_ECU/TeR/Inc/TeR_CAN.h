@@ -45,6 +45,16 @@ typedef struct  {
 	uint8_t data[8];
 }canMsg_t;
 
+typedef struct {
+    uint32_t stdId;                     // ID CAN
+    uint8_t dlc;                        // Longitud de datos
+    void (*packFunc)(uint8_t *buf, void *data, uint8_t dlc); // Funcion de empaquetado
+    void *data;                         // Puntero a los datos a empaquetar
+    uint32_t periodTicks;               // Periodo en ticks del scheduler
+    uint32_t nextRelease;               // Cuando liberamos la llamada
+} CanTxTask_t;
+
+#define NUM_TASKS (sizeof(canTxTasks) / sizeof(CanTxTask_t))
 
 
 struct TeR_t {
@@ -81,7 +91,6 @@ struct TeR_t {
 
 	struct inverter_emcu_setpoint_3_right_t trqReqRight; //Pedido comanda Torque
 	struct inverter_emcu_setpoint_3_left_t trqReqLeft; //Pedido comanda Torque
-
 	//Received
 	struct inverter_emcu_state_2_right_t appStateRight; //Estado inverter
 	struct inverter_emcu_state_2_left_t appStateLeft; //Estado inverter
@@ -123,7 +132,8 @@ extern CAN_HandleTypeDef *invCAN;
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan);
 void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan); //Configs filters
 void canRx(void *argument); //Decodes message according to DBC
-void mainCanTx(void *argument); //main can sender task
+void mainCanTx(void *argument); //main can queue management task
+void mainCanTxSched(void *argument); //main can gen task
 void invCanTx(void *argument); // inv can sender task
 void sendInvCAN(); //Función Callback de envío del CAN de inverters
 void sendMainCAN(); // //Función Callback de envío del CAN principal

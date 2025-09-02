@@ -42,7 +42,7 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 		default:
 			return 1;
 		}
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 50; i++) {
 			if (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
 					== HAL_OK) {
 				break;
@@ -136,7 +136,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			&& (config_id >= 0)) { // if user is requesting a specific config, and the config is valid, send specific config
 		ecu_config.entry = config_id;
 		ter_ecu_config_pack(TxData, &ecu_config, TxHeader.DLC);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 50; i++) {
 			if (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
 					== HAL_OK) {
 				break;
@@ -153,7 +153,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			}
 			ecu_config.entry = i;
 			ter_ecu_config_pack(TxData, &ecu_config, TxHeader.DLC);
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 50; i++) {
 				if (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
 						== HAL_OK) {
 					break;
