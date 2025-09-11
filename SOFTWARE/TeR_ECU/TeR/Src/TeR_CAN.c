@@ -76,6 +76,7 @@ static CanTxTask_t canTxTasks[] = {
 //FreeRTOS Dependencies
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
 extern osMessageQueueId_t mainCanTxQueueHandle;
+extern osMutexId_t g_can_scheduler_mutexHandle;
 
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
@@ -233,6 +234,128 @@ void invCanTx(void *argument) {
 		}
 	}
 }
+
+/* ---------------------------[MAIN CAN TX Scheduler, Asempere]-------------------------- */
+
+// Example usage:
+// // Every 100ms
+// uint8_t raw_msg[8] = {0};
+// ter_ter_status_pack(&raw_msg, &TeR.status, TER_TER_STATUS_LENGTH);
+// can_scheduler_insert_msg(raw_msg, TER_TER_STATUS_FRAME_ID, 100);
+// // Every 300ms
+// uint8_t other_raw_msg[8] = {0};
+// hvbms_bms_rx_ctrl_1_pack(&other_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
+// can_scheduler_insert_msg(other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300);
+
+#define CAN_SCHEDULER_HEAP_CAPACITY 20
+
+typedef struct {
+    uint8_t content[8];
+    uint32_t id;
+    uint32_t next_when;
+    uint32_t period;
+} CanMessage;
+
+typedef struct {
+    CanMessage data[CAN_SCHEDULER_HEAP_CAPACITY];
+    int size;
+} CanSchedulerHeap;
+
+static void swap_can_msg(CanMessage *a, CanMessage *b) {
+    CanMessage temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void can_scheduler_heapify_up(CanSchedulerHeap *heap, int index) {
+    while (index > 0) {
+        int parent = (index - 1) / 2;
+        if (heap->data[index].next_when < heap->data[parent].next_when) {
+            swap_can_msg(&heap->data[index], &heap->data[parent]);
+            index = parent;
+        } else {
+            break;
+        }
+    }
+}
+
+static void can_scheduler_heapify_down(CanSchedulerHeap *heap, int index) {
+    while (1) {
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        int smallest = index;
+
+        if (left < heap->size && heap->data[left].next_when < heap->data[smallest].next_when)
+            smallest = left;
+        if (right < heap->size && heap->data[right].next_when < heap->data[smallest].next_when)
+            smallest = right;
+
+        if (smallest != index) {
+            swap_can_msg(&heap->data[index], &heap->data[smallest]);
+            index = smallest;
+        } else {
+            break;
+        }
+    }
+}
+
+const CanMessage* can_scheduler_peek_next(const CanSchedulerHeap *heap) {
+    if (heap->size == 0) return NULL;
+    return &heap->data[0];
+}
+
+bool can_scheduler_get_next(CanSchedulerHeap *heap, CanMessage *out) {
+	osMutexAcquire(g_can_scheduler_mutexHandle, portMAX_DELAY);
+    if (heap->size == 0) return false;
+    *out = heap->data[0];
+    heap->size--;
+    if (heap->size > 0) {
+        heap->data[0] = heap->data[heap->size];
+        can_scheduler_heapify_down(heap, 0);
+    }
+    osMutexRelease(g_can_scheduler_mutexHandle);
+    return true;
+}
+
+CanSchedulerHeap g_can_scheduler_heap = {0};
+
+bool can_scheduler_insert_built_msg(CanMessage can_msg) {
+	osMutexAcquire(g_can_scheduler_mutexHandle, portMAX_DELAY);
+    if (g_can_scheduler_heap.size >= CAN_SCHEDULER_HEAP_CAPACITY) return false;
+    g_can_scheduler_heap.data[g_can_scheduler_heap.size] = can_msg;
+    can_scheduler_heapify_up(&g_can_scheduler_heap, g_can_scheduler_heap.size);
+    g_can_scheduler_heap.size++;
+    osMutexRelease(g_can_scheduler_mutexHandle);
+    return true;
+}
+
+bool can_scheduler_insert_msg(uint8_t msg[8], uint32_t id, uint32_t period_ms) {
+    CanMessage can_msg = {.id = id, .next_when=0, .period = period_ms};
+    memcpy(can_msg.content, msg, sizeof(can_msg.content));
+
+    return can_scheduler_insert_built_msg(can_msg);
+}
+
+void CanSchedulerTask(void* argument) {
+	CAN_TxHeaderTypeDef TxHeader = {.IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA};
+	uint32_t mailbox;
+
+	CanMessage next_msg;
+	while (true) {
+		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
+		osDelayUntil(next_msg.next_when);
+
+		next_msg.next_when = osKernelGetTickCount() + next_msg.period;
+		if (!can_scheduler_insert_built_msg(next_msg)) {
+			// Nunca va a pasar, pero se podria avisar aqui de que no se ha podido añadir el mensaje al scheduler
+			// (Se puede saber estaticamente y la probabilidad sigue siendo muy baja ademas)
+		}
+
+		TxHeader.StdId = next_msg.id;
+		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content, &mailbox);
+	}
+}
+
 /* ---------------------------[MAIN CAN Scheduler, Piero]-------------------------- */
 void mainCanTxSched(void *argument) {
 	//Buffers volatiles para el envío
@@ -242,6 +365,7 @@ void mainCanTxSched(void *argument) {
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 	for (;;) {
+		osDelay(10);
 		uint32_t currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el valor actual del tick del kernel
 		for (uint32_t i = 0; i < NUM_TASKS; i++) {
 			if (canTxTasks[i].nextRelease <= currentTick) {
@@ -251,7 +375,7 @@ void mainCanTxSched(void *argument) {
 				canTxTasks[i].packFunc(TxData, canTxTasks[i].data,
 						TxHeader.DLC);
 				//enviamos
-				HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
+				//HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
 				//seteamos tick de release del proxumo mensaje
 				canTxTasks[i].nextRelease = currentTick + canTxTasks[i].periodTicks;
 			}
@@ -400,4 +524,3 @@ void canRx(void *argument) {
 		}
 	}
 }
-

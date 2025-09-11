@@ -132,6 +132,7 @@ extern CAN_HandleTypeDef *invCAN;
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan);
 void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan); //Configs filters
 void canRx(void *argument); //Decodes message according to DBC
+void CanSchedulerTask(void *argument);
 void mainCanTx(void *argument); //main can queue management task
 void mainCanTxSched(void *argument); //main can gen task
 void invCanTx(void *argument); // inv can sender task

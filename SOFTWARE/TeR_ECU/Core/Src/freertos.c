@@ -122,6 +122,13 @@ const osThreadAttr_t mainCanTxSchedTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for CanSchedulerTaskN */
+osThreadId_t CanSchedulerTaskNHandle;
+const osThreadAttr_t CanSchedulerTaskN_attributes = {
+  .name = "CanSchedulerTaskN",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -142,6 +149,11 @@ osMutexId_t preventRaceHandle;
 const osMutexAttr_t preventRace_attributes = {
   .name = "preventRace"
 };
+/* Definitions for g_can_scheduler_mutex */
+osMutexId_t g_can_scheduler_mutexHandle;
+const osMutexAttr_t g_can_scheduler_mutex_attributes = {
+  .name = "g_can_scheduler_mutex"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -158,6 +170,7 @@ extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
 extern void mainCanTxSched(void *argument);
+extern void CanSchedulerTask(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -205,6 +218,9 @@ void MX_FREERTOS_Init(void) {
   /* Create the mutex(es) */
   /* creation of preventRace */
   preventRaceHandle = osMutexNew(&preventRace_attributes);
+
+  /* creation of g_can_scheduler_mutex */
+  g_can_scheduler_mutexHandle = osMutexNew(&g_can_scheduler_mutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
 	/* add mutexes, ... */
@@ -262,6 +278,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of mainCanTxSchedTask */
   mainCanTxSchedTaskHandle = osThreadNew(mainCanTxSched, NULL, &mainCanTxSchedTask_attributes);
+
+  /* creation of CanSchedulerTaskN */
+  CanSchedulerTaskNHandle = osThreadNew(CanSchedulerTask, NULL, &CanSchedulerTaskN_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
