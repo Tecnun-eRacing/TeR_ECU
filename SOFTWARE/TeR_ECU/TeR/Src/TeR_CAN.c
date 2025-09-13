@@ -241,24 +241,27 @@ void invCanTx(void *argument) {
 // // Every 100ms
 // uint8_t raw_msg[8] = {0};
 // ter_ter_status_pack(&raw_msg, &TeR.status, TER_TER_STATUS_LENGTH);
-// can_scheduler_insert_msg(&raw_msg, TER_TER_STATUS_FRAME_ID, 100);
+// can_scheduler_insert_msg(&raw_msg, TER_TER_STATUS_FRAME_ID, 100, NULL);
 // // Every 300ms
 // uint8_t other_raw_msg[8] = {0};
 // hvbms_bms_rx_ctrl_1_pack(&other_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_msg(&other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300);
+// can_scheduler_insert_msg(&other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300, NULL);
 // // Only once
 // uint8_t once_raw_msg[8] = {0};
 // hvbms_bms_rx_ctrl_1_pack(&once_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID);
+// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, NULL);
 
 #define CAN_SCHEDULER_HEAP_CAPACITY 20
 
-typedef struct {
+typedef struct CanMessage CanMessage;
+
+struct CanMessage {
     uint8_t content[8];
     uint32_t id;
     uint32_t next_when;
     uint32_t period;
-} CanMessage;
+    void (*callback)(CanMessage*);
+};
 
 typedef struct {
     CanMessage data[CAN_SCHEDULER_HEAP_CAPACITY];
@@ -333,15 +336,15 @@ bool can_scheduler_insert_built_msg(CanMessage can_msg) {
     return true;
 }
 
-inline bool can_scheduler_insert_msg(uint8_t* msg, uint32_t id, uint32_t period_ms) {
-    CanMessage can_msg = {.id = id, .next_when=0, .period = period_ms};
+inline bool can_scheduler_insert_msg(uint8_t* msg, uint32_t id, uint32_t period_ms, void (*callback)(CanMessage*)) {
+    CanMessage can_msg = {.id = id, .next_when=0, .period = period_ms, .callback = callback};
     memcpy(can_msg.content, msg, sizeof(can_msg.content));
 
     return can_scheduler_insert_built_msg(can_msg);
 }
 
-inline bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint32_t id) {
-    return can_scheduler_insert_msg(msg, id, -1);
+inline bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint32_t id, void (*callback)(CanMessage*)) {
+    return can_scheduler_insert_msg(msg, id, -1, callback);
 }
 
 void CanSchedulerTask(void* argument) {
@@ -351,6 +354,8 @@ void CanSchedulerTask(void* argument) {
 	CanMessage next_msg;
 	while (true) {
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
+
+		if (next_msg.callback) next_msg.callback(&next_msg);
 		osDelayUntil(next_msg.next_when);
 
 		if (next_msg.period != -1) {
