@@ -241,11 +241,15 @@ void invCanTx(void *argument) {
 // // Every 100ms
 // uint8_t raw_msg[8] = {0};
 // ter_ter_status_pack(&raw_msg, &TeR.status, TER_TER_STATUS_LENGTH);
-// can_scheduler_insert_msg(raw_msg, TER_TER_STATUS_FRAME_ID, 100);
+// can_scheduler_insert_msg(&raw_msg, TER_TER_STATUS_FRAME_ID, 100);
 // // Every 300ms
 // uint8_t other_raw_msg[8] = {0};
 // hvbms_bms_rx_ctrl_1_pack(&other_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_msg(other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300);
+// can_scheduler_insert_msg(&other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300);
+// // Only once
+// uint8_t once_raw_msg[8] = {0};
+// hvbms_bms_rx_ctrl_1_pack(&once_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
+// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID);
 
 #define CAN_SCHEDULER_HEAP_CAPACITY 20
 
@@ -329,11 +333,15 @@ bool can_scheduler_insert_built_msg(CanMessage can_msg) {
     return true;
 }
 
-bool can_scheduler_insert_msg(uint8_t msg[8], uint32_t id, uint32_t period_ms) {
+inline bool can_scheduler_insert_msg(uint8_t* msg, uint32_t id, uint32_t period_ms) {
     CanMessage can_msg = {.id = id, .next_when=0, .period = period_ms};
     memcpy(can_msg.content, msg, sizeof(can_msg.content));
 
     return can_scheduler_insert_built_msg(can_msg);
+}
+
+inline bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint32_t id) {
+    return can_scheduler_insert_msg(msg, id, -1);
 }
 
 void CanSchedulerTask(void* argument) {
@@ -345,10 +353,12 @@ void CanSchedulerTask(void* argument) {
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
 		osDelayUntil(next_msg.next_when);
 
-		next_msg.next_when = osKernelGetTickCount() + next_msg.period;
-		if (!can_scheduler_insert_built_msg(next_msg)) {
-			// Nunca va a pasar, pero se podria avisar aqui de que no se ha podido añadir el mensaje al scheduler
-			// (Se puede saber estaticamente y la probabilidad sigue siendo muy baja ademas)
+		if (next_msg.period != -1) {
+			next_msg.next_when = osKernelGetTickCount() + next_msg.period;
+			if (!can_scheduler_insert_built_msg(next_msg)) {
+				// Nunca va a pasar, pero se podria avisar aqui de que no se ha podido añadir el mensaje al scheduler
+				// (Se puede saber estaticamente y la probabilidad sigue siendo muy baja ademas)
+			}
 		}
 
 		TxHeader.StdId = next_msg.id;
