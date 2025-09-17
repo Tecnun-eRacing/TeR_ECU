@@ -249,7 +249,7 @@ void invCanTx(void *argument) {
 // // Only once
 // uint8_t once_raw_msg[8] = {0};
 // hvbms_bms_rx_ctrl_1_pack(&once_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, NULL);
+// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 0, NULL);
 
 #define CAN_SCHEDULER_HEAP_CAPACITY 20
 
@@ -257,6 +257,7 @@ typedef struct CanMessage CanMessage;
 
 struct CanMessage {
     uint8_t content[8];
+    uint8_t len;
     uint32_t id;
     uint32_t next_when;
     uint32_t period;
@@ -336,15 +337,22 @@ bool can_scheduler_insert_built_msg(CanMessage can_msg) {
     return true;
 }
 
-inline bool can_scheduler_insert_msg(uint8_t* msg, uint32_t id, uint32_t period_ms, void (*callback)(CanMessage*)) {
-    CanMessage can_msg = {.id = id, .next_when=0, .period = period_ms, .callback = callback};
+bool can_scheduler_insert_msg(uint8_t* msg, uint8_t len, uint32_t id, uint32_t period_ms, void (*callback)(CanMessage*)) {
+    CanMessage can_msg = {.len = len, .id = id, .next_when=0, .period = period_ms, .callback = callback};
     memcpy(can_msg.content, msg, sizeof(can_msg.content));
 
     return can_scheduler_insert_built_msg(can_msg);
 }
 
-inline bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint32_t id, void (*callback)(CanMessage*)) {
-    return can_scheduler_insert_msg(msg, id, -1, callback);
+bool can_scheduler_insert_msg_with_timeout(uint8_t* msg, uint8_t len, uint32_t id, uint32_t period_ms, int32_t timeout, void (*callback)(CanMessage*)) {
+    CanMessage can_msg = {.len = len, .id = id, .next_when=timeout, .period = period_ms, .callback = callback};
+    memcpy(can_msg.content, msg, sizeof(can_msg.content));
+
+    return can_scheduler_insert_built_msg(can_msg);
+}
+
+bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint8_t len, uint32_t id, uint32_t timeout, void (*callback)(CanMessage*)) {
+    return can_scheduler_insert_msg_with_timeout(msg, len, id, -1, timeout + osKernelGetTickCount(), callback);
 }
 
 void CanSchedulerTask(void* argument) {
@@ -367,42 +375,12 @@ void CanSchedulerTask(void* argument) {
 		}
 
 		TxHeader.StdId = next_msg.id;
+		TxHeader.DLC = next_msg.len;
 		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content, &mailbox);
 	}
 }
 
 /* ---------------------------[MAIN CAN Scheduler, Piero]-------------------------- */
-void mainCanTxSched(void *argument) {
-	//Buffers volatiles para el envío
-	uint8_t TxData[8]; //Buffer para datos de envio
-	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
-	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.RTR = CAN_RTR_DATA;
-	for (;;) {
-		osDelay(10);
-		uint32_t currentTick = osKernelGetTickCount(); // sincronizamos nuestra variable de tick con el valor actual del tick del kernel
-		for (uint32_t i = 0; i < NUM_TASKS; i++) {
-			if (canTxTasks[i].nextRelease <= currentTick) {
-				TxHeader.StdId = canTxTasks[i].stdId;
-				TxHeader.DLC = canTxTasks[i].dlc;
-				//funcion de empaquetado
-				canTxTasks[i].packFunc(TxData, canTxTasks[i].data,
-						TxHeader.DLC);
-				//enviamos
-				//HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox);
-				//seteamos tick de release del proxumo mensaje
-				canTxTasks[i].nextRelease = currentTick + canTxTasks[i].periodTicks;
-			}
-		}
-	}
-}
-
-void mainCanTx(void *argument){
-	for(;;){
-		osDelay(100);
-	}
-}
 
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {

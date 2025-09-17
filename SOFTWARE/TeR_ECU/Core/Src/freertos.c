@@ -66,13 +66,6 @@ const osThreadAttr_t canRxTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for mainCanTxTask */
-osThreadId_t mainCanTxTaskHandle;
-const osThreadAttr_t mainCanTxTask_attributes = {
-  .name = "mainCanTxTask",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
-};
 /* Definitions for invCanTxTask */
 osThreadId_t invCanTxTaskHandle;
 const osThreadAttr_t invCanTxTask_attributes = {
@@ -115,13 +108,6 @@ const osThreadAttr_t stateMachineTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for mainCanTxSchedTask */
-osThreadId_t mainCanTxSchedTaskHandle;
-const osThreadAttr_t mainCanTxSchedTask_attributes = {
-  .name = "mainCanTxSchedTask",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for CanSchedulerTaskN */
 osThreadId_t CanSchedulerTaskNHandle;
 const osThreadAttr_t CanSchedulerTaskN_attributes = {
@@ -162,14 +148,12 @@ const osMutexAttr_t g_can_scheduler_mutex_attributes = {
 
 void osRunning(void *argument);
 extern void canRx(void *argument);
-extern void mainCanTx(void *argument);
 extern void invCanTx(void *argument);
 extern void systemCritical(void *argument);
 extern void inertial(void *argument);
 extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
-extern void mainCanTxSched(void *argument);
 extern void CanSchedulerTask(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
@@ -255,9 +239,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of canRxTask */
   canRxTaskHandle = osThreadNew(canRx, NULL, &canRxTask_attributes);
 
-  /* creation of mainCanTxTask */
-  mainCanTxTaskHandle = osThreadNew(mainCanTx, NULL, &mainCanTxTask_attributes);
-
   /* creation of invCanTxTask */
   invCanTxTaskHandle = osThreadNew(invCanTx, NULL, &invCanTxTask_attributes);
 
@@ -275,9 +256,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of stateMachineTask */
   stateMachineTaskHandle = osThreadNew(stateMachine, NULL, &stateMachineTask_attributes);
-
-  /* creation of mainCanTxSchedTask */
-  mainCanTxSchedTaskHandle = osThreadNew(mainCanTxSched, NULL, &mainCanTxSchedTask_attributes);
 
   /* creation of CanSchedulerTaskN */
   CanSchedulerTaskNHandle = osThreadNew(CanSchedulerTask, NULL, &CanSchedulerTaskN_attributes);
