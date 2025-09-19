@@ -268,13 +268,39 @@ typedef struct {
     CanMessage data[CAN_SCHEDULER_HEAP_CAPACITY];
     int size;
 } CanSchedulerHeap;
+void ter_status_callback(CanMessage *msg){
+	ter_ter_status_pack(msg->content,&TeR.status , msg->len);
+}
 
+void ter_wheel_info_callback(CanMessage *msg){
+	ter_wheel_info_pack(msg->content, &TeR.wheelInfo, msg->len);
+}
+void ter_inverter_info_callback(CanMessage *msg){
+	ter_inverter_info_pack(msg->content, &TeR.invInfo, msg->len);
+}
+void ter_ang_rate_callback(CanMessage *msg){
+	ter_ang_rate_pack(msg->content, &TeR.angRate, msg->len);
+}
+void ter_accel_callback(CanMessage *msg){
+	ter_accel_pack(msg->content,&TeR.accel,msg->len);
+}
+void ter_gps_lat_callback(CanMessage *msg){
+	ter_gps_lat_long_pack(msg->content, &TeR.latlong, msg->len);
+}
+void ter_ypr_callback(CanMessage *msg){
+	ter_ypr_pack(msg->content, &TeR.ypr, msg->len);
+}
+void ter_vel_body_callback(CanMessage *msg){
+	ter_vel_body_pack(msg->content, &TeR.velbody, msg->len);
+}
+void hvbms_bms_rx_ctrl_1_callback(CanMessage *msg){
+	hvbms_bms_rx_ctrl_1_pack(msg->content, &TeR.BmsAppReq, msg->len);
+}
 static void swap_can_msg(CanMessage *a, CanMessage *b) {
     CanMessage temp = *a;
     *a = *b;
     *b = temp;
 }
-
 static void can_scheduler_heapify_up(CanSchedulerHeap *heap, int index) {
     while (index > 0) {
         int parent = (index - 1) / 2;
@@ -358,8 +384,35 @@ bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint8_t len, uint32_t i
 void CanSchedulerTask(void* argument) {
 	CAN_TxHeaderTypeDef TxHeader = {.IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA};
 	uint32_t mailbox;
-
 	CanMessage next_msg;
+	// Periodic Messages insertion to queue
+	uint8_t TxData[8];
+	ter_ter_status_pack(TxData,&TeR.status , TER_TER_STATUS_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_TER_STATUS_LENGTH, TER_TER_STATUS_FRAME_ID, 100,ter_status_callback);
+
+	ter_wheel_info_pack(TxData, &TeR.wheelInfo, TER_WHEEL_INFO_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_WHEEL_INFO_LENGTH, TER_WHEEL_INFO_FRAME_ID, 10,ter_wheel_info_callback);
+
+	ter_inverter_info_pack(TxData, &TeR.invInfo, TER_INVERTER_INFO_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_INVERTER_INFO_LENGTH, TER_INVERTER_INFO_FRAME_ID, 10,ter_inverter_info_callback);
+
+	ter_ang_rate_pack(TxData, &TeR.angRate, TER_ANG_RATE_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_ANG_RATE_LENGTH, TER_ANG_RATE_FRAME_ID, 5,ter_ang_rate_callback);
+
+	ter_accel_pack(TxData,&TeR.accel,TER_ACCEL_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_ACCEL_LENGTH, TER_ACCEL_FRAME_ID, 5,ter_accel_callback);
+
+	ter_gps_lat_long_pack(TxData, &TeR.latlong, TER_GPS_LAT_LONG_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_GPS_LAT_LONG_LENGTH, TER_GPS_LAT_LONG_FRAME_ID, 10,ter_gps_lat_callback);
+
+	ter_ypr_pack(TxData, &TeR.ypr, TER_YPR_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_YPR_LENGTH, TER_YPR_FRAME_ID, 5,ter_ypr_callback);
+
+	ter_vel_body_pack(TxData, &TeR.velbody, TER_VEL_BODY_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_VEL_BODY_LENGTH, TER_VEL_BODY_FRAME_ID, 5,ter_vel_body_callback);
+
+	hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
+	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10,hvbms_bms_rx_ctrl_1_callback);
 	while (true) {
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
 
