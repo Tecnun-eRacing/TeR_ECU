@@ -61,22 +61,10 @@ uint8_t mainIndex;
 /* -------------------------------------------------------------------------- */
 struct TeR_t TeR;
 
-static CanTxTask_t canTxTasks[] = {
-    {TER_TER_STATUS_FRAME_ID, TER_TER_STATUS_LENGTH, (void*)ter_ter_status_pack, &TeR.status, 4,0},
-    {TER_WHEEL_INFO_FRAME_ID, TER_WHEEL_INFO_LENGTH, (void*)ter_wheel_info_pack, &TeR.wheelInfo, 8,0},
-    {TER_INVERTER_INFO_FRAME_ID, TER_INVERTER_INFO_LENGTH, (void*)ter_inverter_info_pack, &TeR.invInfo, 20,0},
-    {TER_ANG_RATE_FRAME_ID, TER_ANG_RATE_LENGTH, (void*)ter_ang_rate_pack, &TeR.angRate, 20,0},
-    {TER_ACCEL_FRAME_ID, TER_ACCEL_LENGTH, (void*)ter_accel_pack, &TeR.accel, 20,0},
-    {TER_GPS_LAT_LONG_FRAME_ID, TER_GPS_LAT_LONG_LENGTH, (void*)ter_gps_lat_long_pack, &TeR.latlong, 100,0},
-    {TER_YPR_FRAME_ID, TER_YPR_LENGTH, (void*)ter_ypr_pack, &TeR.ypr, 20,0},
-    {TER_VEL_BODY_FRAME_ID, TER_VEL_BODY_LENGTH, (void*)ter_vel_body_pack, &TeR.velbody, 20,0},
-    {HVBMS_BMS_RX_CTRL_1_FRAME_ID, HVBMS_BMS_RX_CTRL_1_LENGTH, (void*)hvbms_bms_rx_ctrl_1_pack, &TeR.BmsAppReq, 10,0},
-};
-
 //FreeRTOS Dependencies
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
 extern osMessageQueueId_t mainCanTxQueueHandle;
-extern osMutexId_t g_can_scheduler_mutexHandle;
+
 
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
@@ -235,156 +223,12 @@ void invCanTx(void *argument) {
 	}
 }
 
-/* ---------------------------[MAIN CAN TX Scheduler, Asempere]-------------------------- */
 
-// Example usage:
-// // Every 100ms
-// uint8_t raw_msg[8] = {0};
-// ter_ter_status_pack(&raw_msg, &TeR.status, TER_TER_STATUS_LENGTH);
-// can_scheduler_insert_msg(&raw_msg, TER_TER_STATUS_FRAME_ID, 100, NULL);
-// // Every 300ms
-// uint8_t other_raw_msg[8] = {0};
-// hvbms_bms_rx_ctrl_1_pack(&other_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_msg(&other_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 300, NULL);
-// // Only once
-// uint8_t once_raw_msg[8] = {0};
-// hvbms_bms_rx_ctrl_1_pack(&once_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-// can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 0, NULL);
-
-#define CAN_SCHEDULER_HEAP_CAPACITY 20
-
-typedef struct CanMessage CanMessage;
-
-struct CanMessage {
-    uint8_t content[8];
-    uint8_t len;
-    uint32_t id;
-    uint32_t next_when;
-    uint32_t period;
-    void (*callback)(CanMessage*);
-};
-
-typedef struct {
-    CanMessage data[CAN_SCHEDULER_HEAP_CAPACITY];
-    int size;
-} CanSchedulerHeap;
-void ter_status_callback(CanMessage *msg){
-	ter_ter_status_pack(msg->content,&TeR.status , msg->len);
-}
-
-void ter_wheel_info_callback(CanMessage *msg){
-	ter_wheel_info_pack(msg->content, &TeR.wheelInfo, msg->len);
-}
-void ter_inverter_info_callback(CanMessage *msg){
-	ter_inverter_info_pack(msg->content, &TeR.invInfo, msg->len);
-}
-void ter_ang_rate_callback(CanMessage *msg){
-	ter_ang_rate_pack(msg->content, &TeR.angRate, msg->len);
-}
-void ter_accel_callback(CanMessage *msg){
-	ter_accel_pack(msg->content,&TeR.accel,msg->len);
-}
-void ter_gps_lat_callback(CanMessage *msg){
-	ter_gps_lat_long_pack(msg->content, &TeR.latlong, msg->len);
-}
-void ter_ypr_callback(CanMessage *msg){
-	ter_ypr_pack(msg->content, &TeR.ypr, msg->len);
-}
-void ter_vel_body_callback(CanMessage *msg){
-	ter_vel_body_pack(msg->content, &TeR.velbody, msg->len);
-}
-void hvbms_bms_rx_ctrl_1_callback(CanMessage *msg){
-	hvbms_bms_rx_ctrl_1_pack(msg->content, &TeR.BmsAppReq, msg->len);
-}
-static void swap_can_msg(CanMessage *a, CanMessage *b) {
-    CanMessage temp = *a;
-    *a = *b;
-    *b = temp;
-}
-static void can_scheduler_heapify_up(CanSchedulerHeap *heap, int index) {
-    while (index > 0) {
-        int parent = (index - 1) / 2;
-        if (heap->data[index].next_when < heap->data[parent].next_when) {
-            swap_can_msg(&heap->data[index], &heap->data[parent]);
-            index = parent;
-        } else {
-            break;
-        }
-    }
-}
-
-static void can_scheduler_heapify_down(CanSchedulerHeap *heap, int index) {
-    while (1) {
-        int left = 2 * index + 1;
-        int right = 2 * index + 2;
-        int smallest = index;
-
-        if (left < heap->size && heap->data[left].next_when < heap->data[smallest].next_when)
-            smallest = left;
-        if (right < heap->size && heap->data[right].next_when < heap->data[smallest].next_when)
-            smallest = right;
-
-        if (smallest != index) {
-            swap_can_msg(&heap->data[index], &heap->data[smallest]);
-            index = smallest;
-        } else {
-            break;
-        }
-    }
-}
-
-const CanMessage* can_scheduler_peek_next(const CanSchedulerHeap *heap) {
-    if (heap->size == 0) return NULL;
-    return &heap->data[0];
-}
-
-bool can_scheduler_get_next(CanSchedulerHeap *heap, CanMessage *out) {
-	osMutexAcquire(g_can_scheduler_mutexHandle, portMAX_DELAY);
-    if (heap->size == 0) return false;
-    *out = heap->data[0];
-    heap->size--;
-    if (heap->size > 0) {
-        heap->data[0] = heap->data[heap->size];
-        can_scheduler_heapify_down(heap, 0);
-    }
-    osMutexRelease(g_can_scheduler_mutexHandle);
-    return true;
-}
-
-CanSchedulerHeap g_can_scheduler_heap = {0};
-
-bool can_scheduler_insert_built_msg(CanMessage can_msg) {
-	osMutexAcquire(g_can_scheduler_mutexHandle, portMAX_DELAY);
-    if (g_can_scheduler_heap.size >= CAN_SCHEDULER_HEAP_CAPACITY) return false;
-    g_can_scheduler_heap.data[g_can_scheduler_heap.size] = can_msg;
-    can_scheduler_heapify_up(&g_can_scheduler_heap, g_can_scheduler_heap.size);
-    g_can_scheduler_heap.size++;
-    osMutexRelease(g_can_scheduler_mutexHandle);
-    return true;
-}
-
-bool can_scheduler_insert_msg(uint8_t* msg, uint8_t len, uint32_t id, uint32_t period_ms, void (*callback)(CanMessage*)) {
-    CanMessage can_msg = {.len = len, .id = id, .next_when=0, .period = period_ms, .callback = callback};
-    memcpy(can_msg.content, msg, sizeof(can_msg.content));
-
-    return can_scheduler_insert_built_msg(can_msg);
-}
-
-bool can_scheduler_insert_msg_with_timeout(uint8_t* msg, uint8_t len, uint32_t id, uint32_t period_ms, int32_t timeout, void (*callback)(CanMessage*)) {
-    CanMessage can_msg = {.len = len, .id = id, .next_when=timeout, .period = period_ms, .callback = callback};
-    memcpy(can_msg.content, msg, sizeof(can_msg.content));
-
-    return can_scheduler_insert_built_msg(can_msg);
-}
-
-bool can_scheduler_insert_non_periodic_msg(uint8_t* msg, uint8_t len, uint32_t id, uint32_t timeout, void (*callback)(CanMessage*)) {
-    return can_scheduler_insert_msg_with_timeout(msg, len, id, -1, timeout + osKernelGetTickCount(), callback);
-}
 
 void CanSchedulerTask(void* argument) {
 	CAN_TxHeaderTypeDef TxHeader = {.IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA};
 	uint32_t mailbox;
-	CanMessage next_msg;
+	CanMessage_t next_msg;
 	// Periodic Messages insertion to queue
 	uint8_t TxData[8];
 	ter_ter_status_pack(TxData,&TeR.status , TER_TER_STATUS_LENGTH);
@@ -416,11 +260,11 @@ void CanSchedulerTask(void* argument) {
 	while (true) {
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
 
-		if (next_msg.callback) next_msg.callback(&next_msg);
+		if (next_msg.callback) next_msg.callback(&next_msg); // si el callback es 0 (no se ha definido) no se llama el callback
 		osDelayUntil(next_msg.next_when);
 
 		if (next_msg.period != -1) {
-			next_msg.next_when = osKernelGetTickCount() + next_msg.period;
+			next_msg.next_when += next_msg.period;
 			if (!can_scheduler_insert_built_msg(next_msg)) {
 				// Nunca va a pasar, pero se podria avisar aqui de que no se ha podido añadir el mensaje al scheduler
 				// (Se puede saber estaticamente y la probabilidad sigue siendo muy baja ademas)
@@ -429,7 +273,9 @@ void CanSchedulerTask(void* argument) {
 
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
-		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content, &mailbox);
+		while(HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content, &mailbox)!=HAL_OK){
+			osThreadYield();
+		}
 	}
 }
 

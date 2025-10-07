@@ -34,8 +34,9 @@
 //UTILIDADES
 #include "TeR_SCS.h" //para el logging de scs
 #include "TeR_COMMAND.h"//Para las llamadas de comando
-#include "cmsis_os.h" //funciones del Kernel
+#include "cmsis_os2.h" //funciones del Kernel
 #include "TeR_CONFIG.h"
+#include "can_sched.h"
 /* --------------------- Estructuras de datos del coche ----------------- */
 //TER.dbc
 
@@ -44,18 +45,6 @@ typedef struct  {
 	uint8_t DLC;
 	uint8_t data[8];
 }canMsg_t;
-
-typedef struct {
-    uint32_t stdId;                     // ID CAN
-    uint8_t dlc;                        // Longitud de datos
-    void (*packFunc)(uint8_t *buf, void *data, uint8_t dlc); // Funcion de empaquetado
-    void *data;                         // Puntero a los datos a empaquetar
-    uint32_t periodTicks;               // Periodo en ticks del scheduler
-    uint32_t nextRelease;               // Cuando liberamos la llamada
-} CanTxTask_t;
-
-#define NUM_TASKS (sizeof(canTxTasks) / sizeof(CanTxTask_t))
-
 
 struct TeR_t {
 //Propias

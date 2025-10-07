@@ -10,11 +10,8 @@
 uint8_t command(struct ter_command_t command) {
 	//Buffers volatiles para el envio de lo que toque
 	uint8_t TxData[8]; //Buffer para datos de envio
-	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
-	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.RTR = CAN_RTR_DATA;
-	//Preinicializamos la respuesta
+	uint32_t size = 8;
+	uint32_t id = 0;
 	struct ter_response_t response;
 	response.cmd = command.cmd;
 	response.code = TER_RESPONSE_CODE_OK_CHOICE; //Lo pone a ok si nadie dice lo contrario
@@ -63,11 +60,10 @@ uint8_t command(struct ter_command_t command) {
 		/*Sends messages not implemented in this board to the main can if the source is internal*/
 	default: //Handles commands not implemented here
 		if (!HAL_NVIC_GetActive(CAN2_RX0_IRQn)) { //Checks if command is being attended from an external source (CAN2)
-			TxHeader.StdId = TER_COMMAND_FRAME_ID;
-			TxHeader.DLC = TER_COMMAND_LENGTH;
-			ter_command_pack(TxData, &command, TER_COMMAND_LENGTH);
-			while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox)
-					!= HAL_OK) {
+			id = TER_COMMAND_FRAME_ID;
+			size = TER_COMMAND_LENGTH;
+			ter_command_pack(TxData, &command, size);
+			while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 10)) {
 				osDelay(10);
 			};
 			return 0; //Exit function, no result
@@ -76,10 +72,13 @@ uint8_t command(struct ter_command_t command) {
 
 	}
 	/*Devuelve un mensaje de respuesta*/
-	TxHeader.StdId = TER_RESPONSE_FRAME_ID;
-	TxHeader.DLC = TER_RESPONSE_LENGTH;
-	ter_response_pack(TxData, &response, TxHeader.DLC);
-	HAL_CAN_AddTxMessage(mainCAN, &TxHeader, TxData, &mailbox); //Envía el resultado de la ejecución
+	id = TER_RESPONSE_FRAME_ID;
+	size = TER_RESPONSE_LENGTH;
+	ter_response_pack(TxData, &response, size);
+	while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 10)) {
+		osDelay(10);
+	};
+
 	return 1;
 }
 

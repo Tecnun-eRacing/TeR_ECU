@@ -112,7 +112,7 @@ const osThreadAttr_t stateMachineTask_attributes = {
 osThreadId_t CanSchedulerTaskNHandle;
 const osThreadAttr_t CanSchedulerTaskN_attributes = {
   .name = "CanSchedulerTaskN",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for rxMsg */
