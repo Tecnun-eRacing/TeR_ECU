@@ -11,7 +11,7 @@
 pid_t *tvPid; //Estructura del PID
 float dTorque = 0;
 float iMax = 1000; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
-float looptime = 2; //ms of looptime (same as TeR_TRQMANAGER task
+float looptime = 10; //ms of looptime (same as TeR_TRQMANAGER task
 
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
 float yawRef(float steer, float vx) { //STEER ENTRA EN GRADOS, PERO EN LA FORMULA DE YAWRATE ENTRA EN RADIANES

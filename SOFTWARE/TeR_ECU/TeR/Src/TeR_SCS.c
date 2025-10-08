@@ -21,13 +21,7 @@ uint8_t prevConfig;
 
 //FreeRTOS TASK
 void systemCritical(void *argument) {
-	prevConfig = TeR.config.scs_enable;
-	if (TeR.config.scs_enable == TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE) { // tomamos acciones pertinentes
-		startSCS();
-	} else {
-		stopSCS();
-	}
-
+	prevConfig = TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE;
 	for (;;) {
 		osDelay(50);
 		if (prevConfig != TeR.config.scs_enable) { // Ha cambiado la configuracion de las SCS?
