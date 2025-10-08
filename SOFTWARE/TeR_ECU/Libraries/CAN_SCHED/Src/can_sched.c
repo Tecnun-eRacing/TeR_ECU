@@ -13,6 +13,9 @@
 // uint8_t once_raw_msg[8] = {0};
 // hvbms_bms_rx_ctrl_1_pack(&once_raw_msg, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
 // can_scheduler_insert_non_periodic_msg(&once_raw_msg, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 0, NULL);
+
+// Como crear un callback? dale el nombre de la funcion pack, pero en vez de pack pon callback (vamos a tener este standard que sino
+//es un caos, luego haz el pack y listo, recuerda añadirlo tambien en el .h
 #include "can_sched.h"
 extern osMutexId_t g_can_scheduler_mutexHandle;
 CanSchedulerHeap g_can_scheduler_heap = {0};

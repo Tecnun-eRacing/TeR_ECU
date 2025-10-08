@@ -7,19 +7,13 @@
 #include <TeR_INERTIAL.h>
 #include "TeR_CAN.h"
 
-
 //Sensor Interface Wrappers
 static int32_t imu_write(void *handle, uint8_t reg, const uint8_t *bufp,
 		uint16_t len);
-static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len);
+static int32_t imu_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len);
 static int32_t mag_write(void *handle, uint8_t reg, const uint8_t *bufp,
 		uint16_t len);
-static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp,
-		uint16_t len);
-
-
-
+static int32_t mag_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len);
 
 //FreeRtos task
 static const int task_period = 10;
@@ -37,6 +31,7 @@ static int16_t acc_raw[3];
 static int16_t gy_raw[3];
 static float_t acc_xyz[3]; //In m/s
 static float_t a_rate_rpy[3]; //In deg/s
+float a_rate_offset[3];
 
 /* MAG variables ---------------------------------------------------------*/
 static int16_t mag_raw[3];
@@ -46,11 +41,10 @@ static float_t mag_xyz[3];
 
 void inertial(void *argument) {
 	uint32_t lastTick = osKernelGetTickCount(); // Initialize reference time
-	//configIMU();
-	//configMAG();
+	configIMU();
+	configMAG();
 
 	for (;;) {
-		osDelay(0xFFFFFFFF);
 		lastTick += task_period;
 		osDelayUntil(lastTick);
 
@@ -74,12 +68,12 @@ void inertial(void *argument) {
 			/* Read angular rate field data */
 			memset(gy_raw, 0x00, 3 * sizeof(int16_t));
 			asm330lhh_angular_rate_raw_get(&imu, gy_raw);
-			a_rate_rpy[0] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[0])
-					/ 1000.0;
-			a_rate_rpy[1] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[1])
-					/ 1000.0;
-			a_rate_rpy[2] = asm330lhh_from_fs2000dps_to_mdps(gy_raw[2])
-					/ 1000.0;
+			a_rate_rpy[0] = asm330lhh_from_fs500dps_to_mdps(gy_raw[0]) / 1000.0
+					- a_rate_offset[0];
+			a_rate_rpy[1] = asm330lhh_from_fs500dps_to_mdps(gy_raw[1]) / 1000.0
+					- a_rate_offset[1];
+			a_rate_rpy[2] = asm330lhh_from_fs500dps_to_mdps(gy_raw[2]) / 1000.0
+					- a_rate_offset[2];
 		}
 
 		//-----------------------------------------------------------------------------------------------------//
@@ -103,9 +97,9 @@ void inertial(void *argument) {
 		IMU.w_z = a_rate_rpy[2];
 
 		//Process attitude in euler angles
-		compFilter(IMU.w_x, IMU.w_y, IMU.w_z, IMU.a_x,
-				IMU.a_y, IMU.a_z, mag_xyz[0], mag_xyz[1], mag_xyz[2],
-				&IMU.roll, &IMU.pitch, &IMU.yaw);
+		compFilter(IMU.w_x, IMU.w_y, IMU.w_z, IMU.a_x, IMU.a_y, IMU.a_z,
+				mag_xyz[0], mag_xyz[1], mag_xyz[2], &IMU.roll, &IMU.pitch,
+				&IMU.yaw);
 
 		//For viewer usage
 		//printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", IMU.roll,  IMU.pitch,
@@ -113,20 +107,19 @@ void inertial(void *argument) {
 		//		acc_xyz[1], acc_xyz[2]);
 		//Dump to canbus
 		//YPR
-		TeR.ypr.yaw = IMU.yaw*100;
-		TeR.ypr.pitch = IMU.pitch*100;
-		TeR.ypr.roll = IMU.roll*100;
+
+		TeR.ypr.yaw = ter_ypr_yaw_encode(IMU.yaw);
+		TeR.ypr.pitch = ter_ypr_pitch_encode(IMU.pitch);
+		TeR.ypr.roll = ter_ypr_roll_encode(IMU.roll);
 		//Accelerations
-		TeR.accel.a_x = IMU.a_x*1000;
-		TeR.accel.a_y = IMU.a_y*1000;
-		TeR.accel.a_z = IMU.a_z*1000;
+		TeR.accel.a_x = ter_accel_a_x_encode(IMU.a_x);
+		TeR.accel.a_y = ter_accel_a_x_encode(IMU.a_y);
+		TeR.accel.a_z = ter_accel_a_x_encode(IMU.a_z);
 
 		//Angular Rate
-		TeR.angRate.yaw_rate_z = IMU.w_z*1000;
-		TeR.angRate.pitch_rate_y = IMU.w_y*1000;
-		TeR.angRate.roll_rate_x = IMU.w_x*1000;
-
-
+		TeR.angRate.yaw_rate_z = ter_ang_rate_yaw_rate_z_encode(IMU.w_z);
+		TeR.angRate.pitch_rate_y = ter_ang_rate_pitch_rate_y_encode(IMU.w_y);
+		TeR.angRate.roll_rate_x = ter_ang_rate_roll_rate_x_encode(IMU.w_x);
 
 	}
 }
@@ -148,13 +141,10 @@ void configIMU(void) {
 	} while (rst);
 
 	asm330lhh_device_id_get(&imu, &whoamI);
-	while (whoamI != ASM330LHH_ID){
+	while (whoamI != ASM330LHH_ID) {
 		asm330lhh_device_id_get(&imu, &whoamI);
 		osDelay(100);
 	}
-
-
-
 
 	//Turn on light to indicate IMU is running
 	HAL_GPIO_WritePin(IMU_LED_GPIO_Port, IMU_LED_Pin, 1);
@@ -162,18 +152,45 @@ void configIMU(void) {
 	asm330lhh_device_conf_set(&imu, PROPERTY_ENABLE);
 	/* Enable Block Data Update */
 	asm330lhh_block_data_update_set(&imu, PROPERTY_ENABLE);
-	/* Set Output Data Rate */
+	asm330lhh_auto_increment_set(&imu, 1); //nuevo
+	/* Set Output Data Rate*/
 	asm330lhh_xl_data_rate_set(&imu, ASM330LHH_XL_ODR_104Hz);
 	asm330lhh_gy_data_rate_set(&imu, ASM330LHH_GY_ODR_104Hz);
 	/* Set full scale */
 	asm330lhh_xl_full_scale_set(&imu, ASM330LHH_2g);
-	asm330lhh_gy_full_scale_set(&imu, ASM330LHH_2000dps);
+	asm330lhh_gy_full_scale_set(&imu, ASM330LHH_500dps);
 	/* Configure filtering chain(No aux interface)
 	 * Accelerometer - LPF1 + LPF2 path
 	 */
 	asm330lhh_xl_hp_path_on_out_set(&imu, ASM330LHH_LP_ODR_DIV_100);
 	asm330lhh_xl_filter_lp2_set(&imu, PROPERTY_ENABLE);
+	// Filtros Giroscopio
+	asm330lhh_gy_filter_lp1_set(&imu, PROPERTY_ENABLE);  // LPF1 ON
+	asm330lhh_gy_lp1_bandwidth_set(&imu, ASM330LHH_AGGRESSIVE);
+	asm330lhh_gy_hp_path_internal_set(&imu, ASM330LHH_HP_FILTER_NONE);
 
+	// Evitar lecturas mientras asienta el filtro
+	asm330lhh_filter_settling_mask_set(&imu, 1);
+	osDelay(200);
+
+	const uint32_t N = 256;
+	uint8_t reg = 0;
+	for (uint32_t i = 0; i < N; i++) {
+		do {
+			asm330lhh_gy_flag_data_ready_get(&imu, &reg);
+			osDelay(2);
+		} while (!reg);
+		/* Read angular rate field data */
+		memset(gy_raw, 0x00, 3 * sizeof(int16_t));
+		asm330lhh_angular_rate_raw_get(&imu, gy_raw);
+		a_rate_offset[0] += asm330lhh_from_fs500dps_to_mdps(gy_raw[0]) / 1000.0;
+		a_rate_offset[1] += asm330lhh_from_fs500dps_to_mdps(gy_raw[1]) / 1000.0;
+		a_rate_offset[2] += asm330lhh_from_fs500dps_to_mdps(gy_raw[2]) / 1000.0;
+
+	}
+	a_rate_offset[0] /= (float)N;
+	a_rate_offset[1] /= (float)N;
+	a_rate_offset[2] /= (float)N;
 }
 
 void configMAG() {

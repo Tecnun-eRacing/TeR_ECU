@@ -103,11 +103,11 @@ void stateLoop(void) {
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
-		publishConfig(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
+		//publishConfig(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
 			TeR.BmsAppReq.app_state_req =
-					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
@@ -128,8 +128,9 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
+			publishConfig(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
-					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
@@ -143,8 +144,9 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
+			publishConfig(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
-					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
@@ -182,7 +184,7 @@ void stateLoop(void) {
 			break;
 		case DRIVING:
 			TeR.BmsAppReq.app_state_req =
-					HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; // mandamos a ready (en teoria es imposible, pero por si pasamos a driving sin pasar por prech)
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; // mandamos a ready (en teoria es imposible, pero por si pasamos a driving sin pasar por prech)
 			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
@@ -271,9 +273,8 @@ void buttonHandler() {
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
 		TeR.refri_config.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 		TeR.refri_config.power =
-				(TeR.refri_config.power
-						== TER_REFRI_CONFIG_POWER_ON_CHOICE) ?
-								TER_REFRI_CONFIG_POWER_OFF_CHOICE :
+				(TeR.refri_config.power == TER_REFRI_CONFIG_POWER_ON_CHOICE) ?
+						TER_REFRI_CONFIG_POWER_OFF_CHOICE :
 						TER_REFRI_CONFIG_POWER_ON_CHOICE;
 		sendConfig(TER_REFRI_CONFIG_FRAME_ID, &TeR.refri_config);
 	}

@@ -65,7 +65,6 @@ struct TeR_t TeR;
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
 extern osMessageQueueId_t mainCanTxQueueHandle;
 
-
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
@@ -223,44 +222,55 @@ void invCanTx(void *argument) {
 	}
 }
 
-
-
-void CanSchedulerTask(void* argument) {
-	CAN_TxHeaderTypeDef TxHeader = {.IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA};
+void CanSchedulerTask(void *argument) {
+	CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 	uint32_t mailbox;
 	CanMessage_t next_msg;
 	// Periodic Messages insertion to queue
 	uint8_t TxData[8];
-	ter_ter_status_pack(TxData,&TeR.status , TER_TER_STATUS_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_TER_STATUS_LENGTH, TER_TER_STATUS_FRAME_ID, 100,ter_status_callback);
+	ter_ter_status_pack(TxData, &TeR.status, TER_TER_STATUS_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_TER_STATUS_LENGTH,
+			TER_TER_STATUS_FRAME_ID, 100, ter_status_callback);
 
 	ter_wheel_info_pack(TxData, &TeR.wheelInfo, TER_WHEEL_INFO_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_WHEEL_INFO_LENGTH, TER_WHEEL_INFO_FRAME_ID, 10,ter_wheel_info_callback);
+	can_scheduler_insert_msg(TxData, TER_WHEEL_INFO_LENGTH,
+			TER_WHEEL_INFO_FRAME_ID, 10, ter_wheel_info_callback);
 
 	ter_inverter_info_pack(TxData, &TeR.invInfo, TER_INVERTER_INFO_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_INVERTER_INFO_LENGTH, TER_INVERTER_INFO_FRAME_ID, 10,ter_inverter_info_callback);
+	can_scheduler_insert_msg(TxData, TER_INVERTER_INFO_LENGTH,
+			TER_INVERTER_INFO_FRAME_ID, 10, ter_inverter_info_callback);
 
 	ter_ang_rate_pack(TxData, &TeR.angRate, TER_ANG_RATE_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_ANG_RATE_LENGTH, TER_ANG_RATE_FRAME_ID, 5,ter_ang_rate_callback);
+	can_scheduler_insert_msg(TxData, TER_ANG_RATE_LENGTH, TER_ANG_RATE_FRAME_ID,
+			5, ter_ang_rate_callback);
 
-	ter_accel_pack(TxData,&TeR.accel,TER_ACCEL_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_ACCEL_LENGTH, TER_ACCEL_FRAME_ID, 5,ter_accel_callback);
+	ter_accel_pack(TxData, &TeR.accel, TER_ACCEL_LENGTH);
+	can_scheduler_insert_msg(TxData, TER_ACCEL_LENGTH, TER_ACCEL_FRAME_ID, 5,
+			ter_accel_callback);
 
 	ter_gps_lat_long_pack(TxData, &TeR.latlong, TER_GPS_LAT_LONG_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_GPS_LAT_LONG_LENGTH, TER_GPS_LAT_LONG_FRAME_ID, 10,ter_gps_lat_callback);
+	can_scheduler_insert_msg(TxData, TER_GPS_LAT_LONG_LENGTH,
+			TER_GPS_LAT_LONG_FRAME_ID, 10, ter_gps_lat_callback);
 
 	ter_ypr_pack(TxData, &TeR.ypr, TER_YPR_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_YPR_LENGTH, TER_YPR_FRAME_ID, 5,ter_ypr_callback);
+	can_scheduler_insert_msg(TxData, TER_YPR_LENGTH, TER_YPR_FRAME_ID, 5,
+			ter_ypr_callback);
 
 	ter_vel_body_pack(TxData, &TeR.velbody, TER_VEL_BODY_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_VEL_BODY_LENGTH, TER_VEL_BODY_FRAME_ID, 5,ter_vel_body_callback);
+	can_scheduler_insert_msg(TxData, TER_VEL_BODY_LENGTH, TER_VEL_BODY_FRAME_ID,
+			5, ter_vel_body_callback);
 
-	hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq, HVBMS_BMS_RX_CTRL_1_LENGTH);
-	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10,hvbms_bms_rx_ctrl_1_callback);
+
+	hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq,
+			HVBMS_BMS_RX_CTRL_1_LENGTH);
+	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH,
+			HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
 	while (true) {
-		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg)) osDelay(10);
+		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg))
+			osDelay(10);
 
-		if (next_msg.callback) next_msg.callback(&next_msg); // si el callback es 0 (no se ha definido) no se llama el callback
+		if (next_msg.callback)
+			next_msg.callback(&next_msg); // si el callback es 0 (no se ha definido) no se llama el callback
 		osDelayUntil(next_msg.next_when);
 
 		if (next_msg.period != -1) {
@@ -273,7 +283,8 @@ void CanSchedulerTask(void* argument) {
 
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
-		while(HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content, &mailbox)!=HAL_OK){
+		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
+				&mailbox) != HAL_OK){
 			osThreadYield();
 		}
 	}

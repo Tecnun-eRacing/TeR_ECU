@@ -14,7 +14,7 @@
 #include "TeR_CAN.h"
 
 
-#define CAN_SCHEDULER_HEAP_CAPACITY 100
+#define CAN_SCHEDULER_HEAP_CAPACITY 200
 typedef struct CanMessage {
     uint8_t content[8];
     uint8_t len;

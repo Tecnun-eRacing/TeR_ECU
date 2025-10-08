@@ -19,7 +19,7 @@
  *
  */
 
-const static int task_period = 10; // Task frequency 100hz
+const static int task_period = 2; // Task frequency 500hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -168,24 +168,24 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 }
 
 uint8_t regen_allowed(trqMap_t in) { // 1 ok 0 not ok
-	if (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) {
-		if ((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2)
-				&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)) { // no le estamos pidiendo suficiente torque al coche
-			if (hvbms_bms_tx_state_6_cell_max_v_decode(
-					TeR.BmsCellsVolt.cell_min_v)
-					< TeR.config.regen_max_cell_volt) {
-				if (hvbms_bms_tx_state_9_cell_temp_max_deg_c_decode(
-						TeR.BmsCellsTemp.cell_temp_max_deg_c)
-						< TeR.config.regen_max_cell_temp) {
-					if (hvbms_bms_tx_state_4_curr_2_x10_a_decode(
-							TeR.BmsCurrent.curr_2_x10_a)
-							> -TeR.config.regen_max_current) {
-						return 1; // si y solo si se cumplen las condiciones de regen, retornamos 0
-					}
-				}
-			}
-		}
-	}
-	return 0; // no se ha cumplido alguna cosa, retornamos 0
+
+	if (!(TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE)) // refri activada?
+		return 0;
+	if (!((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2) // esta el piloto pidiendo un poco de torque positivo?
+			&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)))
+		return 0;
+	if (!(hvbms_bms_tx_state_6_cell_max_v_decode(TeR.BmsCellsVolt.cell_min_v) // celdas en rango de tension?
+			< TeR.config.regen_max_cell_volt))
+		return 0;
+	if (!(hvbms_bms_tx_state_9_cell_temp_max_deg_c_decode( // celdas en rango de temperatura?
+			TeR.BmsCellsTemp.cell_temp_max_deg_c)
+			< TeR.config.regen_max_cell_temp))
+		return 0;
+	if (!(hvbms_bms_tx_state_4_curr_2_x10_a_decode(TeR.BmsCurrent.curr_2_x10_a) // accu en rango de corriente ?
+			> -TeR.config.regen_max_current))
+		return 0;
+
+	// si se han complido todas las condiciones necesarias para regenerar, retornamos 1
+	return 1;
 }
 

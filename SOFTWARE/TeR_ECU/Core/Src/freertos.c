@@ -113,7 +113,7 @@ osThreadId_t CanSchedulerTaskNHandle;
 const osThreadAttr_t CanSchedulerTaskN_attributes = {
   .name = "CanSchedulerTaskN",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;

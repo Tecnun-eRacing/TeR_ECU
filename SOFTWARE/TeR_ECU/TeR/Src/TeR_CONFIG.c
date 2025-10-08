@@ -32,7 +32,9 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 	default:
 		return 1;
 	}
-	can_scheduler_insert_non_periodic_msg(TxData, size, frame_id, 10);
+	while(!can_scheduler_insert_non_periodic_msg(TxData, size, frame_id, 0)){
+		osThreadYield();
+	}
 	return 0;
 }
 
@@ -111,8 +113,8 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			&& (config_id >= 0)) { // if user is requesting a specific config, and the config is valid, send specific config
 		ecu_config.entry = config_id;
 		ter_ecu_config_pack(TxData, &ecu_config, size);
-		while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 10)){
-			osDelay(5);
+		while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)){
+			osThreadYield();
 		}
 
 	} else { // if user requested all configs or requested config is not valid, send all configs
@@ -122,8 +124,8 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			}
 			ecu_config.entry = i;
 			ter_ecu_config_pack(TxData, &ecu_config, size);
-			while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 5)){
-				osDelay(10);
+			while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)){
+				osThreadYield();
 			}
 		}
 	}
