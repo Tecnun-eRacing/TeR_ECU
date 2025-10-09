@@ -34,6 +34,7 @@
 #define ACTSPEED 5.0 // speed in kmh for threshold
 #define ACTAPPS 10.0 // 2 apps (0-255) uint8_t
 #define STEER_DEADZONE 10.0*DEG2RAD
+#define IMU_DEADZONE 3.0*DEG2RAD
 #define KPMAX 1000.0 // arbitrary
 #define KIMAX 1000.0
 #define KDMAX 100.0
@@ -45,8 +46,6 @@
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
 trqMap_t trqVectoring(trq_t limit);
-uint8_t tv_initPID(float Kp,float Ki, float Kd,float iMax);//wrapper function
-uint8_t tv_deInitPID(void);
-uint8_t areGainsInRange(float Kp, float Ki, float Kd);
+uint8_t tv_deInitPID(void); // se llama desde otro lado para dealocar el puntero del pid
 uint8_t isAngleInDeadzone(float angle_deg,float range);
 #endif /* INC_TV_MDS_H_ */

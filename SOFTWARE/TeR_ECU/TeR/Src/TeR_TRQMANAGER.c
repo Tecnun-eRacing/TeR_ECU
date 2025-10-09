@@ -19,7 +19,7 @@
  *
  */
 
-const static int task_period = 10; // Task frequency 100hz
+const static int task_period = 5; // Task frequency 500hz
 
 extern trqMap_t trqDistribution(trq_t limit);
 

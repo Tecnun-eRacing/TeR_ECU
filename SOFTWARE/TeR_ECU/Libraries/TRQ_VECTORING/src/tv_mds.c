@@ -11,7 +11,7 @@
 PID_t *tvPid; //Estructura del PID
 float dTorque = 0;
 float iMax = 1000; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
-float looptime = 0.010f; //ms of looptime (same as TeR_TRQMANAGER task
+float looptime = 0.005f; //5ms of looptime (same as TeR_TRQMANAGER task
 
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
 float yawRef(float steer, float vx) { //steer en radianes, vx en m/s
@@ -60,7 +60,7 @@ trqMap_t trqVectoring(trq_t limit) {
 	float ref = yawRef(steer * DEG2RAD,
 			TeR.wheelInfo.speed * KMH2MS);
 	float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a radianes
-	imuYawR = isAngleInDeadzone(imuYawR, STEER_DEADZONE) ? 0 : imuYawR;
+	imuYawR = isAngleInDeadzone(imuYawR, IMU_DEADZONE) ? 0 : imuYawR;
 	float corr = pid(tvPid, ref, imuYawR); //Computa el lazo y devuelve el valor de correccion
 	dTorque = mz2DeltaTorque(corr); //es una ganancia sin mas, no aporta al control
 
@@ -79,18 +79,6 @@ trqMap_t trqVectoring(trq_t limit) {
 	return trqMap; //return tv output
 }
 
-uint8_t tv_initPID(float Kp, float Ki, float Kd, float iMax) {
-	if (!areGainsInRange(Kp, Ki, Kd)) { // if any gain not in predefined range, return 0 gain (prevents disaster)
-		Kp = 0;
-		Ki = 0;
-		Kd = 0;
-	}
-	tvPid = initPID(((float) TeR.config.trq_kp / 10000.0f),
-			((float) TeR.config.trq_ki / 10000.0f),
-			((float) TeR.config.trq_kd / 10000.0f), looptime, iMax);
-	return 1;
-}
-
 uint8_t tv_deInitPID(void) {
 	if (tvPid) { // is tvPid pointing to something not 0?
 		deInitPID(&tvPid); // if yes free and set to NULL
@@ -98,16 +86,8 @@ uint8_t tv_deInitPID(void) {
 	return 1;
 }
 
-uint8_t areGainsInRange(float Kp, float Ki, float Kd) {
-	if (Kp < 0 || Ki < 0 || Kd < 0) {
-		return 0;
-	} else if (Kp > KPMAX || Ki > KIMAX || Kd > KDMAX) {
-		return 0;
-	}
-	return 1;
-}
 
-uint8_t isAngleInDeadzone(float angle_deg, float range) {
+inline uint8_t isAngleInDeadzone(float angle_deg, float range) {
 	uint32_t result = fabsf(angle_deg) < range ? 1 : 0;
 	return result;
 }
