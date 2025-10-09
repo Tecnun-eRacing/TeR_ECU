@@ -14,7 +14,7 @@
 #include "TeR_CAN.h"
 
 
-#define CAN_SCHEDULER_HEAP_CAPACITY 200
+#define CAN_SCHEDULER_HEAP_CAPACITY 80
 typedef struct CanMessage {
     uint8_t content[8];
     uint8_t len;
@@ -46,6 +46,8 @@ void ter_gps_lat_callback(CanMessage_t *msg);
 void ter_ypr_callback(CanMessage_t *msg);
 void ter_vel_body_callback(CanMessage_t *msg);
 void hvbms_bms_rx_ctrl_1_callback(CanMessage_t *msg);
+void ter_tv_debug_callback(CanMessage_t *msg);
+
 
 
 

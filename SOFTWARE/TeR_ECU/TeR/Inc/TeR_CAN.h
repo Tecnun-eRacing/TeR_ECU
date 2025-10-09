@@ -52,6 +52,7 @@ struct TeR_t {
 	struct ter_wheel_info_t wheelInfo;
 	struct ter_inverter_info_t invInfo;
 	struct ter_ecu_config_t config; //El mensaje con todas las configuraciones
+	struct ter_tv_debug_t tv_debug; // debug del torque
 
 	//IMU related
 	struct ter_ang_rate_t angRate; //Angular rate(speed) from imu gyroscope

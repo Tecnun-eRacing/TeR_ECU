@@ -63,15 +63,15 @@ const osThreadAttr_t osRunningTask_attributes = {
 osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
   .name = "canRxTask",
-  .stack_size = 256 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for invCanTxTask */
 osThreadId_t invCanTxTaskHandle;
 const osThreadAttr_t invCanTxTask_attributes = {
   .name = "invCanTxTask",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityHigh3,
 };
 /* Definitions for systemCriticalTask */
 osThreadId_t systemCriticalTaskHandle;
@@ -112,23 +112,13 @@ const osThreadAttr_t stateMachineTask_attributes = {
 osThreadId_t CanSchedulerTaskNHandle;
 const osThreadAttr_t CanSchedulerTaskN_attributes = {
   .name = "CanSchedulerTaskN",
-  .stack_size = 512 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
-};
-/* Definitions for mainCanTxQueue */
-osMessageQueueId_t mainCanTxQueueHandle;
-const osMessageQueueAttr_t mainCanTxQueue_attributes = {
-  .name = "mainCanTxQueue"
-};
-/* Definitions for invCanTxQueue */
-osMessageQueueId_t invCanTxQueueHandle;
-const osMessageQueueAttr_t invCanTxQueue_attributes = {
-  .name = "invCanTxQueue"
 };
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
@@ -221,12 +211,6 @@ void MX_FREERTOS_Init(void) {
   /* Create the queue(s) */
   /* creation of rxMsg */
   rxMsgHandle = osMessageQueueNew (128, sizeof(canMsg_t), &rxMsg_attributes);
-
-  /* creation of mainCanTxQueue */
-  mainCanTxQueueHandle = osMessageQueueNew (128, sizeof(canMsg_t), &mainCanTxQueue_attributes);
-
-  /* creation of invCanTxQueue */
-  invCanTxQueueHandle = osMessageQueueNew (128, sizeof(canMsg_t), &invCanTxQueue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */

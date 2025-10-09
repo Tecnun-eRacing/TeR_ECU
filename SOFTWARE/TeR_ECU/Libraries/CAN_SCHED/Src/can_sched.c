@@ -19,6 +19,8 @@
 #include "can_sched.h"
 extern osMutexId_t g_can_scheduler_mutexHandle;
 CanSchedulerHeap g_can_scheduler_heap = {0};
+
+// CALLBACK DEFINITION
 void ter_status_callback(CanMessage_t *msg){
 	ter_ter_status_pack(msg->content,&TeR.status , msg->len);
 }
@@ -47,6 +49,12 @@ void ter_vel_body_callback(CanMessage_t *msg){
 void hvbms_bms_rx_ctrl_1_callback(CanMessage_t *msg){
 	hvbms_bms_rx_ctrl_1_pack(msg->content, &TeR.BmsAppReq, msg->len);
 }
+
+void ter_tv_debug_callback(CanMessage_t *msg){
+	ter_tv_debug_pack(msg->content,&TeR.tv_debug,msg->len);
+}
+
+
 static void swap_can_msg(CanMessage_t *a, CanMessage_t *b) {
     CanMessage_t temp = *a;
     *a = *b;

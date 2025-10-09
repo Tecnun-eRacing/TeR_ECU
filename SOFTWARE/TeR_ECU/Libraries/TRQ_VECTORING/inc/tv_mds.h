@@ -14,7 +14,7 @@
 #include "TeR_CAN.h" //For controlling TeR vehicle
 #include <math.h>
 //#include "pid.h"
-
+#define SAFETY
 #define DEG2RAD PI/180.0f //Degs to radians
 #define KMH2MS 1/3.6f
 /////////////////////////////////////////[Constantes del Vehiculo]/////////////////////////////////////////////////////////////
@@ -31,9 +31,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////[Seguridad]/////////////////////////////////////////////////////////////
-#define ACTSPEED 3.0 // speed in kmh for threshold
-#define ACTAPPS 2.0 // 2 apps (0-255) uint8_t
-#define STEER_DEADZONE 5.0 // +-DEGREES
+#define ACTSPEED 5.0 // speed in kmh for threshold
+#define ACTAPPS 10.0 // 2 apps (0-255) uint8_t
+#define STEER_DEADZONE 10.0*DEG2RAD
 #define KPMAX 1000.0 // arbitrary
 #define KIMAX 1000.0
 #define KDMAX 100.0
@@ -48,4 +48,5 @@ trqMap_t trqVectoring(trq_t limit);
 uint8_t tv_initPID(float Kp,float Ki, float Kd,float iMax);//wrapper function
 uint8_t tv_deInitPID(void);
 uint8_t areGainsInRange(float Kp, float Ki, float Kd);
+uint8_t isAngleInDeadzone(float angle_deg,float range);
 #endif /* INC_TV_MDS_H_ */

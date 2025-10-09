@@ -64,7 +64,7 @@ uint8_t command(struct ter_command_t command) {
 			size = TER_COMMAND_LENGTH;
 			ter_command_pack(TxData, &command, size);
 			while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 10)) {
-				osDelay(10);
+				osDelay(5);
 			};
 			return 0; //Exit function, no result
 		}
@@ -76,7 +76,7 @@ uint8_t command(struct ter_command_t command) {
 	size = TER_RESPONSE_LENGTH;
 	ter_response_pack(TxData, &response, size);
 	while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 10)) {
-		osDelay(10);
+		osDelay(5);
 	};
 
 	return 1;

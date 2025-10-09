@@ -100,7 +100,7 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 
 //MANDATORY USE IN EACH DRIVINGMODE also controls the regen
 trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
-	if (0) {
+	if (TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) {
 		switch (TeR.config.regen_mode) {
 		case TER_ECU_CONFIG_REGEN_MODE_BPPS_CHOICE: {
 			int8_t trq = map(TeR.bpps.bpps * TeR.config.regen_trq_slope, 0,
@@ -188,4 +188,5 @@ uint8_t regen_allowed(trqMap_t in) { // 1 ok 0 not ok
 	// si se han complido todas las condiciones necesarias para regenerar, retornamos 1
 	return 1;
 }
+
 
