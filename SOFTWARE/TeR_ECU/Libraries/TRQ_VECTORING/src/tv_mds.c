@@ -8,7 +8,7 @@
 #include "tv_mds.h"
 
 // todo: La velocidad hay que sacarla mejor de otro sitio ya que de la ruedas no me mola (torque que se autoafecta a si mismo loop chungo)
-pid_t *tvPid; //Estructura del PID
+PID_t *tvPid; //Estructura del PID
 float dTorque = 0;
 float iMax = 1000; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
 float looptime = 10; //ms of looptime (same as TeR_TRQMANAGER task
@@ -54,7 +54,8 @@ trqMap_t trqVectoring(trq_t limit) {
 #endif
 	//Torque Vectoring Available
 	//Torque Vectoring Computation
-	float ref = yawRef(ter_steer_angle_decode(TeR.steer.angle) * DEG2RAD,
+	float steer = ter_steer_angle_decode(TeR.steer.angle);
+	float ref = yawRef(steer * DEG2RAD,
 			TeR.wheelInfo.speed * KMH2MS);
 	float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a radianes
 	imuYawR = isAngleInDeadzone(imuYawR, STEER_DEADZONE) ? 0 : imuYawR;

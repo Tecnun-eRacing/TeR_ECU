@@ -16,9 +16,9 @@
  */
 #include "pid.h"
 
-pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
-	pid_t *pid; //temporal pointer for init
-	pid = (pid_t*) calloc(1, sizeof(pid_t)); //Allocates one pid instance Zeroes memory to prevent disaster, ¡sizeof(pid_t)!
+PID_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
+	PID_t *pid; //temporal pointer for init
+	pid = (PID_t*) calloc(1, sizeof(PID_t)); //Allocates one pid instance Zeroes memory to prevent disaster, ¡sizeof(pid_t)!
 	pid->Kp = Kp;
 	pid->Ki = Ki;
 	pid->Kd = Kd;
@@ -27,14 +27,14 @@ pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax) {
 	return pid;
 }
 
-void deInitPID(pid_t **pid) {
+void deInitPID(PID_t **pid) {
 	if (pid && *pid) { // is the pointer passed valid, and is pointing to something valid?
 		free(*pid); // safely free that pointer, only if it exists and is not null pointing
 		*pid = NULL; // make it point to null
 	}
 }
 
-float pid(pid_t *pid, float ref, float feedback) {
+float pid(PID_t *pid, float ref, float feedback) {
 //PID
 	pid->error = (ref - feedback); //Proporcional
 	pid->errorI += pid->error * pid->T; //Integral

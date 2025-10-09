@@ -26,13 +26,13 @@ typedef struct {
 	float prevError;
 	float antiWindup; //Valor saturacion termino integral (Puede entenderse en las unidades de la integral, velocidad angular máxima en el caso del yawRate)
 	float T; //Tiempo del lazo
-} pid_t;
+} PID_t;
 
 
 
-pid_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax); //Returns a PID instance in the HEAP
-void deInitPID(pid_t **pid); //Frees PID memory and sets pointer to NULL
-float pid(pid_t *pid, float ref, float feedback); //Calculates PID response
+PID_t* initPID(float Kp, float Ki, float Kd, float loopTime, float iMax); //Returns a PID instance in the HEAP
+void deInitPID(PID_t **pid); //Frees PID memory and sets pointer to NULL
+float pid(PID_t *pid, float ref, float feedback); //Calculates PID response
 
 
 
