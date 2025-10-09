@@ -11,7 +11,7 @@
 PID_t *tvPid; //Estructura del PID
 float dTorque = 0;
 float iMax = 1000; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
-float looptime = 10; //ms of looptime (same as TeR_TRQMANAGER task
+float looptime = 0.010f; //ms of looptime (same as TeR_TRQMANAGER task
 
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
 float yawRef(float steer, float vx) { //steer en radianes, vx en m/s
@@ -37,6 +37,7 @@ trqMap_t trqVectoring(trq_t limit) {
 	//Declares a trqMap
 	trqMap_t trqMap;
 	dTorque = 0;
+
 #ifdef SAFETY
 	//check if car is not at speed, or pedal is not being pressed, if true Reset PID and LINEAR RESPONSE
 	//Not in conditions for Torque Vectoring
@@ -51,6 +52,7 @@ trqMap_t trqVectoring(trq_t limit) {
 		trqMap = torqueCheck(trqMap, limit, 0); //no negative torque allowed
 		return trqMap; //return tv output
 	}
+
 #endif
 	//Torque Vectoring Available
 	//Torque Vectoring Computation
@@ -88,6 +90,7 @@ uint8_t tv_initPID(float Kp, float Ki, float Kd, float iMax) {
 			((float) TeR.config.trq_kd / 10000.0f), looptime, iMax);
 	return 1;
 }
+
 uint8_t tv_deInitPID(void) {
 	if (tvPid) { // is tvPid pointing to something not 0?
 		deInitPID(&tvPid); // if yes free and set to NULL
@@ -103,6 +106,7 @@ uint8_t areGainsInRange(float Kp, float Ki, float Kd) {
 	}
 	return 1;
 }
+
 uint8_t isAngleInDeadzone(float angle_deg, float range) {
 	uint32_t result = fabsf(angle_deg) < range ? 1 : 0;
 	return result;
