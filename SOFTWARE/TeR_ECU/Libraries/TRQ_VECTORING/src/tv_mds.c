@@ -12,7 +12,7 @@ PID_t *tvPid; //Estructura del PID
 float dTorque = 0;
 float iMax = 1000; // valor arbitrario, toca testing, esto va hardcoded porque no se deberia de tocar
 float looptime = 0.005f; //5ms of looptime (same as TeR_TRQMANAGER task
-
+uint32_t var2;
 //--------------------------------------------------------[Model Functions]---------------------------------------------------------------//
 float yawRef(float steer, float vx) { //steer en radianes, vx en m/s
 	//girar izq es positivo, realmente es el angulo de giro mediodel modelo bici
@@ -75,7 +75,7 @@ trqMap_t trqVectoring(trq_t limit) {
 
 	//save tv_debug data
 	TeR.tv_debug.delta_trq = ter_tv_debug_delta_trq_encode(dTorque);
-	TeR.tv_debug.yaw_ref = ter_tv_debug_yaw_ref_encode(ref / DEG2RAD); // pasamos yawref a grados
+	TeR.tv_debug.yaw_ref = ter_tv_debug_yaw_ref_encode(ref * 100 / DEG2RAD); // pasamos yawref a grados
 	return trqMap; //return tv output
 }
 

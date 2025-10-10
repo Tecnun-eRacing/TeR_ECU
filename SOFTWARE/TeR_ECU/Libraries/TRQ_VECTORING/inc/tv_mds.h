@@ -14,7 +14,7 @@
 #include "TeR_CAN.h" //For controlling TeR vehicle
 #include <math.h>
 //#include "pid.h"
-#define SAFETY
+//#define SAFETY
 #define DEG2RAD PI/180.0f //Degs to radians
 #define KMH2MS 1/3.6f
 /////////////////////////////////////////[Constantes del Vehiculo]/////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@
 /////////////////////////////////////////[Seguridad]/////////////////////////////////////////////////////////////
 #define ACTSPEED 5.0 // speed in kmh for threshold
 #define ACTAPPS 10.0 // 2 apps (0-255) uint8_t
-#define STEER_DEADZONE 10.0*DEG2RAD
+#define STEER_DEADZONE 8.0*DEG2RAD
 #define IMU_DEADZONE 3.0*DEG2RAD
 #define KPMAX 1000.0 // arbitrary
 #define KIMAX 1000.0

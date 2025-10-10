@@ -288,7 +288,7 @@ void CanSchedulerTask(void *argument) {
 		TxHeader.DLC = next_msg.len;
 		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
 				&mailbox) != HAL_OK) {
-			osDelay(5);
+			osThreadYield();
 		}
 	}
 }

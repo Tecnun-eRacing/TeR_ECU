@@ -17,11 +17,11 @@
 
 //FreeRTOS dependencies
 extern osThreadId_t systemCriticalTaskHandle;
-uint8_t prevConfig;
+uint32_t prevConfig;
 
 //FreeRTOS TASK
 void systemCritical(void *argument) {
-	prevConfig = TER_ECU_CONFIG_SCS_ENABLE_ENABLE_CHOICE;
+	prevConfig = 0xFFFFFFFF;
 	for (;;) {
 		osDelay(50);
 		if (prevConfig != TeR.config.scs_enable) { // Ha cambiado la configuracion de las SCS?
