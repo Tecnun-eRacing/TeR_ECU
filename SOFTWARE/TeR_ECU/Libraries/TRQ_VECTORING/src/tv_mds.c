@@ -29,6 +29,7 @@ static float interp(const float *bp, const float *tab, int n, float x) {
 		i++;
 	float x0 = bp[i], x1 = bp[i + 1];
 	float y0 = tab[i], y1 = tab[i + 1];
+	if(x1==x0){return 0;}
 	float t = (x - x0) / (x1 - x0);
 	return y0 + t * (y1 - y0);
 }
