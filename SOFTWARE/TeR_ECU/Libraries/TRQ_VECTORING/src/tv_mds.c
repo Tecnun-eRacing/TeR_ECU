@@ -13,7 +13,7 @@ PID_t *tvPid; //Estructura del PID
 float dTorque = 0;
 const float looptime = 0.005f; //5ms of looptime (same as TeR_TRQMANAGER task)
 static float kp, ki, kd, iMax;
-static float v_sched_ms_ema = 0.0f;
+//static float v_sched_ms_ema = 0.0f;
 //--------------------------------------------------------[Gain Scheduling]---------------------------------------------------------------//
 const int N = sizeof(v_bp_ms) / sizeof(v_bp_ms[0]);
 static float clampf(float x, float lo, float hi) {
@@ -92,14 +92,14 @@ trqMap_t trqVectoring(trq_t limit) {
 
 	float v_ms = TeR.wheelInfo.speed * KMH2MS;
 	v_ms = clampf(v_ms, 0, 22.22f); // clampeamos a 80 kmH
-	v_sched_ms_ema = ema(v_sched_ms_ema, v_ms, 0.1f); // filtro para suavizar cambios de ganancia
+	//v_sched_ms_ema = ema(v_sched_ms_ema, v_ms, 0.1f); // filtro para suavizar cambios de ganancia
 
 	// 2) interpola ganancias
 
-	float kp_mul = interp(v_bp_ms, kp_tab, N, v_sched_ms_ema);
-	float ki_mul = interp(v_bp_ms, ki_tab, N, v_sched_ms_ema);
-	float kd_mul = interp(v_bp_ms, kd_tab, N, v_sched_ms_ema);
-	float iM_mul = interp(v_bp_ms, iMax_tab, N, v_sched_ms_ema);
+	float kp_mul = interp(v_bp_ms, kp_tab, N, v_ms);
+	float ki_mul = interp(v_bp_ms, ki_tab, N, v_ms);
+	float kd_mul = interp(v_bp_ms, kd_tab, N, v_ms);
+	float iM_mul = interp(v_bp_ms, iMax_tab, N, v_ms);
 	kp = clampf(kp * kp_mul, KMIN, KPMAX);
 	ki = clampf(ki * ki_mul, KMIN, KIMAX);
 	kd = clampf(kd * kd_mul, KMIN, KDMAX);

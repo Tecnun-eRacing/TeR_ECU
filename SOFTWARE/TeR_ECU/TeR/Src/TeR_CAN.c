@@ -251,7 +251,7 @@ void CanSchedulerTask(void *argument) {
 	uint32_t mailbox;
 	CanMessage_t next_msg;
 	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce load
-	uint8_t TxData[8];
+	uint8_t TxData[8] = {0};
 
 	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH,
 	TER_TER_STATUS_FRAME_ID, 100, ter_status_callback);
@@ -314,8 +314,6 @@ void CanSchedulerTask(void *argument) {
 		}
 	}
 }
-
-/* ---------------------------[MAIN CAN Scheduler, Piero]-------------------------- */
 
 //Función de decodificación del CAN, recive un mensaje de un bus y lo coloca en la estructura global
 void canRx(void *argument) {
