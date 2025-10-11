@@ -134,11 +134,9 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 	if (in.rLeft < 0 || in.rRight < 0) {
 		if (TeR.wheelInfo.rl_rpm < TeR.config.regen_thr_rpm) {
 			in.rLeft = 0;
-			in.rRight = 0;
 		}
 		if (TeR.wheelInfo.rr_rpm < TeR.config.regen_thr_rpm) {
 			in.rRight = 0;
-			in.rLeft = 0;
 		}
 		if (TeR.wheelInfo.speed < TeR.config.regen_thr_speed) {
 			in.rRight = 0;

@@ -29,9 +29,9 @@
  * - El envio de CAN de inverters, main CAN y decodificación son tareas diferentes, con prioridades diferentes, siendo la de decodificación superior a las anteriores.
  * - En los envios se utiliza vTaskDelayUntil (en nuestro caso osDelayUntil), y para la recepción desbloqueo basado en colas.
  *
- * - La Decodificación y la maquina de estados comparten un MUTEX para evitar que ambas funciones puedan modificar los valores de TeR y provocar
- * 		corrupciones de memoria, race conditions, etc. Este mutex es adquirido al principio de la ejecución y liberado al final de la ejecución de la función
  *
+ * - Se utiliza un semaforo para comprobar el estado de las mailboxes de una manera non blocking, de esta manera evitamos busy waiting antes de enviar el mensaje
+ *  (revisar task del scheduler de mensajes)
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
  *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
  * 		 Podriamos usar software timers, su implementacion sin embargo no es la mas practica, ya que debemos registrar un callback que mande señales de desbloqueo
@@ -63,8 +63,7 @@ struct TeR_t TeR;
 
 //FreeRTOS Dependencies
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
-extern osMessageQueueId_t mainCanTxQueueHandle;
-
+osSemaphoreId_t g_can_tx_mailbox_handle;
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
@@ -78,16 +77,37 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 			canRxCallback);
 	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_RX_FIFO0_MSG_PENDING_CB_ID,
 			canRxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX0_COMPLETE_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX1_COMPLETE_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX2_COMPLETE_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX0_ABORT_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX1_ABORT_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX2_ABORT_CB_ID,
+			mainCanMailboxCallback);
+	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX2_ABORT_CB_ID,
+			mainCanMailboxCallback);
 
 	//Arranque del modulo
 	HAL_CAN_Start(invCAN); //Activamos el can
 	HAL_CAN_Start(mainCAN); //Activamos el can
 
+	g_can_tx_mailbox_handle = osSemaphoreNew(3,
+			HAL_CAN_GetTxMailboxesFreeLevel(mainCAN), NULL);
 	//Arrancamos las interrupts
 	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
-	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
+	HAL_CAN_ActivateNotification(mainCAN, CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY); //hay mensaje, mailbox libre, rror + busoff
 	return 1;
 }
+/*----------------------------------[Funcion de Callback mailbox libre]--------------------------------*/
+void mainCanMailboxCallback(CAN_HandleTypeDef *hcan) {
+	osSemaphoreRelease(g_can_tx_mailbox_handle);
+}
+
 /*----------------------------------[Funcion de Callback FIFO0]--------------------------------*/
 
 void canRxCallback(CAN_HandleTypeDef *hcan) {
@@ -105,7 +125,9 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	TxHeader.StdId = rxHeader.StdId;
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
+	if(osSemaphoreAcquire(g_can_tx_mailbox_handle, 0)==osOK){ // si hay slot para envio
 	HAL_CAN_AddTxMessage(mainCAN, &TxHeader, msg.data, &mailbox); //Envía el mensaje procesado
+	}
 
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
@@ -228,41 +250,33 @@ void CanSchedulerTask(void *argument) {
 	CanMessage_t next_msg;
 	// Periodic Messages insertion to queue
 	uint8_t TxData[8];
-	ter_ter_status_pack(TxData, &TeR.status, TER_TER_STATUS_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_TER_STATUS_LENGTH,
+
+	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH,
 	TER_TER_STATUS_FRAME_ID, 100, ter_status_callback);
 
-	ter_wheel_info_pack(TxData, &TeR.wheelInfo, TER_WHEEL_INFO_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_WHEEL_INFO_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_WHEEL_INFO_LENGTH,
 	TER_WHEEL_INFO_FRAME_ID, 10, ter_wheel_info_callback);
 
-	ter_inverter_info_pack(TxData, &TeR.invInfo, TER_INVERTER_INFO_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_INVERTER_INFO_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_INVERTER_INFO_LENGTH,
 	TER_INVERTER_INFO_FRAME_ID, 10, ter_inverter_info_callback);
 
-	ter_ang_rate_pack(TxData, &TeR.angRate, TER_ANG_RATE_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_ANG_RATE_LENGTH, TER_ANG_RATE_FRAME_ID,
-			5, ter_ang_rate_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
+	TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
 
-	ter_accel_pack(TxData, &TeR.accel, TER_ACCEL_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_ACCEL_LENGTH, TER_ACCEL_FRAME_ID, 5,
-			ter_accel_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_ACCEL_LENGTH,
+	TER_ACCEL_FRAME_ID, 5, ter_accel_callback);
 
-	ter_gps_lat_long_pack(TxData, &TeR.latlong, TER_GPS_LAT_LONG_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_GPS_LAT_LONG_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_GPS_LAT_LONG_LENGTH,
 	TER_GPS_LAT_LONG_FRAME_ID, 10, ter_gps_lat_callback);
 
-	ter_ypr_pack(TxData, &TeR.ypr, TER_YPR_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_YPR_LENGTH, TER_YPR_FRAME_ID, 5,
-			ter_ypr_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_YPR_LENGTH,
+	TER_YPR_FRAME_ID, 5, ter_ypr_callback);
 
-	ter_vel_body_pack(TxData, &TeR.velbody, TER_VEL_BODY_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_VEL_BODY_LENGTH, TER_VEL_BODY_FRAME_ID,
-			5, ter_vel_body_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
+	TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
-	ter_tv_debug_pack(TxData, &TeR.tv_debug, TER_TV_DEBUG_LENGTH);
-	can_scheduler_insert_msg(TxData, TER_TV_DEBUG_LENGTH, TER_TV_DEBUG_FRAME_ID,
-			5, ter_tv_debug_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_TV_DEBUG_LENGTH,
+	TER_TV_DEBUG_FRAME_ID, 5, ter_tv_debug_callback);
 
 	hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq,
 	HVBMS_BMS_RX_CTRL_1_LENGTH);
@@ -275,20 +289,26 @@ void CanSchedulerTask(void *argument) {
 		if (next_msg.callback)
 			next_msg.callback(&next_msg); // si el callback es 0 (no se ha definido) no se llama el callback
 		osDelayUntil(next_msg.next_when);
-
 		if (next_msg.period != -1) {
-			next_msg.next_when += next_msg.period;
+			uint32_t now = osKernelGetTickCount();
+			do {
+				next_msg.next_when += next_msg.period;
+			} // catch up in case of desync, OJO, hace overflow en 21 dias XD
+			while ((int32_t) (next_msg.next_when - now) <= 0); // importante castear a int32 !! sino la lias biende
 			if (!can_scheduler_insert_built_msg(next_msg)) {
-				// Nunca va a pasar, pero se podria avisar aqui de que no se ha podido añadir el mensaje al scheduler
-				// (Se puede saber estaticamente y la probabilidad sigue siendo muy baja ademas)
 			}
 		}
-
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
-		while (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
-				&mailbox) != HAL_OK) {
-			osThreadYield();
+		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 2) == osOK) { // esperamos un t, asumimos que hay overrun y resincronizamos semaforo
+			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
+					&mailbox);
+		} else {
+			while (osSemaphoreAcquire(g_can_tx_mailbox_handle, 0) == osOK); // vaciamos semaforo
+			uint8_t free_mailboxes = HAL_CAN_GetTxMailboxesFreeLevel(mainCAN);
+			for (uint32_t i = 0; i < free_mailboxes; i++) {
+				osSemaphoreRelease(g_can_tx_mailbox_handle); // y lo resincronizamos
+			}
 		}
 	}
 }

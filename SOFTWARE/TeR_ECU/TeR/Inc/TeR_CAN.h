@@ -127,4 +127,6 @@ void invCanTx(void *argument); // inv can sender task
 void sendInvCAN(); //Función Callback de envío del CAN de inverters
 void sendMainCAN(); // //Función Callback de envío del CAN principal
 void canRxCallback(CAN_HandleTypeDef *hcan);
+void mainCanMailboxCallback(CAN_HandleTypeDef *hcan);
+void mainCanErrorCallback(CAN_HandleTypeDef *hcan);
 #endif /* INC_TER_CAN_H_ */
