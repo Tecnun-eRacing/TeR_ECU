@@ -63,7 +63,7 @@ struct TeR_t TeR;
 
 //FreeRTOS Dependencies
 extern osMessageQueueId_t rxMsgHandle; //handle de la cola de recepcion
-osSemaphoreId_t g_can_tx_mailbox_handle;
+osSemaphoreId_t g_can_tx_mailbox_handle; //counting semaphore of main can MAILBOX
 /* ---------------------------[Inicialización + Interrupts]-------------------------- */
 
 uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
@@ -77,6 +77,8 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 			canRxCallback);
 	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_RX_FIFO0_MSG_PENDING_CB_ID,
 			canRxCallback);
+
+	//Registramos callbacks de mailbox liberado en mainCAN (necesario para el semaforo)
 	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX0_COMPLETE_CB_ID,
 			mainCanMailboxCallback);
 	HAL_CAN_RegisterCallback(mainCAN, HAL_CAN_TX_MAILBOX1_COMPLETE_CB_ID,
@@ -248,7 +250,7 @@ void CanSchedulerTask(void *argument) {
 	CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 	uint32_t mailbox;
 	CanMessage_t next_msg;
-	// Periodic Messages insertion to queue
+	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce load
 	uint8_t TxData[8];
 
 	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH,
@@ -300,7 +302,7 @@ void CanSchedulerTask(void *argument) {
 		}
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
-		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 2) == osOK) { // esperamos un t, asumimos que hay overrun y resincronizamos semaforo
+		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 2) == osOK) { // esperamos un tiempo a que los mailboxes se liberen, cuando se liberen, entramos (evita busy wait)
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
 					&mailbox);
 		} else {

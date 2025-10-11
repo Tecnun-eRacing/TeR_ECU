@@ -19,7 +19,7 @@
  *
  */
 
-const static int task_period = 5; // Task frequency 500hz
+const static int task_period = 5; // Task frequency 500hz NO TOQUES ESTO QUE ME JODES TODAS LAS GANANCIAS DEL TORQUE POR FAVOR GRACIAS
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -167,7 +167,7 @@ trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t maxNegTrq) {
 
 uint8_t regen_allowed(trqMap_t in) { // 1 ok 0 not ok
 
-	if (!(TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE)) // refri activada?
+	if (!(TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE)) // regen activada?
 		return 0;
 	if (!((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2) // esta el piloto pidiendo un poco de torque positivo?
 			&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)))

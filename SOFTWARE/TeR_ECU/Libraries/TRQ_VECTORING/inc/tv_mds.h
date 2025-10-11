@@ -5,7 +5,6 @@
  *      Author: Piero,Ozuba Telmo Martinez de Salinas
  */
 
-
 #ifndef INC_TV_MDS_H_
 #define INC_TV_MDS_H_
 
@@ -34,19 +33,28 @@
 #define ACTSPEED 20.0 // speed in kmh for threshold
 #define ACTAPPS 5.0 // 2 apps (0-255) uint8_t
 #define STEER_DEADZONE 8.0*DEG2RAD
-#define IMU_DEADZONE 3.0*DEG2RAD
-#define KPMAX 1000.0 // arbitrary
-#define KIMAX 1000.0
-#define KDMAX 100.0
-#define MAX_DELTA_TORQUE 20
+#define IMU_DEADZONE 2.0*DEG2RAD
+#define KPMAX 800.0f/10000.0f
+#define KIMAX 10.0 /10000.0f
+#define KDMAX 300.0f/10000.0f
+#define KMIN 0.0f
+#define IMAX 1000.0f
+#define MAX_DELTA_TORQUE 20.0f
+//definimos 8 tramos
+static const float v_bp_ms[] = { 0.0f, 5.55f, 8.33f, 11.11f, 13.88f, 16.66f,
+		19.44f, 22.22f };    // breakpoints en m/s  de 20 a 80 km/h
+static const float kp_tab[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f }; // Kp(v)
+static const float ki_tab[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f }; // Ki(v)
+static const float kd_tab[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f }; // Kd(v)
 
-
-
+// tabla antiwindup
+static const float iMax_tab[] =
+		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
 float mz2DeltaTorque(float alpha);
 trqMap_t trqVectoring(trq_t limit);
 uint8_t tv_deInitPID(void); // se llama desde otro lado para dealocar el puntero del pid
-uint8_t isAngleInDeadzone(float angle_deg,float range);
+uint8_t isAngleInDeadzone(float angle, float range);
 #endif /* INC_TV_MDS_H_ */

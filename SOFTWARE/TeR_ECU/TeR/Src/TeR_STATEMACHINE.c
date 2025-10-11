@@ -165,7 +165,7 @@ void stateLoop(void) {
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 //			activamos cooling  ACCU
-			ter_refri_config_init(&refri);
+		/*	ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
 			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
@@ -176,7 +176,7 @@ void stateLoop(void) {
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
 			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
@@ -188,7 +188,7 @@ void stateLoop(void) {
 			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 60;
+			refri.intensity = 40;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
