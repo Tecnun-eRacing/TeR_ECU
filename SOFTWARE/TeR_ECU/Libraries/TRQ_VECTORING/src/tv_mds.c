@@ -9,7 +9,7 @@
 #include "tv_mds.h"
 
 // todo: La velocidad hay que sacarla mejor de otro sitio ya que de la ruedas no me mola (torque que se autoafecta a si mismo loop chungo)
-PID_t *tvPid; //Estructura del PID
+PID_t *tvPid; //Est-ructura del PID
 float dTorque = 0;
 const float looptime = 0.005f; //5ms of looptime (same as TeR_TRQMANAGER task)
 static float kp, ki, kd, iMax;

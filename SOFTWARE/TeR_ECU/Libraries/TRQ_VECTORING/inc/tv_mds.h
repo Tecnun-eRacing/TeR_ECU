@@ -39,7 +39,7 @@
 #define KDMAX 300.0f/10000.0f
 #define KMIN 0.0f
 #define IMAX 1000.0f
-#define MAX_DELTA_TORQUE 20.0f
+#define MAX_DELTA_TORQUE 40.0f
 //definimos 8 tramos
 static const float v_bp_ms[] = { 0.0f, 5.55f, 8.33f, 11.11f, 13.88f, 16.66f,
 		19.44f, 22.22f };    // breakpoints en m/s  de 20 a 80 km/h
