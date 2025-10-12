@@ -14,8 +14,8 @@
 #include <math.h>
 //#include "pid.h"
 #define SAFETY
-#define DEG2RAD PI/180.0f //Degs to radians
-#define KMH2MS 1/3.6f
+#define DEG2RAD (PI/180.0f) //Degs to radians
+#define KMH2MS (1/3.6f)
 /////////////////////////////////////////[Constantes del Vehiculo]/////////////////////////////////////////////////////////////
 
 #define I_ZZ 122.0 //Momento de inercia en eje Z (kg*M^4) (Modelo Juan Gastaminza)
@@ -34,9 +34,9 @@
 #define ACTAPPS 5.0 // 2 apps (0-255) uint8_t
 #define STEER_DEADZONE 8.0*DEG2RAD
 #define IMU_DEADZONE 2.0*DEG2RAD
-#define KPMAX 800.0f/10000.0f
-#define KIMAX 10.0 /10000.0f
-#define KDMAX 300.0f/10000.0f
+#define KPMAX (800.0f/10000.0f)
+#define KIMAX (10.0 /10000.0f)
+#define KDMAX (300.0f/10000.0f)
 #define KMIN 0.0f
 #define IMAX 1000.0f
 #define MAX_DELTA_TORQUE 40.0f

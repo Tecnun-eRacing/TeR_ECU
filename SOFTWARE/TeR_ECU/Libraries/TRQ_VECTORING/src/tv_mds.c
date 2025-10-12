@@ -79,11 +79,12 @@ trqMap_t trqVectoring(trq_t limit) {
 		tvPid->error = 0; //clear P error
 		tvPid->errorI = 0; // clear I error
 		tvPid->errorD = 0; // clear D error
-		tvPid->prevError = 0;
+		tvPid->prevError = 0; //clear prev Error
+
 		dTorque = 0;
 		TeR.tv_debug.delta_trq = 0;
 		TeR.tv_debug.yaw_ref = 0;
-		trqMap = torqueCheck(trqMap, limit, 0); //no negative torque allowed
+		trqMap = torqueCheck(trqMap, limit, 0);
 		return trqMap; //return tv output
 	}
 #endif
@@ -105,7 +106,7 @@ trqMap_t trqVectoring(trq_t limit) {
 	kd = clampf(kd * kd_mul, KMIN, KDMAX);
 	iMax = clampf(iMax * iM_mul, KMIN, IMAX);
 
-	// 3) aplicaar tabla de ganancias a PID
+	// 3) aplicar tabla de ganancias a PID
 	pidSetGains(tvPid, kp, ki, kd, iMax);
 
 	//Torque Vectoring Computation
@@ -130,7 +131,7 @@ trqMap_t trqVectoring(trq_t limit) {
 
 	//save tv_debug data
 	TeR.tv_debug.delta_trq = ter_tv_debug_delta_trq_encode(dTorque);
-	TeR.tv_debug.yaw_ref = ter_tv_debug_yaw_ref_encode(ref * 100 / DEG2RAD); // pasamos yawref a grados
+	TeR.tv_debug.yaw_ref = ter_tv_debug_yaw_ref_encode(ref / DEG2RAD); // pasamos yawref a centigrados
 	return trqMap; //return tv output
 }
 

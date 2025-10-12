@@ -305,7 +305,7 @@ void CanSchedulerTask(void *argument) {
 		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 2) == osOK) { // esperamos un tiempo a que los mailboxes se liberen, cuando se liberen, entramos (evita busy wait)
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
 					&mailbox);
-		} else {
+		} else { // en el caso de que se hayan tardado 2 millis en vaciar 1 mailbox, suponemos que hubo busoff, resincronizamos semaforo y rearrancamos
 			while (osSemaphoreAcquire(g_can_tx_mailbox_handle, 0) == osOK); // vaciamos semaforo
 			uint8_t free_mailboxes = HAL_CAN_GetTxMailboxesFreeLevel(mainCAN);
 			for (uint32_t i = 0; i < free_mailboxes; i++) {
