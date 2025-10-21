@@ -21,8 +21,8 @@ eeprom_data_t data; // estructura de datos de la eeprom
 
 uint8_t sendConfig(uint32_t frame_id, void *config) {
 	//Buffers volatiles para el envío
-	uint8_t TxData[8]; //Buffer para datos de envio
-	uint32_t size = 8;
+	uint8_t TxData[8] = {0}; //Buffer para datos de envio
+	uint32_t size = 8;//por default (innecesario)
 	switch (frame_id) {
 	case TER_REFRI_CONFIG_FRAME_ID: //configurar refri
 		struct ter_refri_config_t refri_config =
@@ -105,7 +105,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 		return 1;
 	}
 //Buffers volatiles para el envío
-	uint8_t TxData[8]; //Buffer para datos de envio
+	uint8_t TxData[8] = {0}; //Buffer para datos de envio
 	uint32_t size = TER_ECU_CONFIG_LENGTH;
 	uint32_t id = TER_ECU_CONFIG_FRAME_ID;
 	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config;
@@ -131,4 +131,6 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 	}
 	return 0;
 }
+
+
 
