@@ -116,7 +116,8 @@ trqMap_t trqVectoring(trq_t limit) {
 	float ref = yawRef(steer, TeR.wheelInfo.speed * KMH2MS);
 
 	//2) calculate pid
-	float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a radianes
+	//float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a radianes
+	float imuYawR = IMU.w_z * DEG2RAD;
 	imuYawR = isAngleInDeadzone(imuYawR, IMU_DEADZONE) ? 0 : imuYawR;
 	float corr = pid(tvPid, ref, imuYawR); //Computa el lazo y devuelve el valor de correccion
 	dTorque = mz2DeltaTorque(corr); //es una ganancia sin mas, no aporta al control
@@ -146,6 +147,8 @@ uint8_t isAngleInDeadzone(float angle, float range) {
 	uint8_t result = fabsf(angle) < range ? 1 : 0;
 	return result;
 }
+
+
 
 
 

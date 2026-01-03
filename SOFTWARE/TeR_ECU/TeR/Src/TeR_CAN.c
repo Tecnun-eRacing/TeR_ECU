@@ -250,7 +250,7 @@ void CanSchedulerTask(void *argument) {
 	CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 	uint32_t mailbox;
 	CanMessage_t next_msg;
-	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce load
+	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce puntual loads
 	uint8_t TxData[8] = {0};
 
 	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH,
@@ -302,13 +302,14 @@ void CanSchedulerTask(void *argument) {
 		}
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
-		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 2) == osOK) { // esperamos un tiempo a que los mailboxes se liberen, cuando se liberen, entramos (evita busy wait)
+		if (osSemaphoreAcquire(g_can_tx_mailbox_handle, 5) == osOK) { // esperamos un tiempo a que los mailboxes se liberen, cuando se liberen, entramos (evita busy wait)
 			HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
 					&mailbox);
-		} else { // en el caso de que se hayan tardado 2 millis en vaciar 1 mailbox, suponemos que hubo busoff, resincronizamos semaforo y rearrancamos
-			while (osSemaphoreAcquire(g_can_tx_mailbox_handle, 0) == osOK); // vaciamos semaforo
+		} else { // en el caso de overrun suponemos que hubo busoff, resincronizamos semaforo y rearrancamos
+			next_msg.next_when = osKernelGetTickCount(); // resincronizamos para que le vuelva a tocar instant
+			while (osSemaphoreAcquire(g_can_tx_mailbox_handle, 0) == osOK); // vaciamos semaforo, si llegamos aqui es porque ha habido evento de busoff
 			uint8_t free_mailboxes = HAL_CAN_GetTxMailboxesFreeLevel(mainCAN);
-			for (uint32_t i = 0; i < free_mailboxes; i++) {
+			for (uint32_t i = 0; i < free_mailboxes; i++) { // evil trick
 				osSemaphoreRelease(g_can_tx_mailbox_handle); // y lo resincronizamos
 			}
 		}
@@ -367,6 +368,10 @@ void canRx(void *argument) {
 				boot_flag = 1;
 				HAL_NVIC_SystemReset();
 			}
+			break;
+
+		case TER_ANG_RATE_FRAME_ID:
+			ter_ang_rate_unpack(&TeR.angRate, msg.data, msg.DLC);
 			break;
 
 		case TER_BTN_FRAME_ID:

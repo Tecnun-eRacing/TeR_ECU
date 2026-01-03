@@ -188,7 +188,7 @@ void stateLoop(void) {
 			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 40;
+			refri.intensity = 80;
 			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);

@@ -34,9 +34,9 @@
 #define ACTAPPS 5.0 // 2 apps (0-255) uint8_t
 #define STEER_DEADZONE (8.0*DEG2RAD)
 #define IMU_DEADZONE (2.0*DEG2RAD)
-#define KPMAX (800.0f/10000.0f)
+#define KPMAX (400000.0f/10000.0f)
 #define KIMAX (10.0 /10000.0f)
-#define KDMAX (300.0f/10000.0f)
+#define KDMAX (40000.0f/10000.0f)
 #define KMIN 0.0f
 #define IMAX 1000.0f
 #define MAX_DELTA_TORQUE 40.0f
@@ -50,6 +50,9 @@ static const float kd_tab[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f }
 // tabla antiwindup
 static const float iMax_tab[] =
 		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+
+
+
 
 
 float yawRef(float steer, float vx); //Funcion que toma angulo de rueda y velocidad de avance y devuelve referencia de giro yawrate
