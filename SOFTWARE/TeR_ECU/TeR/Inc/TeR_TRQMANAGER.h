@@ -68,7 +68,9 @@ typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
 typedef struct { // Contiene configuraciones del pipeline
 	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
 	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
+
 	trqMap_t (*tractionControl)();
+
 } trqPipeline_t;
 
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)

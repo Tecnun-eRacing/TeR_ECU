@@ -109,18 +109,18 @@ void inertial(void *argument) {
 		//Dump to canbus
 		//YPR
 
-		TeR.ypr.yaw = ter_ypr_yaw_encode(IMU.yaw);
-		TeR.ypr.pitch = ter_ypr_pitch_encode(IMU.pitch);
-		TeR.ypr.roll = ter_ypr_roll_encode(IMU.roll);
+		//TeR.ypr.yaw = ter_ypr_yaw_encode(IMU.yaw);
+		//TeR.ypr.pitch = ter_ypr_pitch_encode(IMU.pitch);
+		//TeR.ypr.roll = ter_ypr_roll_encode(IMU.roll);
 		//Accelerations
-		TeR.accel.a_x = ter_accel_a_x_encode(IMU.a_x);
-		TeR.accel.a_y = ter_accel_a_x_encode(IMU.a_y);
-		TeR.accel.a_z = ter_accel_a_x_encode(IMU.a_z);
+		//TeR.accel.a_x = ter_accel_a_x_encode(IMU.a_x);
+		//TeR.accel.a_y = ter_accel_a_x_encode(IMU.a_y);
+		//TeR.accel.a_z = ter_accel_a_x_encode(IMU.a_z);
 
 		//Angular Rate
-		TeR.angRate.yaw_rate_z = ter_ang_rate_yaw_rate_z_encode(IMU.w_z);
-		TeR.angRate.pitch_rate_y = ter_ang_rate_pitch_rate_y_encode(IMU.w_y);
-		TeR.angRate.roll_rate_x = ter_ang_rate_roll_rate_x_encode(IMU.w_x);
+		//TeR.angRate.yaw_rate_z = ter_ang_rate_yaw_rate_z_encode(IMU.w_z);
+		//TeR.angRate.pitch_rate_y = ter_ang_rate_pitch_rate_y_encode(IMU.w_y);
+		//TeR.angRate.roll_rate_x = ter_ang_rate_roll_rate_x_encode(IMU.w_x);
 
 	}
 }

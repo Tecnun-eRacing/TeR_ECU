@@ -262,20 +262,20 @@ void CanSchedulerTask(void *argument) {
 	can_scheduler_insert_msg_with_phase(TxData, TER_INVERTER_INFO_LENGTH,
 	TER_INVERTER_INFO_FRAME_ID, 10, ter_inverter_info_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
-	TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
+	//TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_ACCEL_LENGTH,
-	TER_ACCEL_FRAME_ID, 5, ter_accel_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_ACCEL_LENGTH,
+	//TER_ACCEL_FRAME_ID, 5, ter_accel_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_GPS_LAT_LONG_LENGTH,
-	TER_GPS_LAT_LONG_FRAME_ID, 10, ter_gps_lat_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_GPS_LAT_LONG_LENGTH,
+	//TER_GPS_LAT_LONG_FRAME_ID, 10, ter_gps_lat_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_YPR_LENGTH,
-	TER_YPR_FRAME_ID, 5, ter_ypr_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_YPR_LENGTH,
+	//TER_YPR_FRAME_ID, 5, ter_ypr_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
-	TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
+	//TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
 	can_scheduler_insert_msg_with_phase(TxData, TER_TV_DEBUG_LENGTH,
 	TER_TV_DEBUG_FRAME_ID, 5, ter_tv_debug_callback);

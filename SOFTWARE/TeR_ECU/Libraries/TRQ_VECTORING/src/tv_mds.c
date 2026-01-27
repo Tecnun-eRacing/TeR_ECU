@@ -117,7 +117,7 @@ trqMap_t trqVectoring(trq_t limit) {
 
 	//2) calculate pid
 	//float imuYawR = IMU.w_z * DEG2RAD; // Imu yawRate a radianes
-	float imuYawR = IMU.w_z * DEG2RAD;
+	float imuYawR = ter_ang_rate_yaw_rate_z_decode(TeR.angRate.yaw_rate_z); // output en radianes
 	imuYawR = isAngleInDeadzone(imuYawR, IMU_DEADZONE) ? 0 : imuYawR;
 	float corr = pid(tvPid, ref, imuYawR); //Computa el lazo y devuelve el valor de correccion
 	dTorque = mz2DeltaTorque(corr); //es una ganancia sin mas, no aporta al control
