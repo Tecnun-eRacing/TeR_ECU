@@ -13,7 +13,7 @@
 #include "stm32f4xx_hal.h"
 #include "TeR_CAN.h"
 
-#define SCS {TER_APPS_FRAME_ID,0xDEADBEEF} //Añadir aqui las señales criticas
+#define SCS {TER_APPS_FRAME_ID} //Añadir aqui las señales criticas
 #define SCS_TIMEOUT 500  //Define el tiempo en unidades del timer (ms) que una scs puede desviarse como maximo
 
 

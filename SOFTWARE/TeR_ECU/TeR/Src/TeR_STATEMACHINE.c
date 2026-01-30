@@ -31,20 +31,17 @@
  */
 #include "TeR_STATEMACHINE.h"
 
-/*Implementacion FreeRTOS Piero
+/*Implementacion FreeRTOS
  *
  * - La idea principal es tener una tarea que se encargue de controlar la maquina de estados, de igual prioridad que la recepción de mensajes (no queremos que se pisen)
  *
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
- *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
- * 		 Podriamos usar software timers (se ha probado y es lo mismo), su implementacion sin embargo no es la mas practica, ya que debemos
- * 		 registrar un callback que mande señales de desbloqueo a los threads, y que estos a su vez esperen a dichas señales,
- * 		 ademas de que NO garantiza ejecucion temporal precisa, ya que por naturaleza la Daemon Task es de baja prioridad(se puede cambiar) (Reference Manual),
- * 		 por lo que se ha decidido utilizar la funcion recomendada por el reference manual para ejecuciones temporales precisas
+ *		 ejecuciones temporizadas sin desfase temporal.
  *
  * - Cuando pasamos al estado DRIVING debemos tener un delay durante 2 segundos, no necesariamente para el beep (que actualmente esta
  * 		implementado utilizando un One Shoot Software timer para evitar halts en las tareas, ver command) sino porque debemos detener la maquina de estados
  *		para evitar la comanda de par durante el pitido.
+ *		Se puede implementar de otra manera, añadiendo un estado temporal en el que estaremos esperando durante 2 segs, por ejemplo, "wait2sState" o algo asi
  *
  */
 
@@ -59,7 +56,7 @@ uint8_t cButton;
 uint8_t regenButton;
 
 // FreeRTOS dependencies
-const static uint32_t task_period = 2; // Task frequency 500 Hz
+const static uint32_t task_period = 5; // Task frequency
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
@@ -87,7 +84,7 @@ state_t evalState(void) {
 			status = PRECHARGED;
 			if (TeR.status.r2_d
 					&& ((TeR.appStateRight.app_state_app == 4)
-							|| (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y los dos inversores operativos
+							|| (TeR.appStateLeft.app_state_app == 4))) { //la flag de ready2drive esta activada y alguno de los dos inversores operativos
 				status = DRIVING;
 			}
 		}
@@ -217,7 +214,7 @@ void permaTask() {
 // Proccess Wheel Data
 	TeR.wheelInfo.rl_rpm = ((TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES)
 			* RED_RATIO;
-	TeR.wheelInfo.rr_rpm = (TeR.dqErpmRight.e_machine_speed_erpm / MOTOR_POLES)
+	TeR.wheelInfo.rr_rpm = ((TeR.dqErpmRight.e_machine_speed_erpm) / MOTOR_POLES)
 			* RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;

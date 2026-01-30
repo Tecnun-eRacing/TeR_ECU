@@ -67,10 +67,10 @@ typedef struct { //Si quieres hacer un 4wd añade 2 miembros más y a correr
 //ManagerConfigs
 typedef struct { // Contiene configuraciones del pipeline
 	trq_t (*limiter)(void); //Toma un valor de limitación de potencia en kw y devuelve el torque desarrollable (trqLimit)
-	trqMap_t (*drivingMode)(trq_t trqLimit); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
-
-	trqMap_t (*tractionControl)();
-
+	trqMap_t (*drivingMode)(trq_t in); //Toma un torque limite y lo distribuye según decida el modo en las ruedas
+	trqMap_t (*regenMode)(trqMap_t in); //toma la distribución de torque y decide si aplicar/aceptar regeneración
+	trqMap_t (*tractionControl)(trqMap_t in); //valida que podamos dar el grip necesario
+	trqMap_t (*sanityChecks)(trqMap_t in,trq_t limit); //valida que no estemos haciendo ninguna estupidez
 } trqPipeline_t;
 
 extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración del pipeline (Solo se puede cambiar fuera de driving mediante el sistema de comandos)
@@ -79,18 +79,26 @@ extern trqPipeline_t DriveConfig; //Expone al resto de modulos la configuración
 
 //Main functions
 void trqManager(void* argument); //Executes all the torque pipeline
-uint8_t loadParams(trqPipeline_t* config); //
+uint8_t loadParams(trqPipeline_t* config);
 
 //Basic limiters
 trq_t limitTorque(void);
 
 //Basic modes
 trqMap_t lineal(trq_t limit);
+trqMap_t remoteTrqRequest(trq_t limit);
 
 //Basic traction Control
 trqMap_t tractionControlOFF(trqMap_t in);
 
-trqMap_t torqueCheck(trqMap_t in, trq_t limit, trq_t allowedNegativeTorque); //allowNegative is defined as a positive number that indicates the maximum allowed negative torque
-uint8_t regen_allowed(trqMap_t in);
+//Basic regen
+trqMap_t regenModeAPPS(trqMap_t in);
+trqMap_t regenModeDV(trqMap_t in);
+
+
+//sanity Checks
+trqMap_t trqCheck(trqMap_t in,trq_t limit);
+
+uint8_t regen_allowed();
 
 #endif

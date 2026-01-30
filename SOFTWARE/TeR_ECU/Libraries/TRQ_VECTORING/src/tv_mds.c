@@ -3,7 +3,7 @@
  *
  *  Created on: Jan 31, 2024
  *      Author: Piero, Telmo Martinez de Salinas, Ozuba
- *      NO TOCAR LOOPTIME NO TOCAR LOOPTIME NO TOCAR LOOPTIME
+ *      LOOPTIME DEBE DE SER IGUAL A EL EXISTENTE EN TRQMANAGER
  */
 
 #include "tv_mds.h"
@@ -69,22 +69,20 @@ trqMap_t trqVectoring(trq_t limit) {
 	trqMap_t trqMap;
 	dTorque = 0;
 
-#ifdef SAFETY
+#ifdef SAFETY // for testing the car in the elevator, comment safety
 	//check if car is not at speed, or pedal is not being pressed, if true Reset PID and LINEAR RESPONSE
 	//Not in conditions for Torque Vectoring
 	if (((TeR.wheelInfo.speed < ACTSPEED) || (TeR.apps.apps_av < ACTAPPS)
-			|| TeR.bpps.bpps > TeR.config.r2_d_brake)) { // if below activation speed or pedal below threshold, or steering not turning, return linear response and clear pid error
+			|| (TeR.bpps.bpps > TeR.config.r2_d_brake))) { // if below activation speed or pedal below threshold, or steering not turning, return linear response and clear pid error
 		trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 		tvPid->error = 0; //clear P error
 		tvPid->errorI = 0; // clear I error
 		tvPid->errorD = 0; // clear D error
 		tvPid->prevError = 0; //clear prev Error
-
-		dTorque = 0;
+		dTorque = 0; // set dTorque to 0
 		TeR.tv_debug.delta_trq = 0;
 		TeR.tv_debug.yaw_ref = 0;
-		trqMap = torqueCheck(trqMap, limit, 0);
 		return trqMap; //return tv output
 	}
 #endif
@@ -128,7 +126,6 @@ trqMap_t trqVectoring(trq_t limit) {
 	//Fill trqMap structure with dTorque
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5) + dTorque / 2;
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5) - dTorque / 2;
-	trqMap = torqueCheck(trqMap, limit, limit); //negative torque is allowed, improves rotation dynamics
 
 	//save tv_debug data
 	TeR.tv_debug.delta_trq = ter_tv_debug_delta_trq_encode(dTorque);
@@ -143,6 +140,7 @@ uint8_t tv_deInitPID(void) {
 	return 1;
 }
 
+//Check if a value is is a deadzone
 uint8_t isAngleInDeadzone(float angle, float range) {
 	uint8_t result = fabsf(angle) < range ? 1 : 0;
 	return result;

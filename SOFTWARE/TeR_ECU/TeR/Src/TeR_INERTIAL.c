@@ -65,7 +65,7 @@ void inertial(void *argument) {
 		asm330lhh_gy_flag_data_ready_get(&imu, &reg);
 
 		if (reg) {
-			logSCS(0xDEADBEEF); // log scs imu (influences on torque, dangerous)
+			//logSCS(0xDEADBEEF); // log scs imu (influences on torque, dangerous)
 			/* Read angular rate field data */
 			memset(gy_raw, 0x00, 3 * sizeof(int16_t));
 			asm330lhh_angular_rate_raw_get(&imu, gy_raw);

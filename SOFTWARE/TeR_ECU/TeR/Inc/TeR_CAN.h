@@ -47,12 +47,18 @@ typedef struct  {
 }canMsg_t;
 
 struct TeR_t {
-//Propias
+	//Propias
 	struct ter_ter_status_t status;
 	struct ter_wheel_info_t wheelInfo;
 	struct ter_inverter_info_t invInfo;
 	struct ter_ecu_config_t config; //El mensaje con todas las configuraciones
 	struct ter_tv_debug_t tv_debug; // debug del torque
+	struct ter_dv_dynamic_req_t dv_dynamic_req; // request externos de torque y steer
+	struct ter_dv_mission_req_t dv_mission_req; // request externos de mision
+	struct ter_dv_driving_dynamics_1_t dv_driving_dynamics_1; //estados dv 1
+	struct ter_dv_driving_dynamics_2_t dv_driving_dynamics_2; // estados dv 2
+	struct ter_dv_system_status_t dv_system_status; // mas estados dv
+
 
 	//IMU related
 	struct ter_ang_rate_t angRate; //Angular rate(speed) from imu gyroscope
@@ -70,6 +76,17 @@ struct TeR_t {
 	struct ter_lv_status_t lvbms; //Estado del BMS de baja
 	struct ter_btn_t buttons; // botones del volante
 	struct ter_refri_config_t refri_config; //configuracion de refri
+	struct ter_asb_status_t asb_status; // estado asb
+	struct ter_asb_ebs_state_req_t asb_ebs_state_req; //request asb ebs, no deberíamos de pedir esto nunca
+	struct ter_asb_redundancy_req_t asb_redundancy_req; // request asb redundantes, pedir para frenar autónomo
+	struct ter_steer_actuator_status_t steer_actuator_status_t; // estado actuador steering
+	struct ter_steer_actuator_set_position_speed_loop_t steer_actuator_set_position_speed_loop; // setear loop completo
+	struct ter_steer_actuator_set_position_t steer_actuator_set_position; //setear pos
+	struct ter_res_nmt_node_control_t res_nmt_node_control; //control res (mandarlo a active)
+	struct ter_res_pdo_tx_t res_pdo_tx; // cositas que manda el res (estado switches y demas)
+	struct ter_res_nmt_node_monitoring_t res_nmt_node_monitoring;// lo manda una sola vez cuando se enciende el vehículo
+
+
 
 	//Inverters.dbc
 	//Enviados

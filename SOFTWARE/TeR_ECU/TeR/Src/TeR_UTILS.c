@@ -34,6 +34,20 @@ int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 	long val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	return val;
 }
+
+//Mapea un intervalo (float)
+float mapf(float x, float in_min, float in_max, float out_min,
+		float out_max) {
+//Saturar las salidas si la entrada excede el límite de calibracion
+	if (x < in_min)
+		return out_min;
+	if (x > in_max)
+		return out_max;
+//Mapear si estamos en rango seguro
+	float val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	return val;
+}
+
 uint8_t read_btn(uint8_t *lock, uint8_t read) {
 	if (osKernelGetTickCount() < 3000) { // esto es para que no pueda tocar nada sin querer en el arranque, 3 segundos
 		return 0;

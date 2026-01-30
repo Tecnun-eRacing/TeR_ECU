@@ -1,4 +1,4 @@
-/* ---------------------------[MAIN CAN TX Scheduler, Author: Asempere, Contributors: pieroebs]-------------------------- */
+/* ---------------------------[MAIN CAN TX Scheduler, Author: Asempere]-------------------------- */
 
 // Example usage:
 // // Every 100ms

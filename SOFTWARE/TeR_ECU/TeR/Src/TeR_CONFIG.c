@@ -3,6 +3,7 @@
  *
  *  Created on: Apr 12, 2025
  *      Author: piero
+ *      Contributors:
  *
  *      Sistema de configs.
  *
@@ -21,18 +22,18 @@ eeprom_data_t data; // estructura de datos de la eeprom
 
 uint8_t sendConfig(uint32_t frame_id, void *config) {
 	//Buffers volatiles para el envío
-	uint8_t TxData[8] = {0}; //Buffer para datos de envio
-	uint32_t size = 8;//por default (innecesario)
+	uint8_t TxData[8] = { 0 }; //Buffer para datos de envio
 	switch (frame_id) {
 	case TER_REFRI_CONFIG_FRAME_ID: //configurar refri
 		struct ter_refri_config_t refri_config =
 				*(struct ter_refri_config_t*) config;
-		ter_refri_config_pack(TxData, &refri_config, size);
+		ter_refri_config_pack(TxData, &refri_config, sizeof(TxData));
 		break;
 	default:
 		return 1;
 	}
-	while(!can_scheduler_insert_non_periodic_msg(TxData, size, frame_id, 0)){
+	while (!can_scheduler_insert_non_periodic_msg(TxData, sizeof(TxData),
+			frame_id, 0)) {
 		osDelay(5);
 	}
 	return 0;
@@ -41,8 +42,8 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 uint8_t initConfig() {
 	EE24_Init(&eeprom, &hi2c2, EE24_ADDRESS_DEFAULT);
 	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500); // load config struct
-	if (data.written == 1) { // if eeprom has been written, copy data to car
-		TeR.config = data.config;
+	if (data.written == 1) { // Si la eeprom ha sido leida
+		TeR.config = data.config; // copiamos datos de eeprom al vehículo
 		return 1;
 	} // if eeprom was not written or anything when bad (data.written is defaulted 0), default config should be loaded
 	defaultConfig(&TeR.config);
@@ -57,7 +58,7 @@ uint8_t writeConfig(struct ter_ecu_config_t config) {
 		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_CHOICE:
 			defaultConfig(&config); //reset config to predetermined values
 			break;
-		case TER_ECU_CONFIG_EEPROM_READ_CHOICE:
+		case TER_ECU_CONFIG_EEPROM_READ_ALL_CHOICE:
 			publishConfig(&config, ALL_CONFIGS);
 			break;
 		}
@@ -105,7 +106,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 		return 1;
 	}
 //Buffers volatiles para el envío
-	uint8_t TxData[8] = {0}; //Buffer para datos de envio
+	uint8_t TxData[8] = { 0 }; //Buffer para datos de envio
 	uint32_t size = TER_ECU_CONFIG_LENGTH;
 	uint32_t id = TER_ECU_CONFIG_FRAME_ID;
 	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config;
@@ -113,7 +114,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			&& (config_id >= 0)) { // if user is requesting a specific config, and the config is valid, send specific config
 		ecu_config.entry = config_id;
 		ter_ecu_config_pack(TxData, &ecu_config, size);
-		while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)){
+		while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)) {
 			osDelay(5);
 		}
 
@@ -124,7 +125,7 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 			}
 			ecu_config.entry = i;
 			ter_ecu_config_pack(TxData, &ecu_config, size);
-			while(!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)){
+			while (!can_scheduler_insert_non_periodic_msg(TxData, size, id, 0)) {
 				osDelay(5);
 			}
 		}
@@ -132,5 +133,16 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 	return 0;
 }
 
-
+void handle_config(struct ter_ecu_config_t *config) {
+	if (config->entry == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) {
+		switch(config->eeprom){
+		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_CHOICE:
+			defaultConfig(config);
+			break;
+		case TER_ECU_CONFIG_EEPROM_READ_ALL_CHOICE:
+			publishConfig(config, ALL_CONFIGS);
+			break;
+		}
+	}
+}
 
