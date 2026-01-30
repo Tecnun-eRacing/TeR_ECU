@@ -20,13 +20,20 @@ extern I2C_HandleTypeDef hi2c2;
 EE24_HandleTypeDef eeprom; // handle de la eeprom
 eeprom_data_t data; // estructura de datos de la eeprom
 
-uint8_t sendConfig(uint32_t frame_id, void *config) {
+
+/*
+ * Enviar un struct de configuración particular de una placa externa
+ * IMPORTANTE: es tu responsabilidad saber lo que estás haciendo y asegurarte que en el uso de la función,
+ * el tipo que deseas usar esta considerado como caso, y que el frame_id esté relacionado con ese tipo,
+ * sino, vas a hacer una corrupción de memoria buena. Nunca me ha pasado pero tienes que estar pendiente de lo que estás haciendo
+ */
+uint8_t send_config(uint32_t frame_id, void *config) {
 	//Buffers volatiles para el envío
 	uint8_t TxData[8] = { 0 }; //Buffer para datos de envio
 	switch (frame_id) {
 	case TER_REFRI_CONFIG_FRAME_ID: //configurar refri
 		struct ter_refri_config_t refri_config =
-				*(struct ter_refri_config_t*) config;
+				*(struct ter_refri_config_t*) config; // interpretamos el puntero como un struct de config de refri
 		ter_refri_config_pack(TxData, &refri_config, sizeof(TxData));
 		break;
 	default:
@@ -38,38 +45,38 @@ uint8_t sendConfig(uint32_t frame_id, void *config) {
 	}
 	return 0;
 }
-
-uint8_t initConfig() {
+/*
+ * Arrancar la EEPROM y copiar los datos al struct del vehículo
+ * En caso de fallo en la lectura, se configurarán los valores por defecto ellamando a set_default_config
+ * */
+uint8_t init_config() {
 	EE24_Init(&eeprom, &hi2c2, EE24_ADDRESS_DEFAULT);
 	EE24_Read(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500); // load config struct
 	if (data.written == 1) { // Si la eeprom ha sido leida
 		TeR.config = data.config; // copiamos datos de eeprom al vehículo
 		return 1;
 	} // if eeprom was not written or anything when bad (data.written is defaulted 0), default config should be loaded
-	defaultConfig(&TeR.config);
-	writeConfig(TeR.config);
+	set_default_config(&TeR.config);
+	write_config(&TeR.config);
 	return 0;
 }
-
-uint8_t writeConfig(struct ter_ecu_config_t config) {
-
-	if (config.entry == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) {
-		switch (config.eeprom) {
-		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_CHOICE:
-			defaultConfig(&config); //reset config to predetermined values
-			break;
-		case TER_ECU_CONFIG_EEPROM_READ_ALL_CHOICE:
-			publishConfig(&config, ALL_CONFIGS);
-			break;
-		}
-	}
-	TeR.config = config;
+/*
+ *	Escribir en la EEPROM un struct de config
+ */
+uint8_t write_config(struct ter_ecu_config_t *config) {
+	//memcpy(&TeR.config,config,sizeof(struct ter_ecu_config_t));
+	TeR.config = *config; //esto confio plenamente en que el compilador me arregla la vida
 	data.config = TeR.config;
 	data.written = 1;
-	return EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500);
+	return EE24_Write(&eeprom, 0, (uint8_t*) &data, sizeof(data), 500); //ojo, podría llegar a bloquear, como máximo durante 500ms
 }
 
-void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config struct to default
+/*
+ * Setear un struct de config a valores por defecto, OJO, debes de configurar tu manualmente aqui cuales son los valores que se
+ * considerarán por defecto.
+ * */
+void set_default_config(struct ter_ecu_config_t *config) { //set car internal config struct to default
+	memset(config,0,sizeof(struct ter_ecu_config_t)); // seteamos el struct a 0 por seguridad (intentar siempre que safestate sea 0)
 	config->entry = TER_ECU_CONFIG_ENTRY_SCS_ENABLE_CHOICE; // para evitar bucle de reset de eeprom, seteamos entry a un valor por defecto (por definir en .dbc)
 	config->driving_mode =
 	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
@@ -101,7 +108,12 @@ void defaultConfig(struct ter_ecu_config_t *config) { //set car internal config 
 	return;
 }
 
-uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
+/*
+ * Esta funcion permite dumpear un struct de config por CAN
+ * Permite seleccionar cual config deseas enviar en particular, o publicar todas las configuraciones cargadas
+ * del sistema, con el define ALL_CONFIGS
+ * */
+uint8_t publish_config(struct ter_ecu_config_t *config, uint32_t config_id) {
 	if (data.written != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion, evitamos exponer junk a la pantalla en el arranque por ejemplo
 		return 1;
 	}
@@ -133,14 +145,55 @@ uint8_t publishConfig(struct ter_ecu_config_t *config, uint32_t config_id) {
 	return 0;
 }
 
-void handle_config(struct ter_ecu_config_t *config) {
+/*
+ * Esta función toma un puntero a un struct de configuración de la ecu y analiza el request
+ * Tomará las acciones pertinentes según sea el request pedido
+ *
+ * 1) En el caso en el que sea un request de EEPROM:
+ * 	- se analizará los 3 tipos de request de eeprom y se realizaran las acciones pertinentes
+ * 	- si el campo de mensaje no es ninguno de los casos, significa que se está haciendo un request específico de lectura de datos guardados en la eeprom
+ *
+ * 	2) En el caso en el que sea un request de RAM:
+ * 	- se analizará si se ha pedido un "read_all"
+ * 	- si el campo de mensaje no es ninguno de los casos, significa que se está haciendo un request específico de lectura de datos guardados en la RAM
+ *
+ *
+ * 	Ejemplo:
+ *
+ * 	recibimos TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE, con TER_ECU_CONFIG_EEPROM_SAVE_ALL_CHOICE
+ * 	-> La eeprom escribirá la config en la ram y en la eeprom
+ *
+ * 	recibimos TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE pero ninguno de los casos de config-> eeprom coinciden:
+ * 	-> asumimos que el transmisor nos está haciendo un request de lo que sea que valga config->eeprom, por ejemplo TER_ECU_CONFIG_ENTRY_LIMITER_CHOICE
+ * 	siempre, enviaremos en config-> eeprom el valor de entry que queremos consultar
+ *   -> enviaremos la configuración correspondiente a ese registro para que el que la haya pedido la pueda ver
+ * */
+
+void handle_config_entry(struct ter_ecu_config_t *config) {
 	if (config->entry == TER_ECU_CONFIG_ENTRY_EEPROM_CHOICE) {
 		switch(config->eeprom){
-		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_CHOICE:
-			defaultConfig(config);
+		case TER_ECU_CONFIG_EEPROM_CLEAR_AND_DEFAULT_ALL_CHOICE:
+			set_default_config(config);
+			write_config(config);
 			break;
 		case TER_ECU_CONFIG_EEPROM_READ_ALL_CHOICE:
-			publishConfig(config, ALL_CONFIGS);
+			publish_config(config, ALL_CONFIGS);
+			break;
+		case TER_ECU_CONFIG_EEPROM_SAVE_ALL_CHOICE:
+			write_config(config);
+			break;
+		default: // si no es ninguno de los anteriores, signifíca que se nos está intentando hacer un request de lectura de config desde la EEPROM
+			publish_config(config,config->eeprom);
+			break;
+		}
+	}
+	else if(config->entry == TER_ECU_CONFIG_ENTRY_RAM_CHOICE){
+		switch(config->ram){
+		case TER_ECU_CONFIG_RAM_READ_ALL_CHOICE:
+			publish_config(&TeR.config, ALL_CONFIGS);
+			break;
+		default: // si no es ninguno de los anteriores casos, significa que esta haciendo request de lectura de config en la RAM
+			publish_config(&TeR.config,config->ram);
 			break;
 		}
 	}

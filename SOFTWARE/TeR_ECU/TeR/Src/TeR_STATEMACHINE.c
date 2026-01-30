@@ -60,7 +60,7 @@ const static uint32_t task_period = 5; // Task frequency
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
-	initConfig(); // Arrancar eeprom y cargar configuraciones del sistema
+	init_config(); // Arrancar eeprom y cargar configuraciones del sistema
 	for (;;) {
 		osDelay(task_period); //osDelay porque no necesitamos ejecución estricta sin desfases en la maquina de estados
 		stateLoop(); //ejecutamos la maquina de estados del vehiculo
@@ -100,7 +100,7 @@ void stateLoop(void) {
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
-		//publishConfig(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
+		//publish_config(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
 			TeR.BmsAppReq.app_state_req =
@@ -112,11 +112,11 @@ void stateLoop(void) {
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 0;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
@@ -125,7 +125,7 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
-			publishConfig(&TeR.config, ALL_CONFIGS);
+			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
@@ -141,7 +141,7 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			publishConfig(&TeR.config, ALL_CONFIGS);
+			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
 			//Anounce through USB CDC
@@ -151,29 +151,29 @@ void stateLoop(void) {
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			request de intensidad 20%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 20;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
 			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 //			activamos cooling  ACCU
 		/*	ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
 			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			request de intensidad 100%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
 			refri.intensity_accu = 100;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
 			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
@@ -186,7 +186,7 @@ void stateLoop(void) {
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 80;
-			sendConfig(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
@@ -257,7 +257,7 @@ void buttonHandler() {
 		} else {
 			TeR.config.trq_limit = 180;
 		}
-		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
+		publish_config(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if ((read_btn(&rButton, TeR.buttons.er)) && !TeR.buttons.eb) {
 		if (TeR.config.trq_limit - 10 >= 60) {
@@ -265,7 +265,7 @@ void buttonHandler() {
 		} else {
 			TeR.config.trq_limit = 60;
 		}
-		publishConfig(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
+		publish_config(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
 		TeR.refri_config.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
@@ -273,7 +273,7 @@ void buttonHandler() {
 				(TeR.refri_config.power == TER_REFRI_CONFIG_POWER_ON_CHOICE) ?
 						TER_REFRI_CONFIG_POWER_OFF_CHOICE :
 						TER_REFRI_CONFIG_POWER_ON_CHOICE;
-		sendConfig(TER_REFRI_CONFIG_FRAME_ID, &TeR.refri_config);
+		send_config(TER_REFRI_CONFIG_FRAME_ID, &TeR.refri_config);
 	}
 
 }

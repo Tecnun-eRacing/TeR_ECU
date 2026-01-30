@@ -358,17 +358,17 @@ void canRx(void *argument) {
 
 		case TER_ECU_CONFIG_FRAME_ID:
 			ter_ecu_config_unpack(&TeR.config, msg.data, msg.DLC);
-			handle_config(&TeR.config);
-			//writeConfig(TeR.config); // TODO esto mejor fuera de aqui guardamos la config en la eeprom
+			handle_config_entry(&TeR.config);
 			break;
-		case BOOTER_BOOT_TX_FRAME_ID:
+
+		case BOOTER_BOOT_TX_FRAME_ID: // request del bootloader, verifica comando init y request a esta placa de entrar en bootloader
 			struct booter_boot_tx_t boot;
 			booter_boot_tx_init(&boot);
 			booter_boot_tx_unpack(&boot, msg.data, msg.DLC);
 			if ((boot.boot_cmd == BOOTER_BOOT_TX_BOOT_CMD_BOOT_INIT_CHOICE)
 					&& (boot.node_id == BOOTER_BOOT_TX_NODE_ID_ECU_CHOICE)) {
-				boot_flag = 1;
-				HAL_NVIC_SystemReset();
+				boot_flag = 1; // variable ubicada en sección específica en flash
+				HAL_NVIC_SystemReset(); // reset del NVIC, el bootloader tomará el control (si lo has flasheado)
 			}
 			break;
 
