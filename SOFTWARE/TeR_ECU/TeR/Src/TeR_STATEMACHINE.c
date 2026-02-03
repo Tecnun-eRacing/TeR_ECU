@@ -38,11 +38,6 @@
  * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
  *		 ejecuciones temporizadas sin desfase temporal.
  *
- * - Cuando pasamos al estado DRIVING debemos tener un delay durante 2 segundos, no necesariamente para el beep (que actualmente esta
- * 		implementado utilizando un One Shoot Software timer para evitar halts en las tareas, ver command) sino porque debemos detener la maquina de estados
- *		para evitar la comanda de par durante el pitido.
- *		Se puede implementar de otra manera, añadiendo un estado temporal en el que estaremos esperando durante 2 segs, por ejemplo, "wait2sState" o algo asi
- *
  */
 
 //Persistance checker
@@ -60,9 +55,11 @@ const static uint32_t task_period = 5; // Task frequency
 
 //FreeRTOS Task
 void stateMachine(void *argument) {
+	uint32_t currentTick = osKernelGetTickCount();
 	init_config(); // Arrancar eeprom y cargar configuraciones del sistema
 	for (;;) {
-		osDelay(task_period); //osDelay porque no necesitamos ejecución estricta sin desfases en la maquina de estados
+		currentTick += task_period;
+		osDelayUntil(currentTick);
 		stateLoop(); //ejecutamos la maquina de estados del vehiculo
 	}
 }
@@ -103,6 +100,7 @@ void stateLoop(void) {
 		//publish_config(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		switch (state) {
 		case WAIT_SL:
+			TeR.status.r2_d = 0;
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
@@ -125,6 +123,7 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
+			TeR.status.r2_d = 0;
 			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
@@ -141,6 +140,13 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
+			if(TeR.status.asms){
+				// configurar modo de conducción del DV
+			}
+			else{
+				// configurar modo de condución del manual
+			}
+			TeR.status.r2_d = 0;
 			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
@@ -162,18 +168,18 @@ void stateLoop(void) {
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 //			activamos cooling  ACCU
-		/*	ter_refri_config_init(&refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
-			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
-			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-//			request de intensidad 100%
-			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
-			refri.intensity_accu = 100;
-			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-//			modo manual
-			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
-			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
-			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
+			/*	ter_refri_config_init(&refri);
+			 refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
+			 refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
+			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			 //			request de intensidad 100%
+			 refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
+			 refri.intensity_accu = 100;
+			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			 //			modo manual
+			 refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
+			 refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
+			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
@@ -187,17 +193,13 @@ void stateLoop(void) {
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
 			refri.intensity = 80;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-
 			easyCommand(TER_COMMAND_CMD_START_LOG_CHOICE);
-			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-			osDelay(1000);
-			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
 			break;
 		default:
 			//Handle Invalid state
 			break;
 		}
-		TeR.status.state = state;
+		TeR.status.state = state; // importante sincronizar el estado AL FINAL
 	}
 }
 
@@ -214,8 +216,8 @@ void permaTask() {
 // Proccess Wheel Data
 	TeR.wheelInfo.rl_rpm = ((TeR.dqErpmLeft.e_machine_speed_erpm) / MOTOR_POLES)
 			* RED_RATIO;
-	TeR.wheelInfo.rr_rpm = ((TeR.dqErpmRight.e_machine_speed_erpm) / MOTOR_POLES)
-			* RED_RATIO;
+	TeR.wheelInfo.rr_rpm =
+			((TeR.dqErpmRight.e_machine_speed_erpm) / MOTOR_POLES) * RED_RATIO;
 	TeR.wheelInfo.rl_trq = TeR.trqEstLeft.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.rr_trq = TeR.trqEstRight.torque_est_nm / RED_RATIO;
 	TeR.wheelInfo.speed =

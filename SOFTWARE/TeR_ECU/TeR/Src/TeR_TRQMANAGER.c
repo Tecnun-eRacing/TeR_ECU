@@ -4,16 +4,23 @@
  *  Created on: Mar 30, 2024
  *      Author: Ozuba
  *      Contributors: Piero
+ *      Este archivo encapsula la gestión del torque del vehículo
+ *      Se trata de un pipeline de ejecución que limita, calcula y valida el torque que se enviará a las ruedas
  *
- */
+ * 		Lo pongo en español para dejarlo claro: El 90 % de este archivo lo unico que hace es prevenir comandar torque en
+ * 		situaciones peligrosas. Si ves multiples doble checks, que puedan parecer en un momento innecesarios, cuando se trata de un
+ * 		coche eléctrico, en el que una comanda incorrecta puede significar irte contra un muro, todo lo que sea por seguridad suma.
+ *
+ *
+ * 		Es importante que todo lo que cambies de este archivo sea testeado correctamente, no vale probar y decir "funciona"
+ * 		recordemos que esto es algo extremadamente crítico
+ *
+ * 		Siempre testea tus cambios con el coche subido en el elevador, NUNCA, NUNCA cambies algo de aqui y confies en que vaya a funcionar
+ * 		recuerda que esto es peligroso
+ * */
 
 #include "TeR_TRQMANAGER.h"
 #include "tv_mds.h"
-
-/* RTOS
- * - La ejecución temporizada con osDelayUntil(), debido a que es la forma mas correcta de realizar
- *		 ejecuciones temporizadas sin desfase
- */
 
 const static int task_period = 5; // Task frequency
 
@@ -29,11 +36,11 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 		nextTick += task_period; //Genera el timestamp de la siguiente ejecucion
 		osDelayUntil(nextTick); // esperamos
 		//Check if we are driving
-		if (TeR.status.state == DRIVING) {
+		if ((TeR.status.state == DRIVING)) {
 			//Execute Pipeline
-			trq_t availableTorque = DriveConfig.limiter(); //Limita (proveniente de config)
+			trq_t availableTorque = DriveConfig.limiter(); //genera una limitación de torque
 
-			trqMap_t driveTorque = DriveConfig.drivingMode(availableTorque); //Distribuye torque proveniente de input
+			trqMap_t driveTorque = DriveConfig.drivingMode(availableTorque); //Distribuye torque
 
 			driveTorque = DriveConfig.regenMode(driveTorque); //Distribuye torque teniendo en cuenta modo de regeneración (permite / otorga regeneración)
 
@@ -66,6 +73,11 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 				DriveConfig.drivingMode = &trqVectoring;
 				tv_deInitPID(); // si el puntero esta creado, lo libera y lo setea a NULL, si el puntero ya es null, no hace nada. Permite reconfigurar gains al salir de driving
 				break;
+
+			case TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE:
+				DriveConfig.drivingMode = &remoteTrqRequest;
+				break;
+
 			default:
 				DriveConfig.drivingMode = &lineal;
 				break;
@@ -85,8 +97,8 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			case TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE:
 				DriveConfig.regenMode = &regenModeAPPS;
 				break;
-			case TER_ECU_CONFIG_REGEN_MODE_DV_CHOICE:
-				DriveConfig.regenMode = &regenModeDV;
+			case TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE:
+				DriveConfig.regenMode = &regenModeFREE;
 				break;
 			default:
 				DriveConfig.regenMode = &regenModeAPPS;
@@ -105,7 +117,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 //Par Máximo constante
 trq_t limitTorque(void) {
 	trq_t limit = TeR.config.trq_limit;
-	limit = limit > 180 ? 180 : TeR.config.trq_limit; // hard limit, lo siento piloto, no te voy a dar 200Nm
+	limit = limit > 180 ? 180 : TeR.config.trq_limit; // hard limit
 	limit = limit < 10 ? 10 : TeR.config.trq_limit;
 	return limit; //Devuelve el valor configurado
 }
@@ -113,19 +125,24 @@ trq_t limitTorque(void) {
 //------------------------------------------------[Basic Driving Modes]------------------------------------------------//
 // trq_t -> trqMap_t
 trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas,se toman valores del APPS como source
-	trqMap_t trqMap = {0};
+	trqMap_t trqMap = { 0 };
 	trqMap.rLeft = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5); // 0.5 porque tenemos 2 ruedas
 	trqMap.rRight = map(TeR.apps.apps_av, 0, 255, 0, limit * 0.5);
 	return trqMap;
 }
 // trq_t -> trqMap_t
-trqMap_t remoteTrqRequest(trq_t limit) { // aceptar request remotas provenientes del DV
-	trqMap_t trqMap = {0};
-	float requested_trq = ter_dv_dynamic_req_trq_req_decode(TeR.dv_dynamic_req.trq_req) / 2; // per wheel, importante el decode por factor de escala del DBC
-	requested_trq = mapf(requested_trq, -1.0f, 1.0f, -limit, limit); // OJO, no mapees entre max regen y limit, la vas a liar basto!! (0 no sería 0 trq!!!)
+trqMap_t remoteTrqRequest(trq_t limit) { // aceptar request de torque con origen remoto(DV, por ejemplo)
+	trqMap_t trqMap = { 0 };
+	if(0){ // si el dv no esta allowed aun: retornamos 0
+		return trqMap;
+	}
+	float requested_trq = ter_dv_dynamic_req_1_trq_req_decode(
+			TeR.dv_dynamic_req_1.trq_req) / 2; // per wheel, importante el decode por factor de escala del DBC
+	requested_trq = mapf(requested_trq, -1.0f, 1.0f, -limit, limit); // OJO, no mapees entre max regen y limit, la vas a liar basto!! (0 no sería 0 trq!!!) not funny
 	requested_trq = requested_trq / 2; // 2 wheels
-	trqMap.rLeft = (trq_t)requested_trq;
-	trqMap.rRight = (trq_t)requested_trq;
+	trqMap.rLeft = (trq_t) requested_trq;
+	trqMap.rRight = (trq_t) requested_trq;
+	clamp_neg_trq(&trqMap, TeR.config.regen_max_trq);
 	return trqMap;
 }
 
@@ -137,29 +154,29 @@ trqMap_t tractionControlOFF(trqMap_t in) {
 //------------------------------------------------[Basic Regen]------------------------------------------------//
 // trqMap_t -> trqMap_t
 trqMap_t regenModeAPPS(trqMap_t in) {
-	if (!regen_allowed(in)) {
+	if (!regen_allowed()) {
 		in.rLeft = in.rLeft < 0 ? 0 : in.rLeft;
 		in.rRight = in.rRight < 0 ? 0 : in.rRight;
+		return in; // retornamos, regen no permitida !!!
 	}
 	if (!((in.rLeft <= TeR.config.regen_max_positive_trq_thr / 2) // threshold de torque pedido a partir del cual consideramos "lift" del pedal /TODO cambiar a valor de apps
 	&& (in.rRight <= TeR.config.regen_max_positive_trq_thr / 2)))
-		return in;
+		return in; // retornamos, regen no permitida !!!
 	int8_t trq = TeR.config.regen_max_trq;
-	trq = -abs(trq / 2);
+	trq = -abs(trq / 2); // per wheel
 	in.rLeft = trq;
 	in.rRight = trq;
 	return in;
 }
-//------------------------------------------------[DV Regen (allow dv to request negative torque within limits)]------------------------------------------------//
+//------------------------------------------------[FREE Regen (within limits) (allow DV and other driving modes such as TV to request negative torque within limits)]------------------------------------------------//
 // trqMap_t -> trqMap_t
-trqMap_t regenModeDV(trqMap_t in) {
-	if (!regen_allowed(in)) {
+trqMap_t regenModeFREE(trqMap_t in) {
+	if (!regen_allowed()) {
 		in.rLeft = in.rLeft < 0 ? 0 : in.rLeft;
 		in.rRight = in.rRight < 0 ? 0 : in.rRight;
+		return in; // Regen is not available !!!
 	}
-	int8_t limit = TeR.config.regen_max_trq / 2; // 2 wheels
-	in.rLeft = in.rLeft < limit ? limit : in.rLeft; // clampeamos a límite
-	in.rRight = in.rRight < limit ? limit : in.rRight;
+	clamp_neg_trq(&in, TeR.config.regen_max_trq);
 	return in; //retornamos pedido
 }
 
@@ -174,15 +191,20 @@ trqMap_t regenModeDV(trqMap_t in) {
  */
 trqMap_t trqCheck(trqMap_t in, trq_t limit) {
 
-// 1) Check if regen is allowed, if not, set negative requests to 0
-	if (!regen_allowed(in)) {
+// 1) TRQ clamping
+	clamp_pos_trq(&in, limit);
+	clamp_neg_trq(&in, TeR.config.regen_max_trq);
+	scale_max_trq(&in, limit);
+
+// 2) Check if regen is allowed, if not, set negative requests to 0
+	if (!regen_allowed()) {
 		in.rLeft = in.rLeft < 0 ? 0 : in.rLeft;
 		in.rRight = in.rRight < 0 ? 0 : in.rRight;
 	}
 
-// 2) Check if negative torque is being requested below activation speed, VERY IMPORTANT (avoids backwards spinning of the wheels)
+// 3) Check if negative torque is being requested below activation speed, VERY IMPORTANT (avoids backwards spinning of the wheels)
 	if (in.rLeft < 0 || in.rRight < 0) {
-		if (TeR.wheelInfo.rl_rpm < TeR.config.regen_thr_rpm) { // responsabilidad tuya si pones los limites de forma incorrecta.
+		if (TeR.wheelInfo.rl_rpm < TeR.config.regen_thr_rpm) { // responsabilidad tuya si pones los limites de forma incorrecta
 			in.rLeft = 0;
 		}
 		if (TeR.wheelInfo.rr_rpm < TeR.config.regen_thr_rpm) {
@@ -192,17 +214,8 @@ trqMap_t trqCheck(trqMap_t in, trq_t limit) {
 			in.rRight = 0;
 			in.rLeft = 0;
 		}
-		return in; //return 0 torque as negative torque is being requested with below security speed/rpms
 	}
 
-// 3) Check if somehow torque limitation has been exceded and clamp
-	int32_t total = abs(in.rLeft) + abs(in.rRight);
-	if ((total > limit) && (total != 0)) { // prevent stupid and impossible case when a division by 0 could occur
-		float scale = (float) limit / total;
-		in.rLeft = (trq_t) (in.rLeft * scale); // scale and clamp
-		in.rRight = (trq_t) (in.rRight * scale);
-		return in;
-	}
 	return in;
 }
 
@@ -221,5 +234,46 @@ uint8_t regen_allowed() { // 1 ok 0 not ok
 		return 0;
 	// si se han coumplido todas las condiciones necesarias para regenerar, retornamos 1
 	return 1;
+}
+
+/*
+ * -> Limit per wheel positive torque based on limit
+ *
+ * */
+void clamp_pos_trq(trqMap_t *in, trq_t limitPos) {
+	trq_t maxPosTrqWheel = abs(limitPos)/2;
+	if (in->rLeft > 0) { //if is positive
+		in->rLeft = in->rLeft > maxPosTrqWheel ? maxPosTrqWheel : in->rLeft; //if exeeds limit clamp
+	}
+	if (in->rRight > 0) {
+		in->rRight = in->rRight > maxPosTrqWheel ? maxPosTrqWheel : in->rRight; //if exeeds limit clamp
+	}
+}
+/*
+ * -> Limit per wheel negative torque based on limit
+ *
+ * */
+void clamp_neg_trq(trqMap_t *in, trq_t limitNeg) {
+	trq_t maxNegTrqWheel = -abs(limitNeg)/2; // sane the input and MAKE IT NEGATIVE, VERY VERY IMPORTANT!!!!  if not catastrophic things could happen (trq stuck to maxNegTrqWheel!!!!!!!!!)
+	if (in->rLeft < 0) { //if is negative, check and clamp
+		in->rLeft = in->rLeft < maxNegTrqWheel ? maxNegTrqWheel : in->rLeft; //if exeeds limit clamp
+	}
+	if (in->rRight < 0) { //if is negative, check and clamp
+		in->rRight = in->rRight < maxNegTrqWheel ? maxNegTrqWheel : in->rRight; //if exeeds limit clamp
+	}
+}
+
+
+/*
+ * Check if overall torque exceeds torque limitation
+ * */
+void scale_max_trq(trqMap_t *in, trq_t limit) {
+	limit = abs(limit);
+	int32_t total = abs(in->rLeft) + abs(in->rRight);
+	if ((total > limit) && (total != 0)) { // prevent stupid and impossible case when a division by 0 could occur
+		float scale = (float) limit / total;
+		in->rLeft = (trq_t) (in->rLeft * scale); // scale and clamp
+		in->rRight = (trq_t) (in->rRight * scale);
+	}
 }
 

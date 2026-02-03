@@ -5,6 +5,20 @@
  *      Author: ozuba
  */
 #include "TeR_COMMAND.h"
+extern osTimerId_t r2d_timerHandle;
+/*
+ * Callback del SW timer para pasar a r2d
+ * Se utiliza para delayear la acción del paso a r2d una vez recibido el comando
+ * Por normativa tiene que pitar y después entrar en driving, mientras pita no se puede acelerar
+ * */
+void r2d_timer_callback(void *argument) {
+	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
+	osDelay(2000); // esperar tiempo para delayear la accion de enablear los inverters
+	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
+	TeR.status.r2_d = 1; //flag r2d
+	TeR.appReqRight.app_state_req = 4; //inverter a ready
+	TeR.appReqLeft.app_state_req = 4; //inverter a ready
+}
 
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
@@ -19,8 +33,17 @@ uint8_t command(struct ter_command_t command) {
 	/*-----------------------------------------[COMANDOS]---------------------------------------*/
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
-	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga
-		if (TeR.status.state == RDY2PRECH) { //Envía al bms el mensaje de precarga
+	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)) { //Envía al bms el mensaje de precarga
+			TeR.BmsAppReq.app_state_req =
+			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+		} else {
+			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
+		}
+		break;
+
+	case TER_COMMAND_CMD_PRECHARGE_DV_CHOICE: //Precarga manual
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 1)) { //Envía al bms el mensaje de precarga
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 		} else {
@@ -38,14 +61,29 @@ uint8_t command(struct ter_command_t command) {
 		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
 		break;
 
-	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive
+	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive manual
 		if ((TeR.status.state == PRECHARGED)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Pone el coche en modo driving y añadir freno
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) && (TeR.status.asms == 0)) { //Pone el coche en modo driving y añadir freno
+//
+//			//Permite el paso al estado drive
+//			TeR.status.r2_d = 1;
+//			TeR.appReqRight.app_state_req = 4;
+//			TeR.appReqLeft.app_state_req = 4;
+			osTimerStart(r2d_timerHandle, 0); // call timer for beep and delayed r2d variable set
+		} else {
+			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
+		}
+		break;
 
-			//Permite el paso al estado drive
-			TeR.status.r2_d = 1;
-			TeR.appReqRight.app_state_req = 4;
-			TeR.appReqLeft.app_state_req = 4;
+	case TER_COMMAND_CMD_READY2_DRIVE_DV_CHOICE: //Ready2Drive source DV
+		if ((TeR.status.state == PRECHARGED)
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) && (TeR.status.asms == 1)) { //Pone el coche en modo driving y añadir freno
+//
+//			//Permite el paso al estado drive
+//			TeR.status.r2_d = 1;
+//			TeR.appReqRight.app_state_req = 4;
+//			TeR.appReqLeft.app_state_req = 4;
+			osTimerStart(r2d_timerHandle, 0); // call timer for beep and delayed r2d variable set
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}

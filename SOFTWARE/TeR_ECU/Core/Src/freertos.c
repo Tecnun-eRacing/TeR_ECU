@@ -30,6 +30,7 @@
 /* USER CODE BEGIN Includes */
 #include "TeR_CAN.h"
 #include "TeR_STATEMACHINE.h"
+#include "TeR_DV_STATEMACHINE.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -120,6 +121,16 @@ osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
   .name = "rxMsg"
 };
+/* Definitions for r2d_timer */
+osTimerId_t r2d_timerHandle;
+const osTimerAttr_t r2d_timer_attributes = {
+  .name = "r2d_timer"
+};
+/* Definitions for dv_allowed_timer */
+osTimerId_t dv_allowed_timerHandle;
+const osTimerAttr_t dv_allowed_timer_attributes = {
+  .name = "dv_allowed_timer"
+};
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
 const osMutexAttr_t preventRace_attributes = {
@@ -145,6 +156,8 @@ extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
 extern void CanSchedulerTask(void *argument);
+extern void r2d_timer_callback(void *argument);
+extern void dv_allowed_timer_callback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -203,6 +216,13 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_SEMAPHORES */
 	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
+
+  /* Create the timer(s) */
+  /* creation of r2d_timer */
+  r2d_timerHandle = osTimerNew(r2d_timer_callback, osTimerOnce, NULL, &r2d_timer_attributes);
+
+  /* creation of dv_allowed_timer */
+  dv_allowed_timerHandle = osTimerNew(dv_allowed_timer_callback, osTimerOnce, NULL, &dv_allowed_timer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */

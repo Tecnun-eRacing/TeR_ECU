@@ -33,18 +33,10 @@
  *
  * - Se utiliza un semaforo para comprobar el estado de las mailboxes de una manera non blocking, de esta manera evitamos busy waiting antes de enviar el mensaje
  *  (revisar task del scheduler de mensajes)
- * - La ejecución temporizada se realiza utilizando funciones del Kernel tales como osDelayUntil(), debido a que es la forma mas correcta de realizar
- *		 ejecuciones temporizadas sin desfase temporal en un sistema operativo en tiempo real como puede ser FreeRTOS.
- * 		 Podriamos usar software timers, su implementacion sin embargo no es la mas practica, ya que debemos registrar un callback que mande señales de desbloqueo
- *  	a los threads, y que estos a su vez esperen a dichas señales, ademas de que no garantiza ejecucion temporal precisa (Reference Manual)
- *  	Usar osDelay() es una buena alternativa, pero puede sufrir desfases temporales ya que su frecuencia depende en parte del tiempo de ejecucion
- *  	de la funcion (ya que el tiempo empieza a contar cuando dicha funcion es llamada, y el tiempo que tarda una funcion no es fijo)
  *
  * - Se utilizan colas para comunicar la interrupcion de recepcion (y su mensaje) con la decodificación, es la manera mas optima cuando utilizamos un sistema
- * 		operativo en tiempo real (no nos interesa llamar funciones dentro de interrupciones, queremos que se encarge el scheduler de cuando hay que decodificar
- * 		 muy en resumen).
+ * 		operativo en tiempo real
  *
- * - SOLO EJECUTAREMOS CUANDO HAYAMOS PODIDO OBTENER EL MUTEX (decodificacion)
  *
  */
 
@@ -117,7 +109,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	CAN_RxHeaderTypeDef rxHeader; //Header temporal
 	canMsg_t msg; //Bufer temporal
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, msg.data); //Recoge el mensaje
-	msg.id = rxHeader.StdId;
+	msg.id = (rxHeader.StdId == CAN_ID_STD) ? rxHeader.StdId : rxHeader.ExtId; // si es es standard pillo id standard, sino pillo ext
 	msg.DLC = rxHeader.DLC;
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
 
@@ -164,6 +156,7 @@ void configFilter(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 	HAL_CAN_ConfigFilter(mainCan, &filter);
 
 }
+
 
 /* ----------------------------------[Envío]---------------------------------------- */
 
@@ -254,14 +247,20 @@ void CanSchedulerTask(void *argument) {
 	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce puntual loads
 	uint8_t TxData[8] = {0};
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_TER_STATUS_LENGTH, // TER STATUS
 	TER_TER_STATUS_FRAME_ID, 100, ter_status_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_WHEEL_INFO_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_WHEEL_INFO_LENGTH, // WHEELINFO
 	TER_WHEEL_INFO_FRAME_ID, 10, ter_wheel_info_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_INVERTER_INFO_LENGTH,
+	can_scheduler_insert_msg_with_phase(TxData, TER_INVERTER_INFO_LENGTH, // INVERTER INFO
 	TER_INVERTER_INFO_FRAME_ID, 10, ter_inverter_info_callback);
+
+	can_scheduler_insert_msg_with_phase(TxData, TER_TV_DEBUG_LENGTH, // TV DEBUG
+	TER_TV_DEBUG_FRAME_ID, 5, ter_tv_debug_callback);
+
+	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, // BMS CONTROL
+	HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
 
 	//can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
 	//TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
@@ -278,13 +277,9 @@ void CanSchedulerTask(void *argument) {
 	//can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
 	//TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
-	can_scheduler_insert_msg_with_phase(TxData, TER_TV_DEBUG_LENGTH,
-	TER_TV_DEBUG_FRAME_ID, 5, ter_tv_debug_callback);
 
-	hvbms_bms_rx_ctrl_1_pack(TxData, &TeR.BmsAppReq,
-	HVBMS_BMS_RX_CTRL_1_LENGTH);
-	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH,
-	HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
+
+
 	while (true) {
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg))
 			osDelay(10);
@@ -378,6 +373,14 @@ void canRx(void *argument) {
 
 		case TER_BTN_FRAME_ID:
 			ter_btn_unpack(&TeR.buttons, msg.data, msg.DLC);
+			break;
+
+		case TER_STEER_ACTUATOR_STATUS_FRAME_ID:
+			ter_steer_actuator_status_unpack(&TeR.steer_actuator_status, msg.data, msg.DLC);
+			break;
+
+		case TER_RES_PDO_RX_FRAME_ID:
+			ter_res_pdo_tx_unpack(&TeR.res_pdo_tx, msg.data, msg.DLC);
 			break;
 
 			/* ---------------------------[INVERTER]-------------------------- */

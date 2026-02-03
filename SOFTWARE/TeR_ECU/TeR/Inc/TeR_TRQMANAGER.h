@@ -93,11 +93,15 @@ trqMap_t tractionControlOFF(trqMap_t in);
 
 //Basic regen
 trqMap_t regenModeAPPS(trqMap_t in);
-trqMap_t regenModeDV(trqMap_t in);
+//Free regen (with limits)
+trqMap_t regenModeFREE(trqMap_t in);
 
 
 //sanity Checks
 trqMap_t trqCheck(trqMap_t in,trq_t limit);
+void clamp_pos_trq(trqMap_t *in,trq_t limitPos);
+void clamp_neg_trq(trqMap_t *in,trq_t limitNeg);
+void scale_max_trq(trqMap_t *in,trq_t limit);
 
 uint8_t regen_allowed();
 
