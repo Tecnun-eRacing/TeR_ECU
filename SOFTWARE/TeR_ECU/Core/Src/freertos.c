@@ -126,10 +126,20 @@ osTimerId_t r2d_timerHandle;
 const osTimerAttr_t r2d_timer_attributes = {
   .name = "r2d_timer"
 };
-/* Definitions for dv_allowed_timer */
-osTimerId_t dv_allowed_timerHandle;
-const osTimerAttr_t dv_allowed_timer_attributes = {
-  .name = "dv_allowed_timer"
+/* Definitions for as_allowed_timer */
+osTimerId_t as_allowed_timerHandle;
+const osTimerAttr_t as_allowed_timer_attributes = {
+  .name = "as_allowed_timer"
+};
+/* Definitions for as_emergency_beep_timer */
+osTimerId_t as_emergency_beep_timerHandle;
+const osTimerAttr_t as_emergency_beep_timer_attributes = {
+  .name = "as_emergency_beep_timer"
+};
+/* Definitions for beep_timer */
+osTimerId_t beep_timerHandle;
+const osTimerAttr_t beep_timer_attributes = {
+  .name = "beep_timer"
 };
 /* Definitions for preventRace */
 osMutexId_t preventRaceHandle;
@@ -157,7 +167,9 @@ extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
 extern void CanSchedulerTask(void *argument);
 extern void r2d_timer_callback(void *argument);
-extern void dv_allowed_timer_callback(void *argument);
+extern void as_allowed_timer_callback(void *argument);
+extern void as_emergency_beep_timer_callback(void *argument);
+extern void beep_timer_callback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -221,8 +233,14 @@ void MX_FREERTOS_Init(void) {
   /* creation of r2d_timer */
   r2d_timerHandle = osTimerNew(r2d_timer_callback, osTimerOnce, NULL, &r2d_timer_attributes);
 
-  /* creation of dv_allowed_timer */
-  dv_allowed_timerHandle = osTimerNew(dv_allowed_timer_callback, osTimerOnce, NULL, &dv_allowed_timer_attributes);
+  /* creation of as_allowed_timer */
+  as_allowed_timerHandle = osTimerNew(as_allowed_timer_callback, osTimerOnce, NULL, &as_allowed_timer_attributes);
+
+  /* creation of as_emergency_beep_timer */
+  as_emergency_beep_timerHandle = osTimerNew(as_emergency_beep_timer_callback, osTimerPeriodic, NULL, &as_emergency_beep_timer_attributes);
+
+  /* creation of beep_timer */
+  beep_timerHandle = osTimerNew(beep_timer_callback, osTimerOnce, NULL, &beep_timer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */

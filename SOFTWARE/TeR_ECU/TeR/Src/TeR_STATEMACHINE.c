@@ -98,9 +98,11 @@ void stateLoop(void) {
 
 	if (stateChanged) { // Handles setup conditions for the new state
 		//publish_config(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
+		if (state != DRIVING) {
+			TeR.status.r2_d = 0;
+		}
 		switch (state) {
 		case WAIT_SL:
-			TeR.status.r2_d = 0;
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
@@ -123,7 +125,6 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
-			TeR.status.r2_d = 0;
 			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
@@ -140,13 +141,23 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			if(TeR.status.asms){
+			if (TeR.status.asms) { // a ver, tecnicamente con el asms unicamente no vale, pero funciona igual confiad
 				// configurar modo de conducción del DV
-			}
-			else{
+				TeR.config.driving_mode =
+				TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
+				TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
+				TeR.config.regen_enable =
+				TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
+			} else {
+				if (TeR.config.driving_mode
+						== TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE) { // por si a algun iluminado se le ocurre la brillante idea de conducir en manual despues de testear el dv y sin apagar el coche
+					TeR.config.driving_mode =
+					TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
+					TeR.config.regen_mode =
+					TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
+				}
 				// configurar modo de condución del manual
 			}
-			TeR.status.r2_d = 0;
 			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
@@ -199,7 +210,28 @@ void stateLoop(void) {
 			//Handle Invalid state
 			break;
 		}
-		TeR.status.state = state; // importante sincronizar el estado AL FINAL
+		TeR.status.state = state; // importante sincronizar el estado AL FINAL (TODO ahora creo que da igual)
+	}
+
+	switch (state) {
+	case WAIT_SL:
+		// T14.4
+		if (TeR.status.asms == 0) { // modo manual
+			if (TeR.asb_status.asb_ebs_state
+					== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE
+					&& TeR.asb_status.asb_redundancy_state
+							== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE) { // si el freno esta totalmente desactivado...
+				//mandar comando de cerrar safety line
+			}
+		} else { // modo dv
+			if(0){ // si hay presion
+
+			}
+
+		}
+		break;
+	default:
+		break;
 	}
 }
 

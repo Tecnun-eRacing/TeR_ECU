@@ -111,6 +111,7 @@ void set_default_config(struct ter_ecu_config_t *config) { //set car internal co
 	config->regen_trq_slope = 1;
 	config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
 	config->regen_max_positive_trq_thr = 5;
+	config->dv_mission_req = TER_ECU_CONFIG_DV_MISSION_REQ_MANUAL_CHOICE;
 	return;
 }
 
@@ -131,14 +132,14 @@ void set_init_config(struct ter_ecu_config_t *config){ // TODO dv mission req
  * del sistema, con el define ALL_CONFIGS
  * */
 uint8_t publish_config(struct ter_ecu_config_t *config, uint32_t config_id) {
-	if (config_ready != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion (polémico)
+	if (config_ready != 1) { // si no se ha cargado la eeprom, no publicamos la configuracion (esto es una tremenda estupidez pero porsiaka)
 		return 1;
 	}
 //Buffers volatiles para el envío
 	uint8_t TxData[8] = { 0 }; //Buffer para datos de envio
 	uint32_t size = TER_ECU_CONFIG_LENGTH;
 	uint32_t id = TER_ECU_CONFIG_FRAME_ID;
-	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config; // creamos copia, no queremos mutar el config original
+	struct ter_ecu_config_t ecu_config = *(struct ter_ecu_config_t*) config; // castear el puntero void al tipo que yo espero que sea (OJO, es tu responsabilidad handelear esto bien)
 	if ((config_id != ALL_CONFIGS) && (config_id <= NB_ENTRIES)) { // if user is requesting a specific config, and the config is valid, send specific config
 		ecu_config.entry = config_id;
 		ter_ecu_config_pack(TxData, &ecu_config, size);

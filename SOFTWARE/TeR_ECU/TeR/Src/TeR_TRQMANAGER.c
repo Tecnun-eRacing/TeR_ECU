@@ -137,8 +137,8 @@ trqMap_t remoteTrqRequest(trq_t limit) { // aceptar request de torque con origen
 		return trqMap;
 	}
 	float requested_trq = ter_dv_dynamic_req_1_trq_req_decode(
-			TeR.dv_dynamic_req_1.trq_req) / 2; // per wheel, importante el decode por factor de escala del DBC
-	requested_trq = mapf(requested_trq, -1.0f, 1.0f, -limit, limit); // OJO, no mapees entre max regen y limit, la vas a liar basto!! (0 no sería 0 trq!!!) not funny
+			TeR.dv_dynamic_req_1.trq_req); // importante el decode por factor de escala del DBC
+	requested_trq = mapf(requested_trq, -1.0f, 1.0f, -limit, limit); // OJO, no mapees entre max regen y limit, la vas a liar basto!! (0 no sería 0 trq!!!) not funny!!!!
 	requested_trq = requested_trq / 2; // 2 wheels
 	trqMap.rLeft = (trq_t) requested_trq;
 	trqMap.rRight = (trq_t) requested_trq;
@@ -266,6 +266,8 @@ void clamp_neg_trq(trqMap_t *in, trq_t limitNeg) {
 
 /*
  * Check if overall torque exceeds torque limitation
+ * this SHOULD be impossible to trigger
+ * This function only makes sense if you somehow have a positive torque limitation, a negative torque limitation, and an overall torque limitation
  * */
 void scale_max_trq(trqMap_t *in, trq_t limit) {
 	limit = abs(limit);

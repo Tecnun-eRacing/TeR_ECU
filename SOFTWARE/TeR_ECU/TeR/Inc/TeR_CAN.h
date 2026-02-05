@@ -79,8 +79,9 @@ struct TeR_t {
 	struct ter_btn_t buttons; // botones del volante
 	struct ter_refri_config_t refri_config; //configuracion de refri
 	struct ter_asb_status_t asb_status; // estado asb
-	struct ter_asb_ebs_state_req_t asb_ebs_state_req; //request asb ebs, no deberíamos de pedir esto nunca
-	struct ter_asb_redundancy_req_t asb_redundancy_req; // request asb redundantes, pedir para frenar autónomo
+	struct ter_asb_ebs_state_req_t asb_ebs_state_req; //request asb ebs checks o off
+	struct ter_asb_redundancy_req_t asb_redundancy_req; // request asb redundant check o off
+	struct ter_asb_brake_req_t asb_brake_req; // request de frenada
 	struct ter_steer_actuator_status_t steer_actuator_status; // estado actuador steering
 	struct ter_steer_actuator_set_position_speed_loop_t steer_actuator_set_position_speed_loop; // setear loop completo
 	struct ter_steer_actuator_set_position_t steer_actuator_set_position; //setear pos

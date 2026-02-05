@@ -13,8 +13,7 @@ typedef struct{
 	struct ter_ecu_config_t config;
 	uint8_t written;
 }eeprom_data_t;
-#define NB_ENTRIES 26 //numero de entradas de configuración que hay definidas, CAMBIALO CUANDO AÑADAS UN ENTRY
-#define RETRY_TIMEOUT 10
+#define NB_ENTRIES 27 //numero de entradas de configuración que hay definidas, CAMBIALO CUANDO AÑADAS UN ENTRY
 #define ALL_CONFIGS 0xFFFFFFFF
 
 ;

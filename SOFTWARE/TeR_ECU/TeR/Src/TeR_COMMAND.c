@@ -6,20 +6,22 @@
  */
 #include "TeR_COMMAND.h"
 extern osTimerId_t r2d_timerHandle;
+extern osTimerId_t beep_timerHandle;
+uint32_t beep_timer; // contador de veces que ha saltado el beep
 /*
  * Callback del SW timer para pasar a r2d
  * Se utiliza para delayear la acción del paso a r2d una vez recibido el comando
  * Por normativa tiene que pitar y después entrar en driving, mientras pita no se puede acelerar
  * */
 void r2d_timer_callback(void *argument) {
-	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-	osDelay(2000); // esperar tiempo para delayear la accion de enablear los inverters
 	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
 	TeR.status.r2_d = 1; //flag r2d
 	TeR.appReqRight.app_state_req = 4; //inverter a ready
 	TeR.appReqLeft.app_state_req = 4; //inverter a ready
 }
-
+void beep_timer_callback(void *argument) { // MADAFUKING BEEP NON BLOCKING
+	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
+}
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
 	//Buffers volatiles para el envio de lo que toque
@@ -34,7 +36,9 @@ uint8_t command(struct ter_command_t command) {
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual
-		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)) { //Envía al bms el mensaje de precarga
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)
+				&& (TeR.dv_system_status.as_status
+						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Envía al bms el mensaje de precarga
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 		} else {
@@ -42,8 +46,13 @@ uint8_t command(struct ter_command_t command) {
 		}
 		break;
 
-	case TER_COMMAND_CMD_PRECHARGE_DV_CHOICE: //Precarga manual
-		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 1)) { //Envía al bms el mensaje de precarga
+	case TER_COMMAND_CMD_PRECHARGE_DV_CHOICE: //Precarga DV
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 1)
+				&& (TeR.asb_status.asb_ebs_state
+						== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
+				&& (TeR.asb_status.asb_redundancy_state
+						== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Envía al bms el mensaje de precarga
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 		} else {
@@ -63,13 +72,17 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive manual
 		if ((TeR.status.state == PRECHARGED)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) && (TeR.status.asms == 0)) { //Pone el coche en modo driving y añadir freno
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
+				&& (TeR.status.asms == 0)
+				&& (TeR.dv_system_status.as_status
+						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Pone el coche en modo driving y añadir freno
 //
 //			//Permite el paso al estado drive
 //			TeR.status.r2_d = 1;
 //			TeR.appReqRight.app_state_req = 4;
 //			TeR.appReqLeft.app_state_req = 4;
-			osTimerStart(r2d_timerHandle, 0); // call timer for beep and delayed r2d variable set
+			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
+			osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 1000ms
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -77,13 +90,15 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_READY2_DRIVE_DV_CHOICE: //Ready2Drive source DV
 		if ((TeR.status.state == PRECHARGED)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) && (TeR.status.asms == 1)) { //Pone el coche en modo driving y añadir freno
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
+				&& (TeR.status.asms == 1)) { //Pone el coche en modo driving y añadir freno
 //
 //			//Permite el paso al estado drive
 //			TeR.status.r2_d = 1;
 //			TeR.appReqRight.app_state_req = 4;
 //			TeR.appReqLeft.app_state_req = 4;
-			osTimerStart(r2d_timerHandle, 0); // call timer for beep and delayed r2d variable set
+			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
+			osTimerStart(r2d_timerHandle, 2000); // call timer for beep and delayed r2d variable set
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -91,8 +106,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
 		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-		osDelay(1000);
-		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
+		osTimerStart(beep_timerHandle, 1000);
 		break;
 
 		/*Sends messages not implemented in this board to the main can if the source is internal*/
