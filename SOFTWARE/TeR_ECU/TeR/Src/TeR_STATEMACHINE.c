@@ -212,27 +212,6 @@ void stateLoop(void) {
 		}
 		TeR.status.state = state; // importante sincronizar el estado AL FINAL (TODO ahora creo que da igual)
 	}
-
-	switch (state) {
-	case WAIT_SL:
-		// T14.4
-		if (TeR.status.asms == 0) { // modo manual
-			if (TeR.asb_status.asb_ebs_state
-					== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE
-					&& TeR.asb_status.asb_redundancy_state
-							== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE) { // si el freno esta totalmente desactivado...
-				//mandar comando de cerrar safety line
-			}
-		} else { // modo dv
-			if(0){ // si hay presion
-
-			}
-
-		}
-		break;
-	default:
-		break;
-	}
 }
 
 /* -------------------------[PermaTask]---------------------------- */

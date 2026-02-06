@@ -75,14 +75,9 @@ uint8_t command(struct ter_command_t command) {
 				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
 				&& (TeR.status.asms == 0)
 				&& (TeR.dv_system_status.as_status
-						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Pone el coche en modo driving y añadir freno
-//
-//			//Permite el paso al estado drive
-//			TeR.status.r2_d = 1;
-//			TeR.appReqRight.app_state_req = 4;
-//			TeR.appReqLeft.app_state_req = 4;
+						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Pone el coche en modo driving al añadir freno
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-			osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 1000ms
+			osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}

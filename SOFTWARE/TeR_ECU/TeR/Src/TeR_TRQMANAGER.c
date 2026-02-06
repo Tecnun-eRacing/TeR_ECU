@@ -7,13 +7,9 @@
  *      Este archivo encapsula la gestión del torque del vehículo
  *      Se trata de un pipeline de ejecución que limita, calcula y valida el torque que se enviará a las ruedas
  *
- * 		Lo pongo en español para dejarlo claro: El 90 % de este archivo lo unico que hace es prevenir comandar torque en
- * 		situaciones peligrosas. Si ves multiples doble checks, que puedan parecer en un momento innecesarios, cuando se trata de un
- * 		coche eléctrico, en el que una comanda incorrecta puede significar irte contra un muro, todo lo que sea por seguridad suma.
- *
- *
  * 		Es importante que todo lo que cambies de este archivo sea testeado correctamente, no vale probar y decir "funciona"
- * 		recordemos que esto es algo extremadamente crítico
+ * 		recordemos que esto es algo extremadamente crítico, hay que testear testear y testear en el elevador, lo ultimo que quieres
+ * 		es una condición rarisima en la cual la gestión de torque pete
  *
  * 		Siempre testea tus cambios con el coche subido en el elevador, NUNCA, NUNCA cambies algo de aqui y confies en que vaya a funcionar
  * 		recuerda que esto es peligroso

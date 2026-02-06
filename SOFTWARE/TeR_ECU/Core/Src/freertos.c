@@ -141,11 +141,6 @@ osTimerId_t beep_timerHandle;
 const osTimerAttr_t beep_timer_attributes = {
   .name = "beep_timer"
 };
-/* Definitions for preventRace */
-osMutexId_t preventRaceHandle;
-const osMutexAttr_t preventRace_attributes = {
-  .name = "preventRace"
-};
 /* Definitions for g_can_scheduler_mutex */
 osMutexId_t g_can_scheduler_mutexHandle;
 const osMutexAttr_t g_can_scheduler_mutex_attributes = {
@@ -215,9 +210,6 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE END Init */
   /* Create the mutex(es) */
-  /* creation of preventRace */
-  preventRaceHandle = osMutexNew(&preventRace_attributes);
-
   /* creation of g_can_scheduler_mutex */
   g_can_scheduler_mutexHandle = osMutexNew(&g_can_scheduler_mutex_attributes);
 

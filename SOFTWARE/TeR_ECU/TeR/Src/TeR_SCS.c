@@ -17,6 +17,8 @@
 
 //FreeRTOS dependencies
 extern osThreadId_t systemCriticalTaskHandle;
+extern osMutexId_t SL_RELAY_MUTEXHandle; // SL mutex
+
 uint32_t prevConfig;
 
 //FreeRTOS TASK
@@ -95,4 +97,6 @@ void checkSCS(void) {
 		}
 	}
 }
+
+
 

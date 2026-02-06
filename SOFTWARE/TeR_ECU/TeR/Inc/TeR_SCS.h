@@ -24,6 +24,7 @@ uint8_t logSCS(uint32_t id); //Comprueba si la id esta en la lista y loguea su t
 
 void checkSCS(void); //Comprueba si alguna ID está caducada respecto al valor del timestamp actual, devuelve el ID de ella o 0 si esta en orden
 uint8_t startSCS(void); //Arranca el sistema de SCS
-uint8_t stopSCS(void); //Detiene el sistema de SCS
+uint8_t stopSCS(void); //Detiene el sistema de SCS (util para testing en elevador cuando quieres probar ciertas cosas)
+
 
 #endif /* INC_TER_SCS_H_ */
