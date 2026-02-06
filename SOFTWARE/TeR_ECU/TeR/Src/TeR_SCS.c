@@ -9,11 +9,12 @@
 /*
  * Hay que añadir a tu gestor de interrupciones favorito el callback de checkeo
  *
- */
-/*Implementacion FreeRTOS Piero
- * Ultrachill es una task que checkea y listo
+ * Este módulo se encarga de gestionar las SCS del vehículo.
+ * Si deja de recibirse cualquier señal considerada SCS (ver normativa) se deberán de tomar las
+ * acciones pertinentes
  *
  */
+
 
 //FreeRTOS dependencies
 extern osThreadId_t systemCriticalTaskHandle;
@@ -91,9 +92,10 @@ void checkSCS(void) {
 			lastFailSCS = scsIds[i]; //Guarda la id de la ultima señal problematica, util a modo de debug
 			//easyCommand(TER_COMMAND_CMD_DISCHARGE_CHOICE); // Descarga el COCHE
 			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 0); //OPEN SC
+			set_sl_request(SL_SCS, 0);
 			TeR.apps.apps_av = 0; //Porsiaka
 		} else {
-			HAL_GPIO_WritePin(SC_EN_GPIO_Port, SC_EN_Pin, 1); //CLOSE SCS relay
+			set_sl_request(SL_SCS, 1); //CLOSE SCS relay
 		}
 	}
 }

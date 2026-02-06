@@ -36,11 +36,4 @@ typedef enum {
 
 
 void stateMachine(void *argument); //Task
-state_t evalState(void); //Evalua en que estado se encuentra el coche
-void stateLoop(void); //Ejecuta el bucle de la maquina de estado
-
-//Permanent Task
-void permaTask(); //Se ejecuta en todos los estados (conversiones/brakelight...)
-void buttonHandler();
-
 #endif /* INC_TER_STATEMACHINE_H_ */

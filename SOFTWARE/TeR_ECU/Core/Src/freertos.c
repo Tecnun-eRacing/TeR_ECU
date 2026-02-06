@@ -116,6 +116,20 @@ const osThreadAttr_t CanSchedulerTaskN_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for safetyLineTask */
+osThreadId_t safetyLineTaskHandle;
+const osThreadAttr_t safetyLineTask_attributes = {
+  .name = "safetyLineTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for dvStateMachineTask */
+osThreadId_t dvStateMachineTaskHandle;
+const osThreadAttr_t dvStateMachineTask_attributes = {
+  .name = "dvStateMachineTask",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -161,6 +175,8 @@ extern void gps(void *argument);
 extern void trqManager(void *argument);
 extern void stateMachine(void *argument);
 extern void CanSchedulerTask(void *argument);
+extern void safetyLine(void *argument);
+extern void dvStateMachine(void *argument);
 extern void r2d_timer_callback(void *argument);
 extern void as_allowed_timer_callback(void *argument);
 extern void as_emergency_beep_timer_callback(void *argument);
@@ -273,6 +289,12 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of CanSchedulerTaskN */
   CanSchedulerTaskNHandle = osThreadNew(CanSchedulerTask, NULL, &CanSchedulerTaskN_attributes);
+
+  /* creation of safetyLineTask */
+  safetyLineTaskHandle = osThreadNew(safetyLine, NULL, &safetyLineTask_attributes);
+
+  /* creation of dvStateMachineTask */
+  dvStateMachineTaskHandle = osThreadNew(dvStateMachine, NULL, &dvStateMachineTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

@@ -219,7 +219,6 @@ void invCanTx(void *argument) {
 }
 
 void CanSchedulerTask(void *argument) {
-	CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 	uint32_t mailbox;
 	CanMessage_t next_msg;
 	// Periodic Messages insertion to queue, we use a function that generates a dephase between messages in order to reduce puntual loads
@@ -256,6 +255,7 @@ void CanSchedulerTask(void *argument) {
 	//TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
 	for(;;) {
+		CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg))
 			osDelay(10);
 		osDelayUntil(next_msg.next_when); // esperamos el tiempo necesario al proximo mensaje
@@ -263,6 +263,11 @@ void CanSchedulerTask(void *argument) {
 			next_msg.callback(&next_msg); // si el callback es 0 (no se ha definido) no se llama el callback
 		TxHeader.StdId = next_msg.id;
 		TxHeader.DLC = next_msg.len;
+		// puto motorcito de los cojones, no voy a reescribir todo por tu culpa pedazo de cabron
+		if(next_msg.id == TER_STEER_ACTUATOR_SET_POSITION_FRAME_ID){
+			TxHeader.ExtId = next_msg.id;
+			TxHeader.IDE = CAN_ID_EXT;
+		}
 		if ((HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) // recuerda, se evalua de izquierda a derecha !!!
 				&& (HAL_CAN_AddTxMessage(mainCAN, &TxHeader, next_msg.content,
 						&mailbox) == HAL_OK)) {
@@ -275,6 +280,7 @@ void CanSchedulerTask(void *argument) {
 			}
 
 		} else { // algo ha fallado, reenviamos el mensaje
+			osDelay(5);
 			next_msg.next_when = osKernelGetTickCount(); // rescheduled to be first
 			if (!can_scheduler_insert_built_msg(next_msg)) { // reañadir a la cola
 				// handle this somehow (confia)

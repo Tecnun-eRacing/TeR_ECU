@@ -39,6 +39,13 @@
  *		 ejecuciones temporizadas sin desfase temporal.
  *
  */
+state_t evalState(void); //Evalua en que estado se encuentra el coche
+void stateLoop(void); //Ejecuta el bucle de la maquina de estado
+
+//Permanent Task
+void permaTask(); //Se ejecuta en todos los estados (conversiones/brakelight...)
+void buttonHandler();
+
 
 //Persistance checker
 persist_t SL;
@@ -141,22 +148,14 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			if (TeR.status.asms) { // a ver, tecnicamente con el asms unicamente no vale, pero funciona igual confiad
-				// configurar modo de conducción del DV
-				TeR.config.driving_mode =
-				TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
-				TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
-				TeR.config.regen_enable =
-				TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-			} else {
+			if (!TeR.status.asms) { // if stupid thing is about to happen
 				if (TeR.config.driving_mode
 						== TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE) { // por si a algun iluminado se le ocurre la brillante idea de conducir en manual despues de testear el dv y sin apagar el coche
 					TeR.config.driving_mode =
-					TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
+					TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE; //prevent stupid thing
 					TeR.config.regen_mode =
 					TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
 				}
-				// configurar modo de condución del manual
 			}
 			publish_config(&TeR.config, ALL_CONFIGS);
 			TeR.BmsAppReq.app_state_req =
