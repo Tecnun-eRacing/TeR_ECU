@@ -55,7 +55,7 @@ void as_emergency_beep_timer_callback(void *argument) {
 //K2 o K3 se pueden usar como go signal (fsg 2026)
 /*
  * This function gets the state of the DV statemachine, it follows the rule T 14.8
- * Nothing crazy, just follow the rules
+ * Nothing crazy, just follow the rules stated in T14.8
  *
  */
 dv_state_t get_dv_state() { // fsg 2026 T 14.8
@@ -139,7 +139,7 @@ void dv_stateLoop(){
 			break;
 
 		case AS_EMERGENCY:
-			osTimerStart(as_emergency_beep_timerHandle, 200); // start a bperiodic beep timer that lasts 10 seconds
+			osTimerStart(as_emergency_beep_timerHandle, 200); // start a periodic beep timer that lasts 10 seconds
 			break;
 
 		default:
@@ -202,7 +202,7 @@ void dv_stateLoop(){
 			//request steering
 			TeR.dv_system_status.steering_state =
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE;
-			//requests steering todo validar entradas, OJO, peligrosisimo
+			//requests steering TODO validar entradas, OJO, peligrosisimo
 			TeR.steer_actuator_set_position.actuator_position =
 					TeR.dv_dynamic_req_1.steer_angle_req;
 			//requests freno (dv espero que no bloquees freno a 50kmH, de esto no te puedo salvar)
