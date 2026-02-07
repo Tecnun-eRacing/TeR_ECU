@@ -103,8 +103,8 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 
 void dvStateMachine(void *argument) {
 	uint32_t currentTick = osKernelGetTickCount();
-	for(;;){
-		currentTick+=task_period;
+	for (;;) {
+		currentTick += task_period;
 		osDelayUntil(currentTick);
 		dv_stateLoop();
 	}
@@ -117,7 +117,7 @@ void dvStateMachine(void *argument) {
  * -> executes permanents tasks associated with the current state
  *
  * */
-void dv_stateLoop(){
+void dv_stateLoop() {
 	dv_state_t prevState = TeR.dv_system_status.as_status;
 	dv_state_t state = get_dv_state();
 	uint8_t stateChanged = state != prevState ? 1 : 0;
@@ -128,7 +128,8 @@ void dv_stateLoop(){
 		case AS_READY:
 			ready_time = 0; // reseteamos ready_time
 			// setup dv driving mode & other relevant configurations
-			TeR.config.driving_mode = TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
+			TeR.config.driving_mode =
+			TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
 			TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
 			TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
 			TeR.config.trq_limit = 20; //hardcodeado aqui porque tengo miedo
@@ -199,15 +200,16 @@ void dv_stateLoop(){
 
 	case AS_DRIVING:
 		if (TeR.status.as_allowed) {
-			//request steering
-			TeR.dv_system_status.steering_state =
-			TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE;
-			//requests steering TODO validar entradas, OJO, peligrosisimo
-			TeR.steer_actuator_set_position.actuator_position =
-					TeR.dv_dynamic_req_1.steer_angle_req;
+
+//			esto no tiene que ir aqui
+//			TeR.dv_system_status.steering_state =
+//			TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE;
+//
 			//requests freno (dv espero que no bloquees freno a 50kmH, de esto no te puedo salvar)
 			TeR.asb_brake_req.brake = TeR.dv_dynamic_req_2.asb_brake_req;
 
+			//requests steering
+			send_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
 		} else {
 			TeR.dv_system_status.steering_state =
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_UNAVAILABLE_CHOICE;
@@ -215,6 +217,9 @@ void dv_stateLoop(){
 		break;
 
 	case AS_EMERGENCY:
+		if (TeR.wheelInfo.speed > 5) { // permite al DV hacer una parada controlada en caso de fallo
+			send_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
+		}
 		//algoimportate todo
 		break;
 
@@ -222,11 +227,20 @@ void dv_stateLoop(){
 		break;
 	}
 
-
 }
 
+void send_steer_angle(int32_t angle) {
+	clamp(angle, -20*10000, 20*10000); // multiplicado por los factores del DBC
+	TeR.steer_actuator_set_position.actuator_position =
+			angle;
+	uint8_t TxData[8] = { 0 };
+	ter_steer_actuator_set_position_pack(TxData,
+			&TeR.steer_actuator_set_position, sizeof(TxData));
+	can_scheduler_insert_non_periodic_msg(TxData, sizeof(TxData),
+	TER_STEER_ACTUATOR_SET_POSITION_FRAME_ID, 0);
+}
 
-void permatask(){
+void permatask() {
 
 }
 

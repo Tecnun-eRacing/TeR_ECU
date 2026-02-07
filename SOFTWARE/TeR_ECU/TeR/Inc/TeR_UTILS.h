@@ -22,6 +22,8 @@ int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max); //Función map muy util
 float mapf(float x, float in_min, float in_max, float out_min,
 		float out_max); // funcion map float
+float clampf(float x, float lo, float hi);
+int32_t clamp(int32_t x, int32_t lo, int32_t hi);
 
 uint8_t read_btn(uint8_t* lock,uint8_t read);
 #endif /* INC_TER_UTILS_H_ */

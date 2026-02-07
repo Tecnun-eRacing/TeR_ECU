@@ -51,6 +51,12 @@ float mapf(float x, float in_min, float in_max, float out_min,
 	float val = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	return val;
 }
+float clampf(float x, float lo, float hi) {
+	return x < lo ? lo : (x > hi ? hi : x);
+}
+int32_t clamp(int32_t x, int32_t lo, int32_t hi) {
+	return x < lo ? lo : (x > hi ? hi : x);
+}
 
 uint8_t read_btn(uint8_t *lock, uint8_t read) {
 	if (osKernelGetTickCount() < 3000) { // esto es para que no pueda tocar nada sin querer en el arranque, 3 segundos

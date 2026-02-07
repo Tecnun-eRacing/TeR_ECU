@@ -16,9 +16,7 @@ static float kp, ki, kd, iMax;
 //static float v_sched_ms_ema = 0.0f;
 //--------------------------------------------------------[Gain Scheduling]---------------------------------------------------------------//
 const int N = sizeof(v_bp_ms) / sizeof(v_bp_ms[0]);
-static float clampf(float x, float lo, float hi) {
-	return x < lo ? lo : (x > hi ? hi : x);
-}
+
 static float interp(const float *bp, const float *tab, int n, float x) {
 	if (x <= bp[0])
 		return tab[0];

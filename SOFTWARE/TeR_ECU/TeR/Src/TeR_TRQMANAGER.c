@@ -129,7 +129,7 @@ trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas,se toman v
 // trq_t -> trqMap_t
 trqMap_t remoteTrqRequest(trq_t limit) { // aceptar request de torque con origen remoto(DV, por ejemplo)
 	trqMap_t trqMap = { 0 };
-	if(0){ // si el dv no esta allowed aun: retornamos 0
+	if(TeR.status.as_allowed){ // si el dv no esta allowed aun: retornamos 0
 		return trqMap;
 	}
 	float requested_trq = ter_dv_dynamic_req_1_trq_req_decode(
