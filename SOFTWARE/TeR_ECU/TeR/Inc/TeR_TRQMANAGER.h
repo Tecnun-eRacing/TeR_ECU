@@ -86,7 +86,7 @@ trq_t limitTorque(void);
 
 //Basic modes
 trqMap_t lineal(trq_t limit);
-trqMap_t remoteTrqRequest(trq_t limit);
+trqMap_t DVTrqRequest(trq_t limit);
 
 //Basic traction Control
 trqMap_t tractionControlOFF(trqMap_t in);

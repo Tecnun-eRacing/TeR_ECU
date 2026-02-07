@@ -71,7 +71,7 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 				break;
 
 			case TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE:
-				DriveConfig.drivingMode = &remoteTrqRequest;
+				DriveConfig.drivingMode = &DVTrqRequest;
 				break;
 
 			default:
@@ -127,9 +127,11 @@ trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas,se toman v
 	return trqMap;
 }
 // trq_t -> trqMap_t
-trqMap_t remoteTrqRequest(trq_t limit) { // aceptar request de torque con origen remoto(DV, por ejemplo)
+trqMap_t DVTrqRequest(trq_t limit) { // aceptar request de torque con origen remoto(DV, por ejemplo)
 	trqMap_t trqMap = { 0 };
 	if(TeR.status.as_allowed){ // si el dv no esta allowed aun: retornamos 0
+		trqMap.rLeft = 0; // innecesario pero para que quede claro
+		trqMap.rRight = 0;
 		return trqMap;
 	}
 	float requested_trq = ter_dv_dynamic_req_1_trq_req_decode(
@@ -179,11 +181,12 @@ trqMap_t regenModeFREE(trqMap_t in) {
 /*
  * This function is used as a sanity check in the last stage of the pipeline
  * This function checks if somehow you managed to place a trq request that is impossible to fulfill:
- * 1) You tried to request negative torque with the regen disabled -> you may cause accumulator faults / overvoltages / overtemps / you did not want to regen
- * 2) You tried to request negative torque below a threshold speed -> you may cause the wheels to spin backwards -> insta DQ and could be VERY dangerous
- * 3) You tried to exceed the power limitation of the vehicle (bug in drivingMode or regenMode function)
+ * 1) You tried to request negative torque with the regen disabled -> you may cause accumulator faults / overvoltages / overtemps / overcurrents/ you did not want to regen (regen disabled)
+ * 2) You tried to request negative torque below a threshold speed -> you may cause the wheels to spin backwards -> insta DQ and could be VERY dangerous for the driver
+ * 3) You tried to exceed the power limitation of the vehicle (bug in drivingMode or regenMode function and somehow limitation is exceded)
  *
  * All relevant checks should be performed in your DrivingMode and RegenMode functions, do not rely exclusively on sanity checks
+ * Its your task as the programmer to ensure that all diving modes are safe, do not rely on sanitychecks
  */
 trqMap_t trqCheck(trqMap_t in, trq_t limit) {
 
@@ -262,7 +265,7 @@ void clamp_neg_trq(trqMap_t *in, trq_t limitNeg) {
 
 /*
  * Check if overall torque exceeds torque limitation
- * this SHOULD be impossible to trigger
+ * this SHOULD be impossible if regentrq < limittrq
  * This function only makes sense if you somehow have a positive torque limitation, a negative torque limitation, and an overall torque limitation
  * */
 void scale_max_trq(trqMap_t *in, trq_t limit) {

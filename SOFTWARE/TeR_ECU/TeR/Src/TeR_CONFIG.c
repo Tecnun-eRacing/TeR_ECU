@@ -119,6 +119,7 @@ void set_default_config(struct ter_ecu_config_t *config) { //set car internal co
  * overridea lo que este escrito en la eeprom
  *
  * Existe por si dejas configurado algo por defecto que no puede ser válido
+ *
  * */
 void set_init_config(struct ter_ecu_config_t *config){ // TODO dv mission req
 	config->driving_mode =

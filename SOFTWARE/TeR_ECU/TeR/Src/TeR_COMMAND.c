@@ -15,9 +15,11 @@ uint32_t beep_timer; // contador de veces que ha saltado el beep
  * */
 void r2d_timer_callback(void *argument) {
 	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
+	if(TeR.status.state == PRECHARGED){ // si no estamos en precharged no saltaremos a driving
 	TeR.status.r2_d = 1; //flag r2d
 	TeR.appReqRight.app_state_req = 4; //inverter a ready
 	TeR.appReqLeft.app_state_req = 4; //inverter a ready
+	}
 }
 void beep_timer_callback(void *argument) { // MADAFUKING BEEP NON BLOCKING
 	HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET);
