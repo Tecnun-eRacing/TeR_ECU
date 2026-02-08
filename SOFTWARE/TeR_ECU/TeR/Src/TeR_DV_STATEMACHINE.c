@@ -353,7 +353,7 @@ dv_act_state_t get_as_act_state() {
 	if (TeR.dv_info.mission == TER_DV_INFO_MISSION_MANUAL_CHOICE)
 		return AS_ACT_WAIT_MISSION;
 	if (TeR.asb_status.asb_energy_status
-			== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAILABLE_CHOICE)
+			== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)
 		return AS_ACT_WAIT_ENERGY;
 	if ((ter_bpps_bpps_decode(TeR.bpps.bpps) < TeR.config.r2_d_brake))
 		return AS_ACT_WAIT_BRAKE;
