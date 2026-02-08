@@ -107,7 +107,9 @@ uint8_t command(struct ter_command_t command) {
 				&& (TeR.dv_system_status.as_status
 						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Pone el coche en modo driving al añadir freno
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-			osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
+			if (osTimerIsRunning(r2d_timerHandle) == osOK) {
+				osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
+			}
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -129,9 +131,9 @@ uint8_t command(struct ter_command_t command) {
 		}
 		break;
 
-	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP
+	case TER_COMMAND_CMD_BEEP_CHOICE: //MADAFUKIN BEEP (encima con timers podemos hacer una cancion)
 		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-		osTimerStart(beep_timerHandle, 200);
+		osTimerStart(beep_timerHandle, 100);
 		break;
 
 		/*Sends messages not implemented in this board to the main can if the source is internal*/

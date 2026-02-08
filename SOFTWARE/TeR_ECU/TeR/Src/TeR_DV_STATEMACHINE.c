@@ -13,33 +13,39 @@
  *      -> request de safety Line (SDC en fsg)
  *
  *
+ *
+ *
  */
 #include "TeR_DV_STATEMACHINE.h"
+
 void permatask();
 void dv_stateLoop();
 void set_steer_angle(int32_t angle);
 void unsafe_set_steer_angle(int32_t angle);
+void as_act_statemachine();
+dv_act_state_t get_as_act_state();
+extern osTimerId_t as_allowed_timerHandle;
+extern osTimerId_t as_emergency_beep_timerHandle;
 const static uint32_t task_period = 5;
 persist_t ready_time; // contar el tiempo que estamos en AS_READY
 persist_t res_k2; // contar el tiempo que "res k2" ha estado en 1
 
 
-extern osTimerId_t as_allowed_timerHandle;
-extern osTimerId_t as_emergency_beep_timerHandle;
 uint32_t emergency_beep_count; // contador de beeps de emergencia
-uint8_t ext_TS;
+uint8_t ext_TS; // para testing con debugger una cosa q quiero mirar
+dv_act_state_t dv_act_state = AS_ACT_OFF; // tengo que crear la señal de can luego lo hago todo
 
 /*
- * This function is called when the SW timer reaches its autoreload value
+ * This function delays the request for AS_DRIVING
  * Use: To delay any requests from the driverless computer for a period of time after entering AS_DRIVING (required by the rules)
  * Important, DO NOT block (osDelay for example) in any timer callback, read the manual
  *
  */
 void as_allowed_timer_callback(void *argument) {
-	if(TeR.dv_system_status.as_status == AS_DRIVING){ // imaginate el caso en el que entras en driving, se lanza el timer, y antes de 3 segundos hay fallo, esto previene jittering (estupidez pero por si acaso)
-	TeR.status.as_allowed = 1;
-	TeR.dv_system_status.steering_state =
-	TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE;
+	if (TeR.dv_system_status.as_status == AS_DRIVING) { // imaginate el caso en el que entras en driving, se lanza el timer, y antes de 3 segundos hay fallo, esto previene jittering (5ms coche en driving y luego cae)
+		TeR.status.as_allowed = 1;
+		TeR.dv_system_status.steering_state =
+		TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE;
 	}
 }
 
@@ -62,13 +68,14 @@ void as_emergency_beep_timer_callback(void *argument) {
 //K2 o K3 se pueden usar como go signal (fsg 2026)
 /*
  * This function gets the state of the DV statemachine, it follows the rule T 14.8
- * Nothing crazy, just follow the rules stated in T14.8
+ * fully combinational, as expected by FSG
+ * It has to be this way, as we have to implement as the rule says, please check the rules
+ *
+ * (puede que la haya liado en alguna condicion luego reviso) todo
  *
  */
 dv_state_t get_dv_state() { // fsg 2026 T 14.8
-	//TeR.status.asms = 0; // leer de un GPIO o del CAN, comentado para testing con debugger
-//todo hacer que el command de precharge no vaya si asms = 1 o crear un command diferente
-//todo necesidad de relé de SL de la ECU para abrir el EBS 0 hacer request de activar EBS
+	//TeR.status.asms = 0; // leer de un GPIO o del CAN, comentado para testing con debugger en algun momento
 	dv_state_t dv_state = AS_OFF;
 	if ((TeR.asb_status.asb_ebs_state
 			== TER_ASB_STATUS_ASB_EBS_STATE_ACTIVATED_CHOICE)
@@ -76,8 +83,8 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 					== TER_ASB_STATUS_ASB_REDUNDANCY_STATE_ACTIVATED_CHOICE)) {
 		if ((TeR.dv_info.mission_status
 				== TER_DV_INFO_MISSION_STATUS_FINISHED_CHOICE)
-				&& (TeR.wheelInfo.speed == 0)) {
-			if (TeR.res_pdo_tx.e_stop_1 || TeR.res_pdo_tx.e_stop_2) { // sl open at res
+				&& (TeR.wheelInfo.speed == 0)) { // supongo que quieren que este en emergency mientras se esta moviendo? ni idea? y si luego llegas a 0 entiendo que no deberia de latchearse? poco sentido la verdad, solo se guarda si el boton del res esta presionado
+			if (TeR.res_pdo_tx.e_stop_1 || TeR.res_pdo_tx.e_stop_2) { // sl open at res ? (res abierto vamos)
 				dv_state = AS_EMERGENCY;
 			} else { // sl not open at RES
 				dv_state = AS_FINISHED;
@@ -105,7 +112,7 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 
 /*
  *
- * Thread that controls the execution of the DV pipeline
+ * Thread that controls the execution of the main DV statemachine
  *
  *
  * */
@@ -178,37 +185,7 @@ void dv_stateLoop() {
 
 	case AS_OFF:
 		// T 14.4 very important this manages the sl relay of the AS
-		if (TeR.status.asms) { // driverless, tomaremos asms como punto de decisión si estamos en DV o MANUAL
-			if ((TeR.config.dv_mission_req
-					!= TER_ECU_CONFIG_DV_MISSION_REQ_MANUAL_CHOICE)
-					&& (ter_bpps_bpps_decode(TeR.bpps.bpps)
-							>= TeR.config.r2_d_brake)) { // asms puesto, la mision NO es manual, hay presión de freno
-				set_sl_request(SL_DV, 1);
-				if (ext_TS && TeR.status.state == RDY2PRECH) { // TODO lectura boton TS externo + SL cerrada
-					easyCommand(TER_COMMAND_CMD_PRECHARGE_DV_CHOICE); // enviamos request de precarga DV
-				}
-				if (TeR.status.state == PRECHARGED) { // pedimos self check (si falla el ASB se encargará de abrir el SDC)
-					TeR.asb_ebs_state_req.state_req =
-					TER_ASB_EBS_STATE_REQ_STATE_REQ_SELF_CHECK_CHOICE;
-					TeR.asb_redundancy_req.state_req =
-					TER_ASB_REDUNDANCY_REQ_STATE_REQ_SELF_CHECK_CHOICE;
-				}
-			} else {
-				set_sl_request(SL_DV, 0);
-			}
-			//MANUAL (miramos TeR.config.dv_mission_req para poder correr sin que el DV esté enchufado, ya que la mision elegida la maneja el DV y pues si no esta enchufado por lo que sea quiero seguir pudiendo testear)
-		} else if ((TeR.config.dv_mission_req
-				== TER_ECU_CONFIG_DV_MISSION_REQ_MANUAL_CHOICE)
-				&& (TeR.asb_status.asb_ebs_state
-						== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE)
-				&& (TeR.asb_status.asb_redundancy_state
-						== TER_ASB_STATUS_ASB_REDUNDANCY_STATE_DEACTIVATED_CHOICE)
-				&& (TeR.asb_status.asb_energy_status
-						== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)) {
-			set_sl_request(SL_DV, 1);
-		} else {
-			set_sl_request(SL_DV, 0);
-		}
+		as_act_statemachine(); // manage requests and SL relay requests at startup
 		break;
 
 	case AS_READY:
@@ -223,18 +200,17 @@ void dv_stateLoop() {
 
 		if (TeR.status.as_allowed) { // si la flag as allowed esta puesta, podemos hacer requests al DV
 
-
-			//bypass request de freno dv -> asb board
+			//bypass request de freno dv -> asb board signal
 			TeR.asb_brake_req.brake = TeR.dv_dynamic_req_2.asb_brake_req;
 
-			//bypass request steering dv -> steering motor
+			//bypass request steering dv -> steering motor signal
 			set_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
 		}
 		break;
 
 	case AS_EMERGENCY:
-		TeR.asb_brake_req.brake = TER_ASB_BRAKE_REQ_BRAKE_ENABLED_CHOICE; // no debería de servir para nada pero por si acaso
-		if (TeR.wheelInfo.speed > 5) { // permite al DV hacer una parada controlada en caso de entrar en AS_EMERGENCY (ojo que si el source de velocidad son las ruedas, y el freno bloquea, esto no hace nada)
+		TeR.asb_brake_req.brake = TER_ASB_BRAKE_REQ_BRAKE_ENABLED_CHOICE; // no debería de servir para nada pero por si acaso (porque si estamos aqui el ebs ha triggereado)
+		if (TeR.wheelInfo.speed > 5) { // permite al DV hacer una parada controlada en caso de entrar en AS_EMERGENCY (le permitimos control de steering hasta un threshold)
 			set_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
 		} else { // cuando la velocidad sea inferior al threshold, quedará desactivado el steering
 			TeR.dv_system_status.steering_state =
@@ -272,11 +248,11 @@ void set_steer_angle(int32_t angle) {
 
 /*
  * Set the steer angle without caring if the car is in the ready state, useful for testing purposes
- * under your own responsability
+ * under your own responsability (this will get you a insta DQ)
  *
  * */
 void unsafe_set_steer_angle(int32_t angle) {
-	angle = clamp(angle, -20 * 10000, 20 * 10000); // multiplicado por los factores del DBC todo max y min angle por can configurables
+	angle = clamp(angle, -20 * 10000, 20 * 10000); // multiplicado por los factores del DBC todo max y min angle por can configurables en un futuro
 	TeR.steer_actuator_set_position.actuator_position = angle;
 	uint8_t TxData[8] = { 0 };
 	ter_steer_actuator_set_position_pack(TxData,
@@ -289,14 +265,17 @@ void permatask() {
 	if (TeR.dv_system_status.as_status == AS_DRIVING && TeR.status.as_allowed) {
 
 	}
+	// comentado por que de momento tengo que pensar de donde sacarlo
 //	TeR.dv_driving_dynamics_1.brake_hydr_actual;
 //	TeR.dv_driving_dynamics_1.brake_hydr_target;
 //	TeR.dv_driving_dynamics_1.motor_moment_actual = TeR.dv_dynamic_req_1.trq_req;
 //	TeR.dv_driving_dynamics_1.motor_moment_target = TeR.dv_dynamic_req_1.trq_req;
-	TeR.dv_driving_dynamics_1.speed_actual = TeR.wheelInfo.speed;
-	TeR.dv_driving_dynamics_1.speed_target = TeR.wheelInfo.speed;
-	TeR.dv_driving_dynamics_1.steering_angle_actual = TeR.steer_actuator_status.position;
-	TeR.dv_driving_dynamics_1.steering_angle_target = TeR.dv_dynamic_req_1.steer_angle_req;
+//	TeR.dv_driving_dynamics_1.speed_actual = TeR.wheelInfo.speed;
+//	TeR.dv_driving_dynamics_1.speed_target = TeR.wheelInfo.speed;
+//	TeR.dv_driving_dynamics_1.steering_angle_actual =
+//			TeR.steer_actuator_status.position;
+//	TeR.dv_driving_dynamics_1.steering_angle_target =
+//			TeR.dv_dynamic_req_1.steer_angle_req;
 
 //	TeR.dv_driving_dynamics_2.acceleration_lateral;
 //	TeR.dv_driving_dynamics_2.acceleration_longitudinal;
@@ -305,12 +284,18 @@ void permatask() {
 //	TeR.dv_system_status.as_ebs_state;
 //	TeR.dv_system_status.asb_redundancy_state;
 	TeR.dv_system_status.cones_count_actual = TeR.dv_info.cones_count_actual;
-	TeR.dv_system_status.cones_count_all= TeR.dv_info.cones_count_all;
+	TeR.dv_system_status.cones_count_all = TeR.dv_info.cones_count_all;
 	TeR.dv_system_status.lap_counter = TeR.dv_info.lap_counter;
 }
 
-void assi_manager(){
-	switch(TeR.dv_system_status.as_status){
+/*
+ * Todavia estoy pensando como hacer esto, se puede hacer sencillo con software timers
+ * o todavia creando otro thread, aunque realmente me parece innecesario
+ *
+ *
+ * */
+void assi_manager() {
+	switch (TeR.dv_system_status.as_status) {
 	case AS_OFF:
 		//apagar assi
 		break;
@@ -325,6 +310,128 @@ void assi_manager(){
 		break;
 	case AS_FINISHED:
 		//blue continuous
+		break;
+	default:
+		break;
+	}
+}
+
+/*
+ * Get the activation state of the driverless system
+ * -> first, check if the car is in manual mode this is:
+ * -ASMS off, MANUAL mission selected, EBS and REDUNDANT deactivated, brake ENERGY unavailable
+ * if so, activation state is AS_ACT_OFF
+ *
+ * -> else, get the activation state of the driverless system
+ *
+ * Why does this exists?
+ * -> While is AS_OFF, the vehicle might be in many different states, such as:
+ * -> waiting for brake pressure
+ * -> waiting for precharge
+ * ->abs energy disconnected
+ *
+ * It can be done without this "mini" statemachine, but the code is a big mess
+ *
+ *
+ * */
+dv_act_state_t get_as_act_state() {
+	dv_act_state_t state = AS_ACT_OFF;
+	if ((TeR.status.asms == 0)
+			&& (TeR.dv_info.mission == TER_DV_INFO_MISSION_MANUAL_CHOICE)
+			&& (TeR.asb_status.asb_energy_status
+					== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)
+			&& (TeR.asb_status.asb_ebs_state
+					== TER_ASB_STATUS_ASB_EBS_STATE_DEACTIVATED_CHOICE)
+			&& (TeR.asb_status.asb_redundancy_state
+					== TER_ASB_STATUS_ASB_REDUNDANCY_STATE_DEACTIVATED_CHOICE)) {
+		return state; // AS_ACT_IDLE, no hacemos nada
+	} else {
+		state = AS_ACT_WAIT_ASMS;
+	}
+	if (!TeR.status.asms)
+		return AS_ACT_WAIT_ASMS;
+	if (TeR.dv_info.mission == TER_DV_INFO_MISSION_MANUAL_CHOICE)
+		return AS_ACT_WAIT_MISSION;
+	if (TeR.asb_status.asb_energy_status
+			== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAILABLE_CHOICE)
+		return AS_ACT_WAIT_ENERGY;
+	if ((ter_bpps_bpps_decode(TeR.bpps.bpps) < TeR.config.r2_d_brake))
+		return AS_ACT_WAIT_BRAKE;
+	if (TeR.status.state < RDY2PRECH) // todo, añadir estado intermedio que sea as_wait_sl por ejemplo, en el que mandemos request de cerrar rele de SL y a la espera de sl cerrada
+		return AS_ACT_READY2PRECH;
+	if (TeR.status.state == PRECHARGED) {
+		if ((TeR.asb_status.asb_ebs_state
+				== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
+				&& (TeR.asb_status.asb_redundancy_state
+						== TER_ASB_STATUS_ASB_REDUNDANCY_STATE_INITIAL_CHECK_PASSED_CHOICE)) {
+			return AS_ACT_DONE; // nunca vamos a llegar aqui XD (porque cambiaremos a AS_READY cuando esto sea cierto y esto solo se ejecuta en AS OFF)
+		} else {
+			return AS_ACT_PRECHARGED; // estamos precargados pero aún falta self-check todo prodriamos añadir timeout (innecesario porque el asb se encargaría de abrir la en caso de fallo supongo)
+		}
+	}
+	return state;
+}
+/*
+ *
+ * Executes logic for the activation of the driverless system
+ * Controls the safetyline of the DV module
+ * how it works:
+ * -> gets the state
+ * -> executes the requested actions
+ * -> controls the SDC, if the state is AS_ACT_OFF the SL is closed
+ * -> else, its open util the car is in AS_ACT_OFF or AS_ACT_READY2PRECH
+ *
+ * */
+
+void as_act_statemachine() {
+	dv_act_state_t state = get_as_act_state();
+	dv_act_state_t prevState = dv_act_state;
+	uint8_t stateChanged = state != prevState ? 1 : 0;
+	if (stateChanged) {
+
+		switch (state) {
+		case AS_ACT_OFF:
+			// cerrar sl, modo manual
+			set_sl_request(SL_DV, 1);
+			break;
+
+		case AS_ACT_WAIT_ASMS:
+			set_sl_request(SL_DV, 0);
+			// nada
+			break;
+		case AS_ACT_WAIT_MISSION:
+			set_sl_request(SL_DV, 0);
+			//nada
+			break;
+		case AS_ACT_WAIT_ENERGY:
+			set_sl_request(SL_DV, 0);
+			// nada
+			break;
+		case AS_ACT_WAIT_BRAKE:
+			set_sl_request(SL_DV, 0);
+			//nada
+			break;
+		case AS_ACT_READY2PRECH: // el sistema esta listo, cerramos safetyline todo quizas un estado anterior de cerrando SL
+			set_sl_request(SL_DV, 1);
+			break;
+
+		case AS_ACT_PRECHARGED: // coche precargado, pedimos selfcheck de ASB
+			TeR.asb_ebs_state_req.state_req =
+			TER_ASB_EBS_STATE_REQ_STATE_REQ_SELF_CHECK_CHOICE;
+			TeR.asb_redundancy_req.state_req =
+			TER_ASB_REDUNDANCY_REQ_STATE_REQ_SELF_CHECK_CHOICE;
+			break;
+		case AS_ACT_DONE:
+			// all check done, automatically will switch to AS_READY
+			break;
+		}
+	}
+	dv_act_state = state; // tengo que crear la señal de can luego lo hago todo
+	switch (state) { // permanent checking
+	case AS_ACT_READY2PRECH:
+		if (ext_TS) { // TODO lectura boton TS externo + SL cerrada
+			easyCommand(TER_COMMAND_CMD_PRECHARGE_DV_CHOICE); // enviamos request de precarga DV ( no deberia de haber problema al mantener pulsado, el coche cambia de estado a dirving y listo)
+		}
 		break;
 	default:
 		break;
