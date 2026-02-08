@@ -242,7 +242,7 @@ void set_steer_angle(int32_t angle) {
 		ter_steer_actuator_set_position_pack(TxData,
 				&TeR.steer_actuator_set_position, sizeof(TxData));
 		can_scheduler_insert_non_periodic_msg(TxData, sizeof(TxData),
-		TER_STEER_ACTUATOR_SET_POSITION_FRAME_ID, 0); // añadir al scheduler
+		TER_STEER_ACTUATOR_SET_POSITION_FRAME_ID, 0); // añadir al scheduler (no puede ser un periodico porque sino el motor haria fuerza, solo enviar mensaje cuando queremos que haga fuerza)
 	}
 }
 
