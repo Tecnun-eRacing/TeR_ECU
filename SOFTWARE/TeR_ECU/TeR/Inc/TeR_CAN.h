@@ -126,6 +126,7 @@ struct TeR_t {
 	struct hvbms_bms_tx_state_6_t BmsCellsVolt; // tensiones media min y max de celdas
 	struct hvbms_bms_tx_state_9_t BmsCellsTemp; // temperaturas media min y max de celdas
 	struct hvbms_bms_tx_state_4_t BmsCurrent; // corriente del bms
+	struct hvbms_bms_tx_state_5_t BmsBatVolt; // tension en hv1 (car side) hv2 (vehicle side) y hv3 (unused)
 
 
 };

@@ -149,6 +149,11 @@ bool can_scheduler_insert_msg_with_timeout(uint8_t *msg, uint8_t len,
 	return can_scheduler_insert_built_msg(can_msg);
 }
 
+
+/*
+ * Do not call inside an ISR!!!
+ *
+ * */
 bool can_scheduler_insert_non_periodic_msg(uint8_t *msg, uint8_t len,
 		uint32_t id, uint32_t timeout) {
 	return can_scheduler_insert_msg_with_timeout(msg, len, id, -1,

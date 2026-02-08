@@ -14,10 +14,12 @@
 typedef enum{
 	SL_DV,
 	SL_SCS,
+	SL_CMD
 }sl_request_t;
-#define MAX_TASKS 2
+#define MAX_TASKS 3 // this defines the number of states of the ENUM
 void set_sl_request(sl_request_t request, uint32_t value);
 uint8_t can_close_relay(void);
+
 
 
 

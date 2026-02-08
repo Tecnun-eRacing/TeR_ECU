@@ -430,6 +430,10 @@ void canRx(void *argument) {
 			hvbms_bms_tx_state_4_unpack(&TeR.BmsCurrent, msg.data,
 					sizeof(msg.data)); // si el dbc estuviera bien hecho, esto no tendriamos que hacer
 			break;
+
+		case HVBMS_BMS_TX_STATE_5_FRAME_ID:
+			hvbms_bms_tx_state_5_unpack(&TeR.BmsBatVolt,msg.data,sizeof(msg.data));
+			break;
 			/* ---------------------------[Default]-------------------------- */
 
 		default:

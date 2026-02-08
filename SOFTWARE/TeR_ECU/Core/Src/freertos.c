@@ -155,10 +155,20 @@ osTimerId_t beep_timerHandle;
 const osTimerAttr_t beep_timer_attributes = {
   .name = "beep_timer"
 };
+/* Definitions for open_sl_cmd_timer */
+osTimerId_t open_sl_cmd_timerHandle;
+const osTimerAttr_t open_sl_cmd_timer_attributes = {
+  .name = "open_sl_cmd_timer"
+};
 /* Definitions for g_can_scheduler_mutex */
 osMutexId_t g_can_scheduler_mutexHandle;
 const osMutexAttr_t g_can_scheduler_mutex_attributes = {
   .name = "g_can_scheduler_mutex"
+};
+/* Definitions for sl_task_mutex */
+osMutexId_t sl_task_mutexHandle;
+const osMutexAttr_t sl_task_mutex_attributes = {
+  .name = "sl_task_mutex"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -181,6 +191,7 @@ extern void r2d_timer_callback(void *argument);
 extern void as_allowed_timer_callback(void *argument);
 extern void as_emergency_beep_timer_callback(void *argument);
 extern void beep_timer_callback(void *argument);
+extern void open_sl_cmd_timer_callback(void *argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -229,6 +240,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of g_can_scheduler_mutex */
   g_can_scheduler_mutexHandle = osMutexNew(&g_can_scheduler_mutex_attributes);
 
+  /* creation of sl_task_mutex */
+  sl_task_mutexHandle = osMutexNew(&sl_task_mutex_attributes);
+
   /* USER CODE BEGIN RTOS_MUTEX */
 	/* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -249,6 +263,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of beep_timer */
   beep_timerHandle = osTimerNew(beep_timer_callback, osTimerOnce, NULL, &beep_timer_attributes);
+
+  /* creation of open_sl_cmd_timer */
+  open_sl_cmd_timerHandle = osTimerNew(open_sl_cmd_timer_callback, osTimerPeriodic, NULL, &open_sl_cmd_timer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */

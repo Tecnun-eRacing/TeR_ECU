@@ -148,13 +148,14 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			if (!TeR.status.asms) { // if stupid thing is about to happen
+			if (!TeR.status.asms) { // if stupid thing is about to happen (asms is not on, but somehow the driving mode is driverless)
 				if (TeR.config.driving_mode
 						== TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE) { // por si a algun iluminado se le ocurre la brillante idea de conducir en manual despues de testear el dv y sin apagar el coche
 					TeR.config.driving_mode =
 					TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE; //prevent stupid thing
 					TeR.config.regen_mode =
 					TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
+					TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
 				}
 			}
 			publish_config(&TeR.config, ALL_CONFIGS);

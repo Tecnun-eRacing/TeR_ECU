@@ -149,7 +149,8 @@ void dv_stateLoop() {
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_UNAVAILABLE_CHOICE;
 			TeR.status.as_allowed = 0;
 			ready_time = 0; // reseteamos ready_time
-			// setup dv driving mode & other relevant configurations
+
+			// setup dv driving mode & other relevant configurations for the driverless computer
 			TeR.config.driving_mode =
 			TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
 			TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
@@ -163,7 +164,7 @@ void dv_stateLoop() {
 
 		case AS_EMERGENCY:
 			TeR.asb_brake_req.brake = TER_ASB_BRAKE_REQ_BRAKE_ENABLED_CHOICE;
-			TeR.status.as_allowed = 0;
+			TeR.status.as_allowed = 0; // disable AS to make torque requests
 			osTimerStart(as_emergency_beep_timerHandle, 200); // start a periodic beep timer that lasts 10 seconds for AS_EMERGENCY
 			break;
 
@@ -177,7 +178,7 @@ void dv_stateLoop() {
 
 	case AS_OFF:
 		// T 14.4 very important this manages the sl relay of the AS
-		if (TeR.status.asms) { // driverless
+		if (TeR.status.asms) { // driverless, tomaremos asms como punto de decisión si estamos en DV o MANUAL
 			if ((TeR.config.dv_mission_req
 					!= TER_ECU_CONFIG_DV_MISSION_REQ_MANUAL_CHOICE)
 					&& (ter_bpps_bpps_decode(TeR.bpps.bpps)
@@ -195,7 +196,7 @@ void dv_stateLoop() {
 			} else {
 				set_sl_request(SL_DV, 0);
 			}
-			//manual (miramos TeR.config.dv_mission_req para poder correr sin que el DV esté enchufado, ya que la mision elegida la maneja el DV)
+			//MANUAL (miramos TeR.config.dv_mission_req para poder correr sin que el DV esté enchufado, ya que la mision elegida la maneja el DV y pues si no esta enchufado por lo que sea quiero seguir pudiendo testear)
 		} else if ((TeR.config.dv_mission_req
 				== TER_ECU_CONFIG_DV_MISSION_REQ_MANUAL_CHOICE)
 				&& (TeR.asb_status.asb_ebs_state
@@ -219,7 +220,9 @@ void dv_stateLoop() {
 		break;
 
 	case AS_DRIVING:
+
 		if (TeR.status.as_allowed) { // si la flag as allowed esta puesta, podemos hacer requests al DV
+
 
 			//bypass request de freno dv -> asb board
 			TeR.asb_brake_req.brake = TeR.dv_dynamic_req_2.asb_brake_req;
@@ -237,7 +240,6 @@ void dv_stateLoop() {
 			TeR.dv_system_status.steering_state =
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_UNAVAILABLE_CHOICE;
 		}
-		//algoimportante todo
 		break;
 
 	default:
