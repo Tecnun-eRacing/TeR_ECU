@@ -11,7 +11,7 @@
 #include "TeR_SL.h"
 void as_allowed_timer_callback(void *argument);
 typedef enum{
-	AS_OFF, // para que coincida con el DBC (mira la value table si no te cuadra esto)
+	AS_OFF = 1, // para que coincida con el DBC (mira la value table si no te cuadra esto)
 	AS_READY,
 	AS_DRIVING,
 	AS_EMERGENCY,
