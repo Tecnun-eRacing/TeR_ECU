@@ -4,7 +4,7 @@
  *  Created on: Jan 31, 2026
  *      Author: pieroebs
  *
- *      Lógica de todo lo relacionado con la obtención y configuración del AS
+ *      Lógica de todo lo relacionado con la obtención y configuración del AS (sistema autonomo/driverless)
  *
  *      -> obtención de estado del AS
  *      -> controlar como se cambia de estado en el AS
@@ -16,6 +16,7 @@
  *
  *
  */
+
 #include "TeR_DV_STATEMACHINE.h"
 
 void permatask();
@@ -52,7 +53,6 @@ void as_allowed_timer_callback(void *argument) {
 /*
  * This timer executes the beep the buzzer at a frequency that i forgot for around 8-10 seconds
  * The timer gets called every 200ms, when an internal count value is reached, the timer gets deactivated
- *
  *
  */
 void as_emergency_beep_timer_callback(void *argument) {
@@ -437,4 +437,3 @@ void as_act_statemachine() {
 		break;
 	}
 }
-

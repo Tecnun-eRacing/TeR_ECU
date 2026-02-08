@@ -33,6 +33,7 @@
 /* USER CODE BEGIN Includes */
 #include "TeR_CAN.h"
 #include "TeR_STATEMACHINE.h"
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
