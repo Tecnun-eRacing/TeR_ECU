@@ -78,7 +78,7 @@ uint8_t initCAN(CAN_HandleTypeDef *invCan, CAN_HandleTypeDef *mainCan) {
 	//Arrancamos las interrupts
 	HAL_CAN_ActivateNotification(invCAN, CAN_IT_RX_FIFO0_MSG_PENDING); //Activamos notificación de mensaje pendiente a lectura
 	HAL_CAN_ActivateNotification(mainCAN,
-	CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY); //hay mensaje, mailbox libre, rror + busoff
+	CAN_IT_RX_FIFO0_MSG_PENDING); //hay mensaje, mailbox libre, rror + busoff
 	return 1;
 }
 
@@ -88,7 +88,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	CAN_RxHeaderTypeDef rxHeader; //Header temporal
 	canMsg_t msg = { 0 }; //Bufer temporal
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, msg.data); //Recoge el mensaje
-	msg.id = (rxHeader.StdId == CAN_ID_STD) ? rxHeader.StdId : rxHeader.ExtId; // si es es standard pillo id standard, sino pillo ext
+	msg.id = (rxHeader.IDE == CAN_ID_STD) ? rxHeader.StdId : rxHeader.ExtId; // si es es standard pillo id standard, sino pillo ext
 	msg.DLC = rxHeader.DLC;
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
 

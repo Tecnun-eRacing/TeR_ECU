@@ -22,7 +22,9 @@ const static int task_period = 5; // Task frequency
 
 extern trqMap_t trqDistribution(trq_t limit);
 
-trqPipeline_t DriveConfig; //Configuración en uso
+trqPipeline_t DriveConfig = { .drivingMode = &lineal, .limiter = &limitTorque,
+		.regenMode = regenModeAPPS, .sanityChecks = trqCheck, .tractionControl =
+				tractionControlOFF }; //Configuración en uso (defaulteada por si acaso)
 extern osThreadId_t trqManagerTaskHandle; // thread id of trqManager task
 
 void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la comanda
@@ -49,6 +51,8 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			TeR.trqReqRight.torque_nm_req = trqToWheels.rRight;
 
 		} else {
+			// sanity check function pointer
+			DriveConfig.sanityChecks = &trqCheck;
 			//Config the driving pipeline if not driving
 			switch (TeR.config.limiter) {
 
@@ -129,7 +133,7 @@ trqMap_t lineal(trq_t limit) { //Entrega lineal de par a las 2 ruedas,se toman v
 // trq_t -> trqMap_t
 trqMap_t DVTrqRequest(trq_t limit) { // aceptar request de torque con origen remoto(DV, por ejemplo)
 	trqMap_t trqMap = { 0 };
-	if(TeR.status.as_allowed){ // si el dv no esta allowed aun: retornamos 0
+	if (TeR.status.as_allowed) { // si el dv no esta allowed aun: retornamos 0
 		trqMap.rLeft = 0; // innecesario pero para que quede claro
 		trqMap.rRight = 0;
 		return trqMap;
@@ -240,7 +244,7 @@ uint8_t regen_allowed() { // 1 ok 0 not ok
  *
  * */
 void clamp_pos_trq(trqMap_t *in, trq_t limitPos) {
-	trq_t maxPosTrqWheel = abs(limitPos)/2;
+	trq_t maxPosTrqWheel = abs(limitPos) / 2;
 	if (in->rLeft > 0) { //if is positive
 		in->rLeft = in->rLeft > maxPosTrqWheel ? maxPosTrqWheel : in->rLeft; //if exeeds limit clamp
 	}
@@ -253,7 +257,7 @@ void clamp_pos_trq(trqMap_t *in, trq_t limitPos) {
  *
  * */
 void clamp_neg_trq(trqMap_t *in, trq_t limitNeg) {
-	trq_t maxNegTrqWheel = -abs(limitNeg)/2; // sane the input and MAKE IT NEGATIVE, VERY VERY IMPORTANT!!!!  if not catastrophic things could happen (trq stuck to maxNegTrqWheel!!!!!!!!!)
+	trq_t maxNegTrqWheel = -abs(limitNeg) / 2; // sane the input and MAKE IT NEGATIVE, VERY VERY IMPORTANT!!!!  if not catastrophic things could happen (trq stuck to maxNegTrqWheel!!!!!!!!!)
 	if (in->rLeft < 0) { //if is negative, check and clamp
 		in->rLeft = in->rLeft < maxNegTrqWheel ? maxNegTrqWheel : in->rLeft; //if exeeds limit clamp
 	}
@@ -261,7 +265,6 @@ void clamp_neg_trq(trqMap_t *in, trq_t limitNeg) {
 		in->rRight = in->rRight < maxNegTrqWheel ? maxNegTrqWheel : in->rRight; //if exeeds limit clamp
 	}
 }
-
 
 /*
  * Check if overall torque exceeds torque limitation

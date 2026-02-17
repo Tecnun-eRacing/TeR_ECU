@@ -11,6 +11,7 @@ extern osTimerId_t open_sl_cmd_timerHandle;
 uint32_t beep_timer; // contador de veces que ha saltado el beep
 
 /* Timer oneshot
+ * Simplemente tengo esquizofrenia y quiero que los cambios de estado sean non blocking
  * Callback del SW timer para pasar a r2d
  * Se utiliza para delayear la acción del paso a r2d una vez recibido el comando + enablear los inverters + apagar el pitado
  * Por normativa tiene que pitar y después entrar en driving, mientras pita no se puede acelerar, por eso hacemos delay del flag de r2d
@@ -26,7 +27,7 @@ void r2d_timer_callback(void *argument) {
 }
 
 /*
- * Timer oneShoot, apaga el beep, se utiliza para delayear la acción de apagado de manera no bloqueante
+ * Timer oneShoot, apaga el beep, se utiliza para delayear la acción de apagado de beep manera no bloqueante
  *
  * */
 void beep_timer_callback(void *argument) { // MADAFUKING NON BLOCKING BEEP
@@ -35,14 +36,14 @@ void beep_timer_callback(void *argument) { // MADAFUKING NON BLOCKING BEEP
 
 /*
  * Timer Periódico
- * Implementa un callback para un shudown requesteado por la ecu de manera segura
- * Se mantendrá el SDC abierto hasta que la tensión del bus sea inferior a 40V
+ * Implementa un callback para un shutdown requesteado por la ecu de manera segura
+ * Se mantendrá el SDC abierto hasta que la tensión del bus sea inferior a 10V
  *
  * */
 void open_sl_cmd_timer_callback(void *argument) {
 	set_sl_request(SL_CMD, 0);
 	if ((hvbms_bms_tx_state_5_volt_2_x10_v_decode(TeR.BmsBatVolt.volt_2_x10_v)
-			< 40)) {
+			< 10)) {
 		set_sl_request(SL_CMD, 1);
 		osTimerStop(open_sl_cmd_timerHandle);
 	}
@@ -61,11 +62,7 @@ uint8_t command(struct ter_command_t command) {
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual (con sanity checks, realmente solo necesitas saber si el coche esta en r2prech)
-		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)
-				&& (TeR.dv_system_status.as_status
-						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)
-				&& ((TeR.asb_status.asb_energy_status
-						== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE))) { //Envía al bms el mensaje de precarga
+		if ((TeR.status.state == RDY2PRECH)) { //Envía al bms el mensaje de precarga falta condicion para evitar prech manual en dv
 			TeR.BmsAppReq.app_state_req =
 			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 		} else {
@@ -102,10 +99,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive manual
 		if ((TeR.status.state == PRECHARGED)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
-				&& (TeR.status.asms == 0)
-				&& (TeR.dv_system_status.as_status
-						== TER_DV_SYSTEM_STATUS_AS_STATUS_AS_STATUS_OFF_CHOICE)) { //Pone el coche en modo driving al añadir freno
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Pone el coche en modo driving al añadir freno
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
 			if (osTimerIsRunning(r2d_timerHandle) == osOK) {
 				osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
