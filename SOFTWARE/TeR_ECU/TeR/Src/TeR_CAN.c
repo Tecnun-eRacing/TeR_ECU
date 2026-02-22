@@ -239,20 +239,20 @@ void CanSchedulerTask(void *argument) {
 	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, // BMS CONTROL
 			HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
 
-	//can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
-	//TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
+	TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
 
-	//can_scheduler_insert_msg_with_phase(TxData, TER_ACCEL_LENGTH,
-	//TER_ACCEL_FRAME_ID, 5, ter_accel_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_ACCEL_LENGTH,
+	TER_ACCEL_FRAME_ID, 5, ter_accel_callback);
 
-	//can_scheduler_insert_msg_with_phase(TxData, TER_GPS_LAT_LONG_LENGTH,
-	//TER_GPS_LAT_LONG_FRAME_ID, 10, ter_gps_lat_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_GPS_LAT_LONG_LENGTH,
+	TER_GPS_LAT_LONG_FRAME_ID, 5, ter_gps_lat_callback);
 
-	//can_scheduler_insert_msg_with_phase(TxData, TER_YPR_LENGTH,
-	//TER_YPR_FRAME_ID, 5, ter_ypr_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_YPR_LENGTH,
+	TER_YPR_FRAME_ID, 5, ter_ypr_callback);
 
-	//can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
-	//TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
+	TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
 	for(;;) {
 		CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
@@ -360,6 +360,15 @@ void canRx(void *argument) {
 		case TER_RES_PDO_RX_FRAME_ID:
 			ter_res_pdo_tx_unpack(&TeR.res_pdo_tx, msg.data, msg.DLC);
 			break;
+
+		case TER_DV_DYNAMIC_REQ_1_FRAME_ID:
+			ter_dv_dynamic_req_1_unpack(&TeR.dv_dynamic_req_1, msg.data, msg.DLC);
+			break;
+
+		case TER_DV_DYNAMIC_REQ_2_FRAME_ID:
+			ter_dv_dynamic_req_2_unpack(&TeR.dv_dynamic_req_2, msg.data, msg.DLC);
+			break;
+
 
 			/* ---------------------------[INVERTER]-------------------------- */
 

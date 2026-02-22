@@ -46,7 +46,6 @@ void stateLoop(void); //Ejecuta el bucle de la maquina de estado
 void permaTask(); //Se ejecuta en todos los estados (conversiones/brakelight...)
 void buttonHandler();
 
-
 //Persistance checker
 persist_t SL;
 //Refri config struct
@@ -125,6 +124,10 @@ void stateLoop(void) {
 			refri.power = TER_REFRI_CONFIG_POWER_OFF_CHOICE;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
+			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
+			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_OFF_CHOICE;
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+
 			//Security
 			easyCommand(TER_COMMAND_CMD_END_LOG_CHOICE);
 			TeR.appReqLeft.app_state_req = 1; //Manda el Inverter a su estado off por si estaba en error
@@ -155,7 +158,8 @@ void stateLoop(void) {
 					TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE; //prevent stupid thing
 					TeR.config.regen_mode =
 					TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
-					TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
+					TeR.config.regen_enable =
+							TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
 				}
 			}
 			publish_config(&TeR.config, ALL_CONFIGS);
@@ -174,23 +178,34 @@ void stateLoop(void) {
 			refri.intensity = 20;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
+			/*refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
+			 refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
+			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
-			refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
+			refri.mode = TER_REFRI_CONFIG_MODE_AUTO_CHOICE;
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_TARGET_TEMP_CHOICE;
+			refri.target_temp = 40;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
-//			activamos cooling  ACCU
-			/*	ter_refri_config_init(&refri);
-			 refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
-			 refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
-			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-			 //			request de intensidad 100%
-			 refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
-			 refri.intensity_accu = 100;
-			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-			 //			modo manual
-			 refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
-			 refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
-			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
+////			activamos cooling  ACCU
+//			ter_refri_config_init(&refri);
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_ACCU_CHOICE;
+//			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
+//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			//			request de intensidad 100%
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
+//			refri.intensity_accu = 0;
+//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			//			modo manual
+//			/*refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
+//			 refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
+//			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
+//			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_AUTO_CHOICE;
+//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_TARGET_TEMP_ACCU_CHOICE;
+//			refri.target_temp_accu = 45;
 
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
@@ -281,12 +296,13 @@ void buttonHandler() {
 		publish_config(&TeR.config, TER_ECU_CONFIG_ENTRY_TRQ_LIMIT_CHOICE);
 	}
 	if (read_btn(&regenButton, TeR.buttons.b3)) {
-		TeR.refri_config.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
-		TeR.refri_config.power =
-				(TeR.refri_config.power == TER_REFRI_CONFIG_POWER_ON_CHOICE) ?
-						TER_REFRI_CONFIG_POWER_OFF_CHOICE :
-						TER_REFRI_CONFIG_POWER_ON_CHOICE;
-		send_config(TER_REFRI_CONFIG_FRAME_ID, &TeR.refri_config);
+		TeR.config.entry = TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE;
+		TeR.config.regen_enable =
+				(TeR.config.regen_enable
+						== TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE) ?
+						TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE :
+						TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
+		publish_config(&TeR.config, TER_ECU_CONFIG_ENTRY_REGEN_ENABLE_CHOICE);
 	}
 
 }
