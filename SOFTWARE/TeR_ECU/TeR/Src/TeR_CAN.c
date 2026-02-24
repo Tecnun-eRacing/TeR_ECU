@@ -91,7 +91,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	msg.id = (rxHeader.IDE == CAN_ID_STD) ? rxHeader.StdId : rxHeader.ExtId; // si es es standard pillo id standard, sino pillo ext
 	msg.DLC = rxHeader.DLC;
 	osMessageQueuePut(rxMsgHandle, &msg, 0U, 0U); //ponemos el mensaje en una cola, que será atendido cuando sea posible
-
+if(hcan == invCAN){
 	//Bridge inverter output to our can
 	CAN_TxHeaderTypeDef TxHeader; //Header de transmisión
 	uint32_t mailbox; //Variable para guardar provisionalmente el slot donde se coloca el mensaje
@@ -102,6 +102,7 @@ void canRxCallback(CAN_HandleTypeDef *hcan) {
 	if (HAL_CAN_GetTxMailboxesFreeLevel(mainCAN) > 0) { // si hay slot para envio
 		HAL_CAN_AddTxMessage(mainCAN, &TxHeader, msg.data, &mailbox); //Envía el mensaje procesado
 	}
+}
 
 }
 /*----------------------------------[Configuración de filtros]--------------------------------*/
@@ -280,7 +281,6 @@ void CanSchedulerTask(void *argument) {
 			}
 
 		} else { // algo ha fallado, reenviamos el mensaje
-			osDelay(5);
 			next_msg.next_when = osKernelGetTickCount(); // rescheduled to be first
 			if (!can_scheduler_insert_built_msg(next_msg)) { // reañadir a la cola
 				// handle this somehow (confia)
