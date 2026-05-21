@@ -31,6 +31,7 @@
 #include "inverter.h"
 #include "hvbms.h"
 #include "booter.h"
+#include "ams.h"
 //UTILIDADES
 #include "TeR_SCS.h" //para el logging de scs
 #include "TeR_COMMAND.h"//Para las llamadas de comando
@@ -128,6 +129,14 @@ struct TeR_t {
 	struct hvbms_bms_tx_state_4_t BmsCurrent; // corriente del bms
 	struct hvbms_bms_tx_state_5_t BmsBatVolt; // tension en hv1 (car side) hv2 (vehicle side) y hv3 (unused)
 
+	//MIPUTOBMS.dbc
+	// enviados
+	struct ams_bms_req_t bms_req;
+	// recibidos
+	struct ams_cell_temperatures_status_t bms_temperatures_status;
+	struct ams_cell_voltage_status_t bms_voltage_status;
+	struct ams_bms_status_t bms_status;
+	struct ams_hv_measurements_status_t bms_hv_measurements_status;
 
 };
 

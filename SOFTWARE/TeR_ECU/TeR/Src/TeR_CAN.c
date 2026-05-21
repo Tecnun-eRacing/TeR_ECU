@@ -237,8 +237,10 @@ void CanSchedulerTask(void *argument) {
 	can_scheduler_insert_msg_with_phase(TxData, TER_TV_DEBUG_LENGTH, // TV DEBUG
 			TER_TV_DEBUG_FRAME_ID, 5, ter_tv_debug_callback);
 
-	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, // BMS CONTROL
-			HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
+//	can_scheduler_insert_msg(TxData, HVBMS_BMS_RX_CTRL_1_LENGTH, // BMS CONTROL
+//			HVBMS_BMS_RX_CTRL_1_FRAME_ID, 10, hvbms_bms_rx_ctrl_1_callback);
+
+	can_scheduler_insert_msg_with_phase(TxData, AMS_BMS_REQ_LENGTH,AMS_BMS_REQ_FRAME_ID,10,ams_bms_req_callback); // MIPUTOBMS CONTROL
 
 	can_scheduler_insert_msg_with_phase(TxData, TER_ANG_RATE_LENGTH,
 	TER_ANG_RATE_FRAME_ID, 5, ter_ang_rate_callback);
@@ -443,7 +445,19 @@ void canRx(void *argument) {
 		case HVBMS_BMS_TX_STATE_5_FRAME_ID:
 			hvbms_bms_tx_state_5_unpack(&TeR.BmsBatVolt,msg.data,sizeof(msg.data));
 			break;
-			/* ---------------------------[Default]-------------------------- */
+			/* ---------------------------[MIPUTOBMS]-------------------------- */
+		case AMS_BMS_STATUS_FRAME_ID:
+			ams_bms_status_unpack(&TeR.bms_status, msg.data, sizeof(msg.data));
+			break;
+		case AMS_CELL_TEMPERATURES_STATUS_FRAME_ID:
+			ams_cell_temperatures_status_unpack(&TeR.bms_temperatures_status, msg.data, sizeof(msg.data));
+			break;
+		case AMS_CELL_VOLTAGE_STATUS_FRAME_ID:
+			ams_cell_voltage_status_unpack(&TeR.bms_voltage_status, msg.data, sizeof(msg.data));
+			break;
+		case AMS_HV_MEASUREMENTS_STATUS_FRAME_ID:
+			ams_hv_measurements_status_unpack(&TeR.bms_hv_measurements_status, msg.data, sizeof(msg.data));
+			break;
 
 		default:
 			break;

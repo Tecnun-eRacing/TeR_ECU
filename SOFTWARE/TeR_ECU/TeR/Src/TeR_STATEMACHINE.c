@@ -79,11 +79,9 @@ state_t evalState(void) {
 
 	if (TeR.status.sl) { //Si esta ok la safety
 		status = RDY2PRECH; //Se puede precargar
-		if (TeR.BmsAppState.app_state_app
-				== HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__PRECHARGE__READY_CHOICE) { // Se está haciendo precarga?
+		if (TeR.bms_status.bms_state == AMS_BMS_STATUS_BMS_STATE_PRECHARGING_CHOICE) { // Se está haciendo precarga?
 			status = PRECHARGING;
-		} else if (TeR.BmsAppState.app_state_app
-				== HVBMS_BMS_TX_STATE_3_APP_STATE_APP_HV__READY_CHOICE) { // Esta precargado?
+		} else if (TeR.bms_status.bms_state == AMS_BMS_STATUS_BMS_STATE_RUNNING_CHOICE) { // Esta precargado?
 			status = PRECHARGED;
 			if (TeR.status.r2_d
 					&& ((TeR.appStateRight.app_state_app == 4)
@@ -109,8 +107,9 @@ void stateLoop(void) {
 		}
 		switch (state) {
 		case WAIT_SL:
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_STOP_REQ_CHOICE; // pedimos parada
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Waiting for Safety Line");
 
@@ -135,9 +134,10 @@ void stateLoop(void) {
 			break;
 
 		case RDY2PRECH:
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_READY_REQ_CHOICE;
 			publish_config(&TeR.config, ALL_CONFIGS);
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Ready To Precharge");
 			//Security
@@ -163,8 +163,9 @@ void stateLoop(void) {
 				}
 			}
 			publish_config(&TeR.config, ALL_CONFIGS);
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
 			//Anounce through USB CDC
 			printf("TeR is Precharged");
 
@@ -213,8 +214,9 @@ void stateLoop(void) {
 			TeR.appReqRight.app_state_req = 2;
 			break;
 		case DRIVING:
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; // mandamos a ready (en teoria es imposible, pero por si pasamos a driving sin pasar por prech)
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; // mandamos a ready (en teoria es imposible, pero por si pasamos a driving sin pasar por prech)
 			//activamos cooling potencia HIGH
 			ter_refri_config_init(&refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;

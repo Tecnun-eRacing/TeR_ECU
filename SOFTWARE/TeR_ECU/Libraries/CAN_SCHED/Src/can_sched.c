@@ -48,6 +48,9 @@ void ter_vel_body_callback(CanMessage_t *msg) {
 void hvbms_bms_rx_ctrl_1_callback(CanMessage_t *msg) {
 	hvbms_bms_rx_ctrl_1_pack(msg->content, &TeR.BmsAppReq, msg->len);
 }
+void ams_bms_req_callback(CanMessage_t *msg){
+	ams_bms_req_pack(msg->content, &TeR.bms_req, msg->len);
+}
 
 void ter_tv_debug_callback(CanMessage_t *msg) {
 	ter_tv_debug_pack(msg->content, &TeR.tv_debug, msg->len);

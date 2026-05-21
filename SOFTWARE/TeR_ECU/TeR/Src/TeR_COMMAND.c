@@ -41,12 +41,12 @@ void beep_timer_callback(void *argument) { // MADAFUKING NON BLOCKING BEEP
  *
  * */
 void open_sl_cmd_timer_callback(void *argument) {
-	set_sl_request(SL_CMD, 0);
-	if ((hvbms_bms_tx_state_5_volt_2_x10_v_decode(TeR.BmsBatVolt.volt_2_x10_v)
-			< 10)) {
-		set_sl_request(SL_CMD, 1);
-		osTimerStop(open_sl_cmd_timerHandle);
-	}
+//	set_sl_request(SL_CMD, 0);
+//	if ((hvbms_bms_tx_state_5_volt_2_x10_v_decode(TeR.BmsBatVolt.volt_2_x10_v)
+//			< 10)) {
+//		set_sl_request(SL_CMD, 1);
+//		osTimerStop(open_sl_cmd_timerHandle);
+//	}
 }
 //Implementa aqui los comandos que se han de ejecutar
 uint8_t command(struct ter_command_t command) {
@@ -63,8 +63,9 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual (con sanity checks, realmente solo necesitas saber si el coche esta en r2prech)
 		if ((TeR.status.state == RDY2PRECH)) { //Envía al bms el mensaje de precarga falta condicion para evitar prech manual en dv
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -79,8 +80,9 @@ uint8_t command(struct ter_command_t command) {
 				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
 				&& (TeR.asb_status.asb_energy_status
 						== TER_ASB_STATUS_ASB_ENERGY_STATUS_AVAILABLE_CHOICE)) { //Acepta pregarga con intent desde el driverless
-			TeR.BmsAppReq.app_state_req =
-			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+//			TeR.BmsAppReq.app_state_req =
+//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}
@@ -88,13 +90,14 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_DISCHARGE_CHOICE: //Descarga
 		osTimerStart(open_sl_cmd_timerHandle, 100); // ask bms not so politely for shutdown
-		TeR.BmsAppReq.app_state_req =
-		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_SHUTDOWN_CHOICE; //Ask BMS politely for HV_Shutwdown
+//		TeR.BmsAppReq.app_state_req =
+//		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_SHUTDOWN_CHOICE; //Ask BMS politely for HV_Shutwdown
+		TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_STOP_REQ_CHOICE;
 		break;
 
-	case TER_COMMAND_CMD_RESET_BMS_CHOICE: //Descarga (realmente, desconozco que hace esto sobre el BMS, mirate a a ver el manual si han puesto algo)
-		TeR.BmsAppReq.app_state_req =
-		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
+	case TER_COMMAND_CMD_RESET_BMS_CHOICE:
+//		TeR.BmsAppReq.app_state_req =
+//		HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE; //Ask for HV_Reset
 		break;
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive manual
