@@ -274,8 +274,8 @@ void permaTask() {
 					TeR.tempsRight.pwr_stg_temp_deg_c);
 
 	//Fill in Status Message
-	TeR.status.ams = TeR.BmsAppState.dio3_state; //1 OK
-	TeR.status.imd = TeR.BmsAppState.dio2_state; // 1 OK
+	TeR.status.ams = TeR.bms_status.ams_status; //1 OK
+	TeR.status.imd = TeR.bms_status.imd_status; // 1 OK
 	TeR.status.left_inv = (TeR.appStateLeft.app_state_app != 6); //Distinto de fault state
 	TeR.status.right_inv = (TeR.appStateRight.app_state_app != 6); //Distinto de fault state
 }
