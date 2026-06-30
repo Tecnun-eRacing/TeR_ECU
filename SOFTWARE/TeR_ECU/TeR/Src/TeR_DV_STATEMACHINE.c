@@ -27,8 +27,8 @@ dv_act_state_t get_as_act_state();
 extern osTimerId_t as_allowed_timerHandle;
 extern osTimerId_t as_emergency_beep_timerHandle;
 const static uint32_t task_period = 5;
-persist_t ready_time; // contar el tiempo que estamos en AS_READY
-persist_t res_k2; // contar el tiempo que "res k2" ha estado en 1
+persist_t ready_time; // persistencia que cuenta el tiempo que estamos en AS_READY
+persist_t res_k2; // persistencia que cuenta el tiempo que "res k2" ha estado en 1
 
 
 uint32_t emergency_beep_count; // contador de beeps de emergencia
@@ -155,14 +155,14 @@ void dv_stateLoop() {
 			TeR.dv_system_status.steering_state =
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_UNAVAILABLE_CHOICE;
 			TeR.status.as_allowed = 0;
-			ready_time = 0; // reseteamos ready_time
+			ready_time = 0; // reseteamos ready_time, importantisimo
 
 			// setup dv driving mode & other relevant configurations for the driverless computer
 			TeR.config.driving_mode =
 			TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
 			TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
 			TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-			TeR.config.trq_limit = 20; // todo quitar en un futuro
+			TeR.config.trq_limit = 10; // todo quitar en un futuro
 			break;
 
 		case AS_DRIVING:
@@ -189,7 +189,7 @@ void dv_stateLoop() {
 		break;
 
 	case AS_READY:
-		if (!checkPersistance(&ready_time, 0, 5000)) { // han pasado al menos 5 segundos? (leete como funciona checkpersistance para que entiendas este truco)
+		if (!checkPersistance(&ready_time, 0, 5000)) { // han pasado al menos 5 segundos?
 			if (!checkPersistance(&res_k2, TeR.res_pdo_tx.k2, 500)) { // le han dado al k2 del RES durante mas de 500 millis ?
 				easyCommand(TER_COMMAND_CMD_READY2_DRIVE_DV_CHOICE); // enviamos request de paso a r2d DV
 			}
@@ -205,6 +205,8 @@ void dv_stateLoop() {
 
 			//bypass request steering dv -> steering motor signal
 			set_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
+
+			//trq is controlled in the drivingmode, check TeR_TRQMANAGER.c
 		}
 		break;
 
