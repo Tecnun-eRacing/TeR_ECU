@@ -17,11 +17,20 @@
  *
  */
 #include "TeR_DV_STATEMACHINE.h"
+#include "math.h"
+#define MAX_STEER_LEFT_ANGLE 80.0
+#define MAX_STEER_RIGHT_ANGLE -80.0
+#define DEG2RAD (180.0/PI)
+#define ACTUATOR2STEER (3.5)
+void set_assi_yellow(uint8_t set);
+void set_assi_blue(uint8_t set);
+void toggle_assi_yellow();
+void toggle_assi_blue();
 
 void permatask();
 void dv_stateLoop();
-void set_steer_angle(int32_t angle);
-void unsafe_set_steer_angle(int32_t angle);
+void set_steer_angle(float angle);
+void unsafe_set_steer_angle(float angle);
 void as_act_statemachine();
 dv_act_state_t get_as_act_state();
 extern osTimerId_t as_allowed_timerHandle;
@@ -29,7 +38,6 @@ extern osTimerId_t as_emergency_beep_timerHandle;
 const static uint32_t task_period = 5;
 persist_t ready_time; // persistencia que cuenta el tiempo que estamos en AS_READY
 persist_t res_k2; // persistencia que cuenta el tiempo que "res k2" ha estado en 1
-
 
 uint32_t emergency_beep_count; // contador de beeps de emergencia
 uint8_t ext_TS; // para testing con debugger una cosa q quiero mirar
@@ -58,7 +66,7 @@ void as_allowed_timer_callback(void *argument) {
 void as_emergency_beep_timer_callback(void *argument) {
 	HAL_GPIO_TogglePin(DOUT1_GPIO_Port, DOUT1_Pin);
 	emergency_beep_count++;
-	if (emergency_beep_count >= 24) {
+	if (emergency_beep_count >= 40) {
 		emergency_beep_count = 0;
 		HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_RESET); // asegurar que la hemos apagado
 		osTimerStop(as_emergency_beep_timerHandle);
@@ -84,7 +92,7 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 		if ((TeR.dv_info.mission_status
 				== TER_DV_INFO_MISSION_STATUS_FINISHED_CHOICE)
 				&& (TeR.wheelInfo.speed == 0)) { // supongo que quieren que este en emergency mientras se esta moviendo? ni idea? y si luego llegas a 0 entiendo que no deberia de latchearse? poco sentido la verdad, solo se guarda si el boton del res esta presionado
-			if (TeR.res_pdo_tx.e_stop_1 || TeR.res_pdo_tx.e_stop_2) { // sl open at res ? (res abierto vamos)
+			if (!TeR.res_pdo_tx.e_stop_1 || !TeR.res_pdo_tx.e_stop_2) { // sl open at res ? (res abierto vamos)
 				dv_state = AS_EMERGENCY;
 			} else { // sl not open at RES
 				dv_state = AS_FINISHED;
@@ -92,7 +100,7 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 		} else {
 			dv_state = AS_EMERGENCY;
 		}
-	} else if ((TeR.dv_info.mission != TER_DV_INFO_MISSION_MANUAL_CHOICE)
+	} else if ((TeR.dv_system_status.ami_state != 0) // si no es manual
 			&& (TeR.status.asms)
 			&& (TeR.asb_status.asb_ebs_state
 					== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
@@ -120,6 +128,7 @@ dv_state_t get_dv_state() { // fsg 2026 T 14.8
 void dvStateMachine(void *argument) {
 	uint32_t currentTick = osKernelGetTickCount();
 	for (;;) {
+
 		currentTick += task_period;
 		osDelayUntil(currentTick);
 		dv_stateLoop();
@@ -139,6 +148,9 @@ void dvStateMachine(void *argument) {
  *
  * */
 void dv_stateLoop() {
+	 permatask();
+	//unsafe_set_steer_angle(20);
+	TeR.status.asms = HAL_GPIO_ReadPin(DIN3_GPIO_Port, DIN3_Pin);
 	dv_state_t prevState = TeR.dv_system_status.as_status;
 	dv_state_t state = get_dv_state();
 	uint8_t stateChanged = state != prevState ? 1 : 0;
@@ -162,7 +174,7 @@ void dv_stateLoop() {
 			TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE;
 			TeR.config.regen_mode = TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE;
 			TeR.config.regen_enable = TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE;
-			TeR.config.trq_limit = 10; // todo quitar en un futuro
+			TeR.config.trq_limit = 20; // todo quitar en un futuro
 			break;
 
 		case AS_DRIVING:
@@ -186,12 +198,14 @@ void dv_stateLoop() {
 	case AS_OFF:
 		// T 14.4 very important this manages the sl relay of the AS
 		as_act_statemachine(); // manage requests and SL relay requests at startup
+		TeR.dv_config.entry = TER_DV_CONFIG_ENTRY_MISSION_REQ_CHOICE;
+		TeR.dv_config.mission_req = TeR.config.dv_mission_req;
 		break;
 
 	case AS_READY:
-		if (!checkPersistance(&ready_time, 0, 5000)) { // han pasado al menos 5 segundos?
-			if (!checkPersistance(&res_k2, TeR.res_pdo_tx.k2, 500)) { // le han dado al k2 del RES durante mas de 500 millis ?
-				easyCommand(TER_COMMAND_CMD_READY2_DRIVE_DV_CHOICE); // enviamos request de paso a r2d DV
+		if (heldFor(&ready_time, 1, 5000)) {                 // 5 s en AS_READY
+			if (heldFor(&res_k2, TeR.res_pdo_tx.k3 && TeR.res_pdo_tx.k2, 500)) { // k2 pulsado >= 500 ms
+				easyCommand(TER_COMMAND_CMD_READY2_DRIVE_DV_CHOICE);
 			}
 		}
 		break;
@@ -201,19 +215,25 @@ void dv_stateLoop() {
 		if (TeR.status.as_allowed) { // si la flag as allowed esta puesta, podemos hacer requests al DV
 
 			//bypass request de freno dv -> asb board signal
-			TeR.asb_brake_req.brake = TeR.dv_dynamic_req_2.asb_brake_req;
-
+			//TeR.asb_brake_req.brake = TeR.dv_dynamic_req_2.asb_brake_req;
+			TeR.asb_brake_req.brake = 0;
 			//bypass request steering dv -> steering motor signal
-			set_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
+			set_steer_angle(
+					ter_dv_dynamic_req_1_steer_angle_req_decode(
+							TeR.dv_dynamic_req_1.steer_angle_req));
 
 			//trq is controlled in the drivingmode, check TeR_TRQMANAGER.c
 		}
 		break;
 
 	case AS_EMERGENCY:
+//		TeR.asb_ebs_state_req = TER_ASB_EBS_STATE_REQ_STATE_REQ_ENABLED_CHOICE;
+//		TeR.asb_redundancy_req = TER_ASB_REDUNDANCY_REQ_STATE_REQ_ENABLED_CHOICE;
 		TeR.asb_brake_req.brake = TER_ASB_BRAKE_REQ_BRAKE_ENABLED_CHOICE; // no debería de servir para nada pero por si acaso (porque si estamos aqui el ebs ha triggereado)
 		if (TeR.wheelInfo.speed > 5) { // permite al DV hacer una parada controlada en caso de entrar en AS_EMERGENCY (le permitimos control de steering hasta un threshold)
-			set_steer_angle(TeR.dv_dynamic_req_1.steer_angle_req);
+			set_steer_angle(
+					ter_dv_dynamic_req_1_steer_angle_req_decode(
+							TeR.dv_dynamic_req_1.steer_angle_req));
 		} else { // cuando la velocidad sea inferior al threshold, quedará desactivado el steering
 			TeR.dv_system_status.steering_state =
 			TER_DV_SYSTEM_STATUS_STEERING_STATE_UNAVAILABLE_CHOICE;
@@ -235,10 +255,18 @@ void dv_stateLoop() {
  *
  *
  * */
-void set_steer_angle(int32_t angle) {
+void set_steer_angle(float angle) {
+	// OJO, el ángulo llega en RADIANES
+	float max_left = ter_steer_actuator_set_position_actuator_position_encode(
+	MAX_STEER_LEFT_ANGLE);
+	float max_right = ter_steer_actuator_set_position_actuator_position_encode(
+	MAX_STEER_RIGHT_ANGLE);
+	angle = ter_steer_actuator_set_position_actuator_position_encode(angle);
+	angle = angle*(DEG2RAD*ACTUATOR2STEER); // pasamos a GRADOS
 	if (TeR.dv_system_status.steering_state ==
 	TER_DV_SYSTEM_STATUS_STEERING_STATE_AVAILABLE_CHOICE) { // steering permitido
-		angle = clamp(angle, -20 * 10000, 20 * 10000); // multiplicado por los factores del DBC todo max y min angle por can configurables
+
+		angle = clampf(angle, max_right, max_left); // multiplicado por los factores del DBC todo max y min angle por can configurables
 		TeR.steer_actuator_set_position.actuator_position = angle;
 		uint8_t TxData[8] = { 0 };
 		ter_steer_actuator_set_position_pack(TxData,
@@ -253,8 +281,14 @@ void set_steer_angle(int32_t angle) {
  * under your own responsability (this will get you a insta DQ)
  *
  * */
-void unsafe_set_steer_angle(int32_t angle) {
-	angle = clamp(angle, -20 * 10000, 20 * 10000); // multiplicado por los factores del DBC todo max y min angle por can configurables en un futuro
+void unsafe_set_steer_angle(float angle) {
+	float max_left = ter_steer_actuator_set_position_actuator_position_encode(
+	MAX_STEER_LEFT_ANGLE);
+	float max_right = ter_steer_actuator_set_position_actuator_position_encode(
+	MAX_STEER_RIGHT_ANGLE);
+	angle = ter_steer_actuator_set_position_actuator_position_encode(angle);
+	angle = angle*DEG2RAD*ACTUATOR2STEER;
+	angle = clampf(angle, max_right, max_left); // multiplicado por los factores del DBC todo max y min angle por can configurables en un futuro
 	TeR.steer_actuator_set_position.actuator_position = angle;
 	uint8_t TxData[8] = { 0 };
 	ter_steer_actuator_set_position_pack(TxData,
@@ -282,9 +316,9 @@ void permatask() {
 //	TeR.dv_driving_dynamics_2.acceleration_lateral;
 //	TeR.dv_driving_dynamics_2.acceleration_longitudinal;
 //	TeR.dv_driving_dynamics_2.yaw_rate;
-//	TeR.dv_system_status.ami_state;
-//	TeR.dv_system_status.as_ebs_state;
-//	TeR.dv_system_status.asb_redundancy_state;
+	TeR.dv_system_status.ami_state = TeR.config.dv_mission_req;
+	TeR.dv_system_status.as_ebs_state = TeR.asb_status.asb_ebs_state;
+	TeR.dv_system_status.asb_redundancy_state = TeR.asb_status.asb_redundancy_state;
 	TeR.dv_system_status.cones_count_actual = TeR.dv_info.cones_count_actual;
 	TeR.dv_system_status.cones_count_all = TeR.dv_info.cones_count_all;
 	TeR.dv_system_status.lap_counter = TeR.dv_info.lap_counter;
@@ -296,25 +330,41 @@ void permatask() {
  *
  *
  * */
-void assi_manager() {
-	switch (TeR.dv_system_status.as_status) {
-	case AS_OFF:
-		//apagar assi
-		break;
-	case AS_READY:
-		// assi yellow
-		break;
-	case AS_DRIVING:
-		// assi yellow flashing
-		break;
-	case AS_EMERGENCY:
-		// blue flashing
-		break;
-	case AS_FINISHED:
-		//blue continuous
-		break;
-	default:
-		break;
+void assiManager(void *argument) {
+	for (;;) {
+		osDelay(100);
+		switch (TeR.dv_system_status.as_status) {
+		case AS_OFF:
+			set_assi_blue(0);
+			set_assi_yellow(0);
+			//apagar assi
+			break;
+		case AS_READY:
+			// assi yellow
+			set_assi_blue(0);
+			set_assi_yellow(1);
+			break;
+		case AS_DRIVING:
+			// assi yellow flashing
+			set_assi_blue(0);
+			toggle_assi_yellow();
+			osDelay(300);
+			break;
+		case AS_EMERGENCY:
+			// blue flashing
+			toggle_assi_blue();
+			set_assi_yellow(0);
+			osDelay(300);
+			break;
+		case AS_FINISHED:
+			//blue continuous
+			set_assi_blue(1);
+			set_assi_yellow(0);
+			osDelay(300);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -339,7 +389,7 @@ void assi_manager() {
 dv_act_state_t get_as_act_state() {
 	dv_act_state_t state = AS_ACT_OFF;
 	if ((TeR.status.asms == 0)
-			&& (TeR.dv_info.mission == TER_DV_INFO_MISSION_MANUAL_CHOICE)
+			&& (TeR.dv_system_status.ami_state == 0)
 			&& (TeR.asb_status.asb_energy_status
 					== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)
 			&& (TeR.asb_status.asb_ebs_state
@@ -352,14 +402,14 @@ dv_act_state_t get_as_act_state() {
 	}
 	if (!TeR.status.asms)
 		return AS_ACT_WAIT_ASMS;
-	if (TeR.dv_info.mission == TER_DV_INFO_MISSION_MANUAL_CHOICE)
+	if (TeR.dv_system_status.ami_state == 0)
 		return AS_ACT_WAIT_MISSION;
-	if (TeR.asb_status.asb_energy_status
-			== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)
-		return AS_ACT_WAIT_ENERGY;
+//	if (TeR.asb_status.asb_energy_status
+//			== TER_ASB_STATUS_ASB_ENERGY_STATUS_UNAVAILABLE_CHOICE)
+//		return AS_ACT_WAIT_ENERGY;
 	if ((ter_bpps_bpps_decode(TeR.bpps.bpps) < TeR.config.r2_d_brake))
 		return AS_ACT_WAIT_BRAKE;
-	if (TeR.status.state < RDY2PRECH) // todo, añadir estado intermedio que sea as_wait_sl por ejemplo, en el que mandemos request de cerrar rele de SL y a la espera de sl cerrada
+	if (TeR.status.state <= RDY2PRECH) // todo, añadir estado intermedio que sea as_wait_sl por ejemplo, en el que mandemos request de cerrar rele de SL y a la espera de sl cerrada
 		return AS_ACT_READY2PRECH;
 	if (TeR.status.state == PRECHARGED) {
 		if ((TeR.asb_status.asb_ebs_state
@@ -431,12 +481,27 @@ void as_act_statemachine() {
 	dv_act_state = state; // tengo que crear la señal de can luego lo hago todo
 	switch (state) { // permanent checking
 	case AS_ACT_READY2PRECH:
-		if (ext_TS) { // TODO lectura boton TS externo + SL cerrada
+		if (HAL_GPIO_ReadPin(DIN2_GPIO_Port, DIN2_Pin)) { // TODO lectura boton TS externo + SL cerrada
 			easyCommand(TER_COMMAND_CMD_PRECHARGE_DV_CHOICE); // enviamos request de precarga DV ( no deberia de haber problema al mantener pulsado, el coche cambia de estado a dirving y listo)
 		}
 		break;
 	default:
 		break;
 	}
+}
+void set_assi_yellow(uint8_t set) {
+	HAL_GPIO_WritePin(DOUT2_GPIO_Port, DOUT2_Pin, set);
+
+}
+void toggle_assi_yellow() {
+	HAL_GPIO_TogglePin(DOUT2_GPIO_Port, DOUT2_Pin);
+}
+
+void toggle_assi_blue() {
+	HAL_GPIO_TogglePin(DOUT3_GPIO_Port, DOUT3_Pin);
+}
+
+void set_assi_blue(uint8_t set) {
+	HAL_GPIO_WritePin(DOUT3_GPIO_Port, DOUT3_Pin, set);
 }
 

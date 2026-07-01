@@ -257,6 +257,10 @@ void CanSchedulerTask(void *argument) {
 	can_scheduler_insert_msg_with_phase(TxData, TER_VEL_BODY_LENGTH,
 	TER_VEL_BODY_FRAME_ID, 5, ter_vel_body_callback);
 
+	can_scheduler_insert_msg_with_phase(TxData, TER_ASB_BRAKE_REQ_LENGTH, TER_ASB_BRAKE_REQ_FRAME_ID, 10, ter_asb_brake_req_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_DV_SYSTEM_STATUS_LENGTH, TER_DV_SYSTEM_STATUS_FRAME_ID, 100, ter_dv_system_status_callback);
+	can_scheduler_insert_msg_with_phase(TxData, TER_DV_CONFIG_LENGTH, TER_DV_CONFIG_FRAME_ID, 100, ter_dv_config_callback);
+
 	for(;;) {
 		CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };
 		while (!can_scheduler_get_next(&g_can_scheduler_heap, &next_msg))
@@ -359,7 +363,7 @@ void canRx(void *argument) {
 					msg.data, msg.DLC);
 			break;
 
-		case TER_RES_PDO_RX_FRAME_ID:
+		case TER_RES_PDO_TX_FRAME_ID:
 			ter_res_pdo_tx_unpack(&TeR.res_pdo_tx, msg.data, msg.DLC);
 			break;
 
@@ -370,6 +374,14 @@ void canRx(void *argument) {
 		case TER_DV_DYNAMIC_REQ_2_FRAME_ID:
 			ter_dv_dynamic_req_2_unpack(&TeR.dv_dynamic_req_2, msg.data, msg.DLC);
 			break;
+		case TER_ASB_STATUS_FRAME_ID:
+			ter_asb_status_unpack(&TeR.asb_status, msg.data, msg.DLC);
+			break;
+
+		case TER_DV_INFO_FRAME_ID:
+			ter_dv_info_unpack(&TeR.dv_info, msg.data, msg.DLC);
+			break;
+
 
 
 			/* ---------------------------[INVERTER]-------------------------- */

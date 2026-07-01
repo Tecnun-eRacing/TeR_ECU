@@ -16,7 +16,7 @@
 typedef uint32_t persist_t; // Almacena el timestamp de el flanco de subida
 
 uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax);
-
+uint8_t heldFor(persist_t *instance, uint8_t cond, uint32_t tMax);
 //MAP (Mape)
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max); //Función map muy util

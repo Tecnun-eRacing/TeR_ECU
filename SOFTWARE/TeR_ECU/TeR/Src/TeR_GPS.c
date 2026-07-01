@@ -17,6 +17,7 @@ ubx_device_t gps_d;
 void uart1RxCallback(UART_HandleTypeDef *huart);
 
 void gps(void *argument) {
+	osDelay(0xFFFFFFFF);
 	uartEventFlags = osEventFlagsNew(NULL); // Event definition
 	//Assing function pointers to gps_d structure
 	gps_d.write = &gps_write;

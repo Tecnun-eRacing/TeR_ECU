@@ -26,6 +26,15 @@ uint8_t checkPersistance(persist_t *instance, uint8_t ok, uint32_t tMax) {
 	return 1; //Tenemos Error pero no hemos superado maxTime
 }
 
+uint8_t heldFor(persist_t *instance, uint8_t cond, uint32_t tMax) {
+    if (!cond) {            // no se cumple -> reset
+        *instance = 0;
+        return 0;
+    }
+    if (*instance == 0)     // acaba de empezar a cumplirse
+        *instance = osKernelGetTickCount();
+    return (osKernelGetTickCount() - *instance >= tMax) ? 1 : 0;
+}
 // Mapea un intervalo
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
 		int32_t out_max) {

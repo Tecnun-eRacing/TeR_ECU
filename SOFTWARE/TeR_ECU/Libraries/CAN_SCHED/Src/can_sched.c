@@ -45,6 +45,12 @@ void ter_ypr_callback(CanMessage_t *msg) {
 void ter_vel_body_callback(CanMessage_t *msg) {
 	ter_vel_body_pack(msg->content, &TeR.velbody, msg->len);
 }
+void ter_asb_brake_req_callback(CanMessage_t *msg){
+	ter_asb_brake_req_pack(msg->content, &TeR.asb_brake_req, msg->len);
+}
+void ter_dv_system_status_callback(CanMessage_t *msg){
+ter_dv_system_status_pack(msg->content, &TeR.dv_system_status, msg->len);
+}
 void hvbms_bms_rx_ctrl_1_callback(CanMessage_t *msg) {
 	hvbms_bms_rx_ctrl_1_pack(msg->content, &TeR.BmsAppReq, msg->len);
 }
@@ -54,6 +60,9 @@ void ams_bms_req_callback(CanMessage_t *msg){
 
 void ter_tv_debug_callback(CanMessage_t *msg) {
 	ter_tv_debug_pack(msg->content, &TeR.tv_debug, msg->len);
+}
+void ter_dv_config_callback(CanMessage_t *msg){
+	ter_dv_config_pack(msg->content, &TeR.dv_config, msg->len);
 }
 
 static uint32_t can_scheduler_phase_from_id(uint32_t id, uint32_t period_ms) {

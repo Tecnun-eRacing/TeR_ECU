@@ -62,7 +62,7 @@ uint8_t command(struct ter_command_t command) {
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual (con sanity checks, realmente solo necesitas saber si el coche esta en r2prech)
-		if ((TeR.status.state == RDY2PRECH)) { //Envía al bms el mensaje de precarga falta condicion para evitar prech manual en dv
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)) { //Envía al bms el mensaje de precarga falta condicion para evitar prech manual en dv
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
@@ -73,13 +73,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_PRECHARGE_DV_CHOICE: //Precarga DV
 		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 1)
-				&& (TeR.asb_status.asb_ebs_state
-						== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
-				&& (TeR.asb_status.asb_redundancy_state
-						== TER_ASB_STATUS_ASB_EBS_STATE_INITIAL_CHECK_PASSED_CHOICE)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)
-				&& (TeR.asb_status.asb_energy_status
-						== TER_ASB_STATUS_ASB_ENERGY_STATUS_AVAILABLE_CHOICE)) { //Acepta pregarga con intent desde el driverless
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Acepta pregarga con intent desde el driverless
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
@@ -102,7 +96,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_READY2_DRIVE_CHOICE: //Ready2Drive manual
 		if ((TeR.status.state == PRECHARGED)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Pone el coche en modo driving al añadir freno
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake) && (TeR.status.asms == 0)) { //Pone el coche en modo driving al añadir freno
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
 			if (osTimerIsRunning(r2d_timerHandle) == osOK) {
 				osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
@@ -122,7 +116,9 @@ uint8_t command(struct ter_command_t command) {
 //			TeR.appReqRight.app_state_req = 4;
 //			TeR.appReqLeft.app_state_req = 4;
 			HAL_GPIO_WritePin(DOUT1_GPIO_Port, DOUT1_Pin, GPIO_PIN_SET);
-			osTimerStart(r2d_timerHandle, 2000); // call timer for beep and delayed r2d variable set
+			if (osTimerIsRunning(r2d_timerHandle) == osOK) {
+				osTimerStart(r2d_timerHandle, 2000); // call timer for stopping beep and setting r2d after 2000ms
+			}
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
 		}

@@ -130,6 +130,13 @@ const osThreadAttr_t dvStateMachineTask_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for assiManagerTask */
+osThreadId_t assiManagerTaskHandle;
+const osThreadAttr_t assiManagerTask_attributes = {
+  .name = "assiManagerTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for rxMsg */
 osMessageQueueId_t rxMsgHandle;
 const osMessageQueueAttr_t rxMsg_attributes = {
@@ -187,6 +194,7 @@ extern void stateMachine(void *argument);
 extern void CanSchedulerTask(void *argument);
 extern void safetyLine(void *argument);
 extern void dvStateMachine(void *argument);
+extern void assiManager(void *argument);
 extern void r2d_timer_callback(void *argument);
 extern void as_allowed_timer_callback(void *argument);
 extern void as_emergency_beep_timer_callback(void *argument);
@@ -312,6 +320,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of dvStateMachineTask */
   dvStateMachineTaskHandle = osThreadNew(dvStateMachine, NULL, &dvStateMachineTask_attributes);
+
+  /* creation of assiManagerTask */
+  assiManagerTaskHandle = osThreadNew(assiManager, NULL, &assiManagerTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */

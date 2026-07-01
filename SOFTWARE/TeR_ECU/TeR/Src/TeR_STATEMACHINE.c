@@ -94,6 +94,7 @@ state_t evalState(void) {
 }
 
 void stateLoop(void) {
+
 	uint8_t prevState = TeR.status.state; //Guarda el estado previo
 	uint8_t state = evalState(); //Get Current State, guardamos y seteamos al evaluar el caso para evitar desincronizaciones de estado
 	uint8_t stateChanged = state != prevState ? 1 : 0; //for state setup
@@ -101,7 +102,7 @@ void stateLoop(void) {
 	//-----------------------------------[State Transition Tasks]--------------------------------------------//
 
 	if (stateChanged) { // Handles setup conditions for the new state
-		//publish_config(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
+		publish_config(&TeR.config, ALL_CONFIGS); // en cada cambio de estado publicamos configuracion entera del coche
 		if (state != DRIVING) {
 			TeR.status.r2_d = 0;
 		}
@@ -135,7 +136,7 @@ void stateLoop(void) {
 
 		case RDY2PRECH:
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_READY_REQ_CHOICE;
-			publish_config(&TeR.config, ALL_CONFIGS);
+			//publish_config(&TeR.config, ALL_CONFIGS);
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
@@ -151,7 +152,7 @@ void stateLoop(void) {
 			break;
 
 		case PRECHARGED:
-			if (!TeR.status.asms) { // if stupid thing is about to happen (asms is not on, but somehow the driving mode is driverless)
+			if (TeR.status.asms) { // if stupid thing is about to happen (asms is not on, but somehow the driving mode is driverless)
 				if (TeR.config.driving_mode
 						== TER_ECU_CONFIG_DRIVING_MODE_DV_TORQUE_REQUEST_CHOICE) { // por si a algun iluminado se le ocurre la brillante idea de conducir en manual despues de testear el dv y sin apagar el coche
 					TeR.config.driving_mode =
@@ -162,7 +163,7 @@ void stateLoop(void) {
 							TER_ECU_CONFIG_REGEN_ENABLE_DISABLE_CHOICE;
 				}
 			}
-			publish_config(&TeR.config, ALL_CONFIGS);
+			//publish_config(&TeR.config, ALL_CONFIGS);
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
