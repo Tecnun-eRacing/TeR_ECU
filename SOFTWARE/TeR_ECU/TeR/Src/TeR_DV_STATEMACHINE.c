@@ -38,9 +38,8 @@ extern osTimerId_t as_emergency_beep_timerHandle;
 const static uint32_t task_period = 5;
 persist_t ready_time; // persistencia que cuenta el tiempo que estamos en AS_READY
 persist_t res_k2; // persistencia que cuenta el tiempo que "res k2" ha estado en 1
-
+persist_t ext_ts; // persistencia que cuenta el tiempo que "boton ts dv" ha sido presionado
 uint32_t emergency_beep_count; // contador de beeps de emergencia
-uint8_t ext_TS; // para testing con debugger una cosa q quiero mirar
 dv_act_state_t dv_act_state = AS_ACT_OFF; // tengo que crear la señal de can luego lo hago todo
 
 /*
@@ -83,7 +82,6 @@ void as_emergency_beep_timer_callback(void *argument) {
  *
  */
 dv_state_t get_dv_state() { // fsg 2026 T 14.8
-	//TeR.status.asms = 0; // leer de un GPIO o del CAN, comentado para testing con debugger en algun momento
 	dv_state_t dv_state = AS_OFF;
 	if ((TeR.asb_status.asb_ebs_state
 			== TER_ASB_STATUS_ASB_EBS_STATE_ACTIVATED_CHOICE)
@@ -211,6 +209,10 @@ void dv_stateLoop() {
 		break;
 
 	case AS_DRIVING:
+		if(TeR.dv_info.mission_status == TER_DV_INFO_MISSION_STATUS_FINISHED_CHOICE){
+			// REQUEST DE ACTIVACIÓN DE EBS
+
+		}
 
 		if (TeR.status.as_allowed) { // si la flag as allowed esta puesta, podemos hacer requests al DV
 
@@ -332,7 +334,7 @@ void permatask() {
  * */
 void assiManager(void *argument) {
 	for (;;) {
-		osDelay(100);
+		osDelay(10);
 		switch (TeR.dv_system_status.as_status) {
 		case AS_OFF:
 			set_assi_blue(0);
@@ -348,19 +350,19 @@ void assiManager(void *argument) {
 			// assi yellow flashing
 			set_assi_blue(0);
 			toggle_assi_yellow();
-			osDelay(300);
+			osDelay(200);
 			break;
 		case AS_EMERGENCY:
 			// blue flashing
 			toggle_assi_blue();
 			set_assi_yellow(0);
-			osDelay(300);
+			osDelay(200);
 			break;
 		case AS_FINISHED:
 			//blue continuous
 			set_assi_blue(1);
 			set_assi_yellow(0);
-			osDelay(300);
+			osDelay(200);
 			break;
 		default:
 			break;
@@ -481,7 +483,7 @@ void as_act_statemachine() {
 	dv_act_state = state; // tengo que crear la señal de can luego lo hago todo
 	switch (state) { // permanent checking
 	case AS_ACT_READY2PRECH:
-		if (HAL_GPIO_ReadPin(DIN2_GPIO_Port, DIN2_Pin)) { // TODO lectura boton TS externo + SL cerrada
+		if (heldFor(ext_ts, HAL_GPIO_ReadPin(DIN2_GPIO_Port, DIN2_Pin), 500)) { // TODO lectura boton TS externo + SL cerrada
 			easyCommand(TER_COMMAND_CMD_PRECHARGE_DV_CHOICE); // enviamos request de precarga DV ( no deberia de haber problema al mantener pulsado, el coche cambia de estado a dirving y listo)
 		}
 		break;

@@ -64,6 +64,9 @@ void ter_tv_debug_callback(CanMessage_t *msg) {
 void ter_dv_config_callback(CanMessage_t *msg){
 	ter_dv_config_pack(msg->content, &TeR.dv_config, msg->len);
 }
+void ter_ebs_state_req_callback(CanMessage_t *msg){
+	ter_asb_ebs_state_req_pack(msg->content, &TeR.asb_ebs_state_req, msg->len);
+}
 
 static uint32_t can_scheduler_phase_from_id(uint32_t id, uint32_t period_ms) {
 	uint32_t h = id * 2654435761u; // 1) mezclar bits (hash multiplicativo de Knuth)

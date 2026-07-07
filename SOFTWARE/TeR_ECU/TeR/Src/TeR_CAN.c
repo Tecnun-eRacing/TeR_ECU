@@ -260,6 +260,7 @@ void CanSchedulerTask(void *argument) {
 	can_scheduler_insert_msg_with_phase(TxData, TER_ASB_BRAKE_REQ_LENGTH, TER_ASB_BRAKE_REQ_FRAME_ID, 10, ter_asb_brake_req_callback);
 	can_scheduler_insert_msg_with_phase(TxData, TER_DV_SYSTEM_STATUS_LENGTH, TER_DV_SYSTEM_STATUS_FRAME_ID, 100, ter_dv_system_status_callback);
 	can_scheduler_insert_msg_with_phase(TxData, TER_DV_CONFIG_LENGTH, TER_DV_CONFIG_FRAME_ID, 100, ter_dv_config_callback);
+	//can_scheduler_insert_msg_with_phase(TxData, TER_ASB_EBS_STATE_REQ_LENGTH, TER_ASB_EBS_STATE_REQ_FRAME_ID, 100, ter_ebs_state_req_callback);
 
 	for(;;) {
 		CAN_TxHeaderTypeDef TxHeader = { .IDE = CAN_ID_STD, .RTR = CAN_RTR_DATA };

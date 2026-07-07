@@ -56,6 +56,7 @@ void ams_bms_req_callback(CanMessage_t *msg);
 void ter_asb_brake_req_callback(CanMessage_t *msg);
 void ter_dv_system_status_callback(CanMessage_t *msg);
 void ter_dv_config_callback(CanMessage_t *msg);
+void ter_ebs_state_req_callback(CanMessage_t *msg);
 
 
 #endif /* CAN_SCHED_INC_CAN_SCHED_H_ */
