@@ -47,8 +47,8 @@ MEMORY
 {
   CCMRAM    (xrw)    : ORIGIN = 0x10000000,   LENGTH = 64K
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
-  /*FLASH    (rx)    : ORIGIN = 0x0800C000,   LENGTH = 976K */
-  FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 1024K 
+  FLASH    (rx)    : ORIGIN = 0x0800C000,   LENGTH = 976K 
+  /*FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 1024K */
 }
 
 /* Sections */

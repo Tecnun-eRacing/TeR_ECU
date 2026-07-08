@@ -223,15 +223,21 @@ trqMap_t trqCheck(trqMap_t in, trq_t limit) {
 }
 
 uint8_t regen_allowed() { // 1 ok 0 not ok
+	if (!isAngleInDeadzone(ter_steer_angle_decode(TeR.steer.angle), 15)) {
+		return 0;
+	}
 	if (!(TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE)) // regen activada?
 		return 0;
-	if (!(ams_cell_voltage_status_cell_min_volt_decode(TeR.bms_voltage_status.cell_min_volt) // celdas en rango de tension? (pone min porque el dbc del bms estaba al revés, cuando lo arreglen lo cambio TODO
+	if (!(ams_cell_voltage_status_cell_max_volt_decode(
+			TeR.bms_voltage_status.cell_max_volt) // celdas en rango de tension? (pone min porque el dbc del bms estaba al revés, cuando lo arreglen lo cambio TODO
 	< TeR.config.regen_max_cell_volt))
 		return 0;
-	if (!(ams_cell_temperatures_status_cell_max_temp_decode(TeR.bms_temperatures_status.cell_max_temp)
+	if (!(ams_cell_temperatures_status_cell_max_temp_decode(
+			TeR.bms_temperatures_status.cell_max_temp)
 			< TeR.config.regen_max_cell_temp))
 		return 0;
-	if (!(ams_hv_measurements_status_current_a_decode(TeR.bms_hv_measurements_status.current_a) // accu en rango de corriente ?
+	if (!(ams_hv_measurements_status_current_a_decode(
+			TeR.bms_hv_measurements_status.current_a) // accu en rango de corriente ?
 	> -TeR.config.regen_max_current)) // always set below your max accumulator regen current, currently is 80A so this should be 60A or so
 		return 0;
 	// si se han coumplido todas las condiciones necesarias para regenerar, retornamos 1

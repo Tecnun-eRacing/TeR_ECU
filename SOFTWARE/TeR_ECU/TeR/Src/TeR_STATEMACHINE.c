@@ -196,19 +196,19 @@ void stateLoop(void) {
 			refri.power_accu = TER_REFRI_CONFIG_POWER_ACCU_ON_CHOICE;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			//			request de intensidad 100%
-//			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
-//			refri.intensity_accu = 0;
-//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_ACCU_CHOICE;
+			refri.intensity_accu = 100;
+			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			//			modo manual
-			/*refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
-			 refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
-			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
-			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_AUTO_CHOICE;
-			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-			refri.entry = TER_REFRI_CONFIG_ENTRY_TARGET_TEMP_ACCU_CHOICE;
-			refri.target_temp_accu = 35;
-			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+			 refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_MANUAL_CHOICE;
+			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_ACCU_CHOICE;
+//			refri.mode_accu = TER_REFRI_CONFIG_MODE_ACCU_AUTO_CHOICE;
+//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
+//			refri.entry = TER_REFRI_CONFIG_ENTRY_TARGET_TEMP_ACCU_CHOICE;
+//			refri.target_temp_accu = 35;
+//			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 			//Manda el inverter a listo
 			TeR.appReqLeft.app_state_req = 2;
