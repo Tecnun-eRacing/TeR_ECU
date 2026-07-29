@@ -170,6 +170,7 @@ trqMap_t regenModeAPPS(trqMap_t in) {
 	in.rRight = trq;
 	return in;
 }
+
 //------------------------------------------------[FREE Regen (within limits) (allow DV and other driving modes such as TV to request negative torque within limits)]------------------------------------------------//
 // trqMap_t -> trqMap_t
 trqMap_t regenModeFREE(trqMap_t in) {
@@ -223,9 +224,9 @@ trqMap_t trqCheck(trqMap_t in, trq_t limit) {
 }
 
 uint8_t regen_allowed() { // 1 ok 0 not ok
-	if (!isAngleInDeadzone(ter_steer_angle_decode(TeR.steer.angle), 15)) {
-		return 0;
-	}
+//	if (!isAngleInDeadzone(ter_steer_angle_decode(TeR.steer.angle), 20)) {
+//		return 0;
+//	}
 	if (!(TeR.config.regen_enable == TER_ECU_CONFIG_REGEN_ENABLE_ENABLE_CHOICE)) // regen activada?
 		return 0;
 	if (!(ams_cell_voltage_status_cell_max_volt_decode(

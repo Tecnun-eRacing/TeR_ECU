@@ -107,7 +107,7 @@ osThreadId_t stateMachineTaskHandle;
 const osThreadAttr_t stateMachineTask_attributes = {
   .name = "stateMachineTask",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for CanSchedulerTaskN */
 osThreadId_t CanSchedulerTaskNHandle;
@@ -121,7 +121,7 @@ osThreadId_t safetyLineTaskHandle;
 const osThreadAttr_t safetyLineTask_attributes = {
   .name = "safetyLineTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for dvStateMachineTask */
 osThreadId_t dvStateMachineTaskHandle;

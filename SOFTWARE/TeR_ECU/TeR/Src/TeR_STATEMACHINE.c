@@ -187,7 +187,7 @@ void stateLoop(void) {
 			refri.mode = TER_REFRI_CONFIG_MODE_AUTO_CHOICE;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 			refri.entry = TER_REFRI_CONFIG_ENTRY_TARGET_TEMP_CHOICE;
-			refri.target_temp = 40;
+			refri.target_temp = 45;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 
 ////			activamos cooling  ACCU

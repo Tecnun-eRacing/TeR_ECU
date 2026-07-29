@@ -93,6 +93,7 @@ trqMap_t tractionControlOFF(trqMap_t in);
 
 //Basic regen
 trqMap_t regenModeAPPS(trqMap_t in);
+
 //Free regen (with limits)
 trqMap_t regenModeFREE(trqMap_t in);
 
