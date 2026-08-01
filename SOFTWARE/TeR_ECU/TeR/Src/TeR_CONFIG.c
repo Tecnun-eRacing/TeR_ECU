@@ -124,7 +124,7 @@ void set_default_config(struct ter_ecu_config_t *config) { //set car internal co
 void set_init_config(struct ter_ecu_config_t *config){ // TODO dv mission req
 //	config->driving_mode =
 //	TER_ECU_CONFIG_DRIVING_MODE_LINEAL_CHOICE;
-	config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
+	//config->regen_mode = TER_ECU_CONFIG_REGEN_MODE_APPS_CHOICE;
 }
 
 /*

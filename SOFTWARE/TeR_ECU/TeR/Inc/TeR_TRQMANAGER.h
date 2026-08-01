@@ -97,6 +97,8 @@ trqMap_t regenModeAPPS(trqMap_t in);
 //Free regen (with limits)
 trqMap_t regenModeFREE(trqMap_t in);
 
+trqMap_t regenModeBRAKE(trqMap_t in);
+
 
 //sanity Checks
 trqMap_t trqCheck(trqMap_t in,trq_t limit);

@@ -210,8 +210,8 @@ void dv_stateLoop() {
 
 	case AS_DRIVING:
 		if(TeR.dv_info.mission_status == TER_DV_INFO_MISSION_STATUS_FINISHED_CHOICE){
-			// REQUEST DE ACTIVACIÓN DE EBS
-
+			TeR.asb_brake_req.brake = 1;
+			return;
 		}
 
 		if (TeR.status.as_allowed) { // si la flag as allowed esta puesta, podemos hacer requests al DV

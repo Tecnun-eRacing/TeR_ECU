@@ -19,6 +19,7 @@
 #include "tv_mds.h"
 
 const static int task_period = 5; // Task frequency
+persist_t regen_time;
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -100,6 +101,10 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			case TER_ECU_CONFIG_REGEN_MODE_FREE_CHOICE:
 				DriveConfig.regenMode = &regenModeFREE;
 				break;
+
+			case TER_ECU_CONFIG_REGEN_MODE_BRAKE_CHOICE:
+				DriveConfig.regenMode = &regenModeBRAKE;
+				break;
 			default:
 				DriveConfig.regenMode = &regenModeAPPS;
 				break;
@@ -168,6 +173,21 @@ trqMap_t regenModeAPPS(trqMap_t in) {
 	trq = -abs(trq / 2); // per wheel
 	in.rLeft = trq;
 	in.rRight = trq;
+	return in;
+}
+
+trqMap_t regenModeBRAKE(trqMap_t in){
+	if (!regen_allowed()) {
+		in.rLeft = in.rLeft < 0 ? 0 : in.rLeft;
+		in.rRight = in.rRight < 0 ? 0 : in.rRight;
+		return in; // retornamos, regen no permitida !!!
+	}
+	if(!checkPersistance(&regen_time, ter_bpps_bpps_decode(TeR.bpps.bpps) <= 1,100)){
+	int8_t trq = TeR.config.regen_max_trq;
+	trq = -abs(trq / 2); // per wheel
+	in.rLeft = trq;
+	in.rRight = trq;
+	return in;}
 	return in;
 }
 

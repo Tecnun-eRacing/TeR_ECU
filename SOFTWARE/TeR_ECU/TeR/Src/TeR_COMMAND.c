@@ -62,9 +62,7 @@ uint8_t command(struct ter_command_t command) {
 	switch (command.cmd) { //Hay que generar un archivon los defines de esto en el repo de DBCS
 
 	case TER_COMMAND_CMD_PRECHARGE_CHOICE: //Precarga manual (con sanity checks, realmente solo necesitas saber si el coche esta en r2prech)
-		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0)) { //Envía al bms el mensaje de precarga falta condicion para evitar prech manual en dv
-//			TeR.BmsAppReq.app_state_req =
-//			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
+		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 0) && (TeR.dv_system_status.ami_state == TER_DV_SYSTEM_STATUS_AMI_STATE_AMI_STATE_MANUAL_CHOICE)) { //Envía al bms el mensaje de precarga en modo manual
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
 		} else {
 			response.code = TER_RESPONSE_CODE_INVALID_STATE_CHOICE;
@@ -73,7 +71,7 @@ uint8_t command(struct ter_command_t command) {
 
 	case TER_COMMAND_CMD_PRECHARGE_DV_CHOICE: //Precarga DV
 		if ((TeR.status.state == RDY2PRECH) && (TeR.status.asms == 1)
-				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)) { //Acepta pregarga con intent desde el driverless
+				&& (ter_bpps_bpps_decode(TeR.bpps.bpps) >= TeR.config.r2_d_brake)&& (TeR.dv_system_status.ami_state != TER_DV_SYSTEM_STATUS_AMI_STATE_AMI_STATE_MANUAL_CHOICE)) { //Acepta pregarga con intent desde el driverless
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_PRECHARGE_CHOICE; //Solicitamos la precarga al BMS
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
