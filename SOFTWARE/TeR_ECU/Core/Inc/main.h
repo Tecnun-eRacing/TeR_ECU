@@ -83,6 +83,8 @@ void Error_Handler(void);
 #define IMU_LED_GPIO_Port GPIOB
 #define DIN3_Pin GPIO_PIN_7
 #define DIN3_GPIO_Port GPIOE
+#define YELLOW_Pin GPIO_PIN_8
+#define YELLOW_GPIO_Port GPIOC
 #define SC_EN_Pin GPIO_PIN_9
 #define SC_EN_GPIO_Port GPIOB
 #define DOUT3_Pin GPIO_PIN_0
