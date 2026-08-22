@@ -20,6 +20,9 @@
 
 const static int task_period = 5; // Task frequency
 persist_t regen_time;
+uint8_t first_time;
+trq_t start_trq_limit;
+persist_t ams_undervoltage, ams_overcurrent;
 
 extern trqMap_t trqDistribution(trq_t limit);
 
@@ -36,6 +39,21 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 		osDelayUntil(nextTick); // esperamos
 		//Check if we are driving
 		if ((TeR.status.state == DRIVING)) {
+			if (first_time == 0) {
+				start_trq_limit = TeR.config.trq_limit; // copy config trq
+				first_time = 1;
+			}
+			/* If overcurrent is detected, stop the car
+			 * */
+//			if(heldFor(&ams_overcurrent, ams_hv_measurements_status_current_a_decode(
+//					TeR.bms_hv_measurements_status.current_a) > 220.0, 500)){
+//				TeR.config.trq_limit = 20;
+//			}
+//			/*If undervoltage is detected, stop the car*/
+//			if(heldFor(&ams_undervoltage, ams_cell_voltage_status_cell_min_volt_decode(
+//					TeR.bms_voltage_status.cell_min_volt) < 3200, 500)){
+//				TeR.config.trq_limit = 20;
+//			}
 			//Execute Pipeline
 			trq_t availableTorque = DriveConfig.limiter(); //genera una limitación de torque
 
@@ -52,6 +70,10 @@ void trqManager(void *argument) { // Corre las etapas del pipeline y solicita la
 			TeR.trqReqRight.torque_nm_req = trqToWheels.rRight;
 
 		} else {
+			if (first_time) {
+				first_time = 0;
+				TeR.config.trq_limit = start_trq_limit;
+			}
 			// sanity check function pointer
 			DriveConfig.sanityChecks = &trqCheck;
 			//Config the driving pipeline if not driving
@@ -176,18 +198,20 @@ trqMap_t regenModeAPPS(trqMap_t in) {
 	return in;
 }
 
-trqMap_t regenModeBRAKE(trqMap_t in){
+trqMap_t regenModeBRAKE(trqMap_t in) {
 	if (!regen_allowed()) {
 		in.rLeft = in.rLeft < 0 ? 0 : in.rLeft;
 		in.rRight = in.rRight < 0 ? 0 : in.rRight;
 		return in; // retornamos, regen no permitida !!!
 	}
-	if(!checkPersistance(&regen_time, ter_bpps_bpps_decode(TeR.bpps.bpps) <= 1,100)){
-	int8_t trq = TeR.config.regen_max_trq;
-	trq = -abs(trq / 2); // per wheel
-	in.rLeft = trq;
-	in.rRight = trq;
-	return in;}
+	if (!checkPersistance(&regen_time, ter_bpps_bpps_decode(TeR.bpps.bpps) <= 1,
+			100)) {
+		int8_t trq = TeR.config.regen_max_trq;
+		trq = -abs(trq / 2); // per wheel
+		in.rLeft = trq;
+		in.rRight = trq;
+		return in;
+	}
 	return in;
 }
 

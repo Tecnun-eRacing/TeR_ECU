@@ -176,12 +176,12 @@ void stateLoop(void) {
 			refri.entry = TER_REFRI_CONFIG_ENTRY_POWER_CHOICE;
 			refri.power = TER_REFRI_CONFIG_POWER_ON_CHOICE;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
-//			request de intensidad 20%
+//			request de intensidad 100%
 			refri.entry = TER_REFRI_CONFIG_ENTRY_INTENSITY_CHOICE;
-			refri.intensity = 20;
+			refri.intensity = 100;
 			send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);
 //			modo manual
-			/*refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
+/*			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
 			 refri.mode = TER_REFRI_CONFIG_MODE_MANUAL_CHOICE;
 			 send_config(TER_REFRI_CONFIG_FRAME_ID, &refri);*/
 			refri.entry = TER_REFRI_CONFIG_ENTRY_MODE_CHOICE;
