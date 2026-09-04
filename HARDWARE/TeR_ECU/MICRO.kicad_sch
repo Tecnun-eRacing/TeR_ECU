@@ -6159,7 +6159,6 @@
 	)
 	(label "SWO"
 		(at 261.62 76.2 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6170,7 +6169,6 @@
 	)
 	(label "BOOT0"
 		(at 78.74 86.36 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6181,7 +6179,6 @@
 	)
 	(label "SWDIO"
 		(at 58.42 43.18 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6192,7 +6189,6 @@
 	)
 	(label "SDA_2"
 		(at 133.35 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6203,7 +6199,6 @@
 	)
 	(label "LSE_OUT"
 		(at 264.16 149.86 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6214,7 +6209,6 @@
 	)
 	(label "SCL_1"
 		(at 91.44 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6225,7 +6219,6 @@
 	)
 	(label "SDA_1"
 		(at 91.44 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6236,7 +6229,6 @@
 	)
 	(label "VREF+"
 		(at 200.66 35.56 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6247,7 +6239,6 @@
 	)
 	(label "HSE_IN"
 		(at 200.66 40.64 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6258,7 +6249,6 @@
 	)
 	(label "HSE_IN"
 		(at 135.89 26.67 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6269,7 +6259,6 @@
 	)
 	(label "SWO"
 		(at 57.15 45.72 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6280,7 +6269,6 @@
 	)
 	(label "SWCLK"
 		(at 261.62 60.96 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6291,7 +6279,6 @@
 	)
 	(label "NRST"
 		(at 40.64 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6302,7 +6289,6 @@
 	)
 	(label "NRST"
 		(at 200.66 25.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6313,7 +6299,6 @@
 	)
 	(label "SDA_2"
 		(at 265.43 96.52 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6324,7 +6309,6 @@
 	)
 	(label "LSE_IN"
 		(at 87.63 26.67 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6335,7 +6319,6 @@
 	)
 	(label "SWDIO"
 		(at 261.62 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6346,7 +6329,6 @@
 	)
 	(label "LSE_OUT"
 		(at 124.46 26.67 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6357,7 +6339,6 @@
 	)
 	(label "SDA_1"
 		(at 262.89 86.36 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6368,7 +6349,6 @@
 	)
 	(label "SCL_2"
 		(at 265.43 93.98 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6379,7 +6359,6 @@
 	)
 	(label "HSE_OUT"
 		(at 200.66 43.18 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6390,7 +6369,6 @@
 	)
 	(label "SCL_1"
 		(at 262.89 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6401,7 +6379,6 @@
 	)
 	(label "NRST"
 		(at 57.15 35.56 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6412,7 +6389,6 @@
 	)
 	(label "HSE_OUT"
 		(at 172.72 26.67 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6423,7 +6399,6 @@
 	)
 	(label "SWCLK"
 		(at 58.42 40.64 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6434,7 +6409,6 @@
 	)
 	(label "LSE_IN"
 		(at 264.16 147.32 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6445,7 +6419,6 @@
 	)
 	(label "SCL_2"
 		(at 133.35 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6456,7 +6429,6 @@
 	)
 	(label "BOOT0"
 		(at 200.66 30.48 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6468,7 +6440,6 @@
 	(hierarchical_label "OUT_0"
 		(shape input)
 		(at 208.28 55.88 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6480,7 +6451,6 @@
 	(hierarchical_label "T3_CH2"
 		(shape input)
 		(at 257.81 129.54 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6492,7 +6462,6 @@
 	(hierarchical_label "SCL_1"
 		(shape input)
 		(at 111.76 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6504,7 +6473,6 @@
 	(hierarchical_label "T3_CH4"
 		(shape input)
 		(at 257.81 134.62 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6516,7 +6484,6 @@
 	(hierarchical_label "ADC1_0"
 		(shape input)
 		(at 260.35 30.48 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6528,7 +6495,6 @@
 	(hierarchical_label "IN_1"
 		(shape input)
 		(at 208.28 60.96 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6540,7 +6506,6 @@
 	(hierarchical_label "IN_0"
 		(shape input)
 		(at 208.28 63.5 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6552,7 +6517,6 @@
 	(hierarchical_label "SYS_LED"
 		(shape input)
 		(at 261.62 68.58 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6564,7 +6528,6 @@
 	(hierarchical_label "SPI1_MOSI"
 		(shape input)
 		(at 260.35 43.18 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6576,7 +6539,6 @@
 	(hierarchical_label "IMU_LED"
 		(shape input)
 		(at 261.62 73.66 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6588,7 +6550,6 @@
 	(hierarchical_label "ERR_LED"
 		(shape input)
 		(at 261.62 71.12 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6600,7 +6561,6 @@
 	(hierarchical_label "USB_D-"
 		(shape input)
 		(at 261.62 53.34 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6612,7 +6572,6 @@
 	(hierarchical_label "SDA_2"
 		(shape input)
 		(at 153.67 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6624,7 +6583,6 @@
 	(hierarchical_label "CAN2_RX"
 		(shape input)
 		(at 261.62 99.06 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6636,7 +6594,6 @@
 	(hierarchical_label "T3_CH3"
 		(shape input)
 		(at 257.81 132.08 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6648,7 +6605,6 @@
 	(hierarchical_label "USB_D+"
 		(shape input)
 		(at 261.62 55.88 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6660,7 +6616,6 @@
 	(hierarchical_label "CAN1_RX"
 		(shape input)
 		(at 207.01 91.44 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6672,7 +6627,6 @@
 	(hierarchical_label "UART_TX"
 		(shape output)
 		(at 261.62 48.26 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6684,7 +6638,6 @@
 	(hierarchical_label "ADC1_1"
 		(shape input)
 		(at 260.35 33.02 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6696,7 +6649,6 @@
 	(hierarchical_label "OUT_3"
 		(shape input)
 		(at 208.28 48.26 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6708,7 +6660,6 @@
 	(hierarchical_label "OUT_2"
 		(shape input)
 		(at 208.28 50.8 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6720,7 +6671,6 @@
 	(hierarchical_label "OUT_1"
 		(shape input)
 		(at 208.28 53.34 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6732,7 +6682,6 @@
 	(hierarchical_label "IN_3"
 		(shape input)
 		(at 208.28 66.04 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6744,7 +6693,6 @@
 	(hierarchical_label "ADC1_3"
 		(shape input)
 		(at 260.35 27.94 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6756,7 +6704,6 @@
 	(hierarchical_label "CAN2_TX"
 		(shape output)
 		(at 261.62 101.6 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6768,7 +6715,6 @@
 	(hierarchical_label "SC_EN"
 		(shape input)
 		(at 265.43 91.44 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6780,7 +6726,6 @@
 	(hierarchical_label "CAN1_TX"
 		(shape output)
 		(at 207.01 93.98 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6792,7 +6737,6 @@
 	(hierarchical_label "IN_2"
 		(shape input)
 		(at 208.28 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6804,7 +6748,6 @@
 	(hierarchical_label "SDA_1"
 		(shape input)
 		(at 111.76 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6816,7 +6759,6 @@
 	(hierarchical_label "UART_RX"
 		(shape input)
 		(at 261.62 50.8 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6828,7 +6770,6 @@
 	(hierarchical_label "T3_CH1"
 		(shape input)
 		(at 257.81 127 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6840,7 +6781,6 @@
 	(hierarchical_label "SCL_2"
 		(shape input)
 		(at 153.67 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6852,7 +6792,6 @@
 	(hierarchical_label "SPI2_MOSI"
 		(shape input)
 		(at 257.81 119.38 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6864,7 +6803,6 @@
 	(hierarchical_label "ADC1_2"
 		(shape input)
 		(at 260.35 25.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

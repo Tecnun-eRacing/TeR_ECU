@@ -461,7 +461,6 @@
 	(hierarchical_label "SCL"
 		(shape input)
 		(at 163.83 93.98 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -473,7 +472,6 @@
 	(hierarchical_label "SDA"
 		(shape input)
 		(at 163.83 91.44 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

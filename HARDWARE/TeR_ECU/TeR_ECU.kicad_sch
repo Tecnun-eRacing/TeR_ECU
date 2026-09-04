@@ -3317,7 +3317,6 @@
 	)
 	(label "PWM1"
 		(at 140.97 87.63 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3328,7 +3327,6 @@
 	)
 	(label "DOUT0"
 		(at 96.52 71.12 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3339,7 +3337,6 @@
 	)
 	(label "PWM2"
 		(at 96.52 86.36 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3350,7 +3347,6 @@
 	)
 	(label "DOUT0"
 		(at 140.97 67.31 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3361,7 +3357,6 @@
 	)
 	(label "IMU_LED"
 		(at 16.51 179.07 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3372,7 +3367,6 @@
 	)
 	(label "SYS_LED"
 		(at 175.26 125.73 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3383,7 +3377,6 @@
 	)
 	(label "DIN0"
 		(at 96.52 60.96 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3394,7 +3387,6 @@
 	)
 	(label "DOUT1"
 		(at 140.97 69.85 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3405,7 +3397,6 @@
 	)
 	(label "PWM3"
 		(at 96.52 88.9 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3416,7 +3407,6 @@
 	)
 	(label "DIN1"
 		(at 96.52 63.5 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3427,7 +3417,6 @@
 	)
 	(label "DOUT2"
 		(at 96.52 76.2 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3438,7 +3427,6 @@
 	)
 	(label "PWM3"
 		(at 140.97 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3449,7 +3437,6 @@
 	)
 	(label "AIN2"
 		(at 96.52 55.88 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3460,7 +3447,6 @@
 	)
 	(label "SC_OUT"
 		(at 96.52 99.06 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3471,7 +3457,6 @@
 	)
 	(label "DIN0"
 		(at 140.97 34.29 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3482,7 +3467,6 @@
 	)
 	(label "AIN1"
 		(at 140.97 50.8 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3493,7 +3477,6 @@
 	)
 	(label "PWM0"
 		(at 96.52 81.28 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3504,7 +3487,6 @@
 	)
 	(label "ERR_LED"
 		(at 16.51 171.45 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3515,7 +3497,6 @@
 	)
 	(label "AIN3"
 		(at 96.52 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3526,7 +3507,6 @@
 	)
 	(label "SC_OUT"
 		(at 139.7 119.38 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3537,7 +3517,6 @@
 	)
 	(label "LED1"
 		(at 96.52 91.44 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3548,7 +3527,6 @@
 	)
 	(label "DIN3"
 		(at 140.97 41.91 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3559,7 +3537,6 @@
 	)
 	(label "SC_IN"
 		(at 96.52 96.52 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3570,7 +3547,6 @@
 	)
 	(label "LED1"
 		(at 140.97 102.87 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3581,7 +3557,6 @@
 	)
 	(label "DIN3"
 		(at 96.52 68.58 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3592,7 +3567,6 @@
 	)
 	(label "AIN2"
 		(at 140.97 53.34 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3603,7 +3577,6 @@
 	)
 	(label "DOUT3"
 		(at 140.97 74.93 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3614,7 +3587,6 @@
 	)
 	(label "AIN1"
 		(at 96.52 53.34 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3625,7 +3597,6 @@
 	)
 	(label "DIN2"
 		(at 140.97 39.37 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3636,7 +3607,6 @@
 	)
 	(label "SC_IN"
 		(at 139.7 116.84 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3647,7 +3617,6 @@
 	)
 	(label "IMU_LED"
 		(at 175.26 130.81 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3658,7 +3627,6 @@
 	)
 	(label "DOUT2"
 		(at 140.97 72.39 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3669,7 +3637,6 @@
 	)
 	(label "AIN0"
 		(at 96.52 50.8 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3680,7 +3647,6 @@
 	)
 	(label "PWM2"
 		(at 140.97 90.17 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3691,7 +3657,6 @@
 	)
 	(label "LED2"
 		(at 96.52 93.98 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3702,7 +3667,6 @@
 	)
 	(label "ERR_LED"
 		(at 175.26 128.27 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3713,7 +3677,6 @@
 	)
 	(label "DIN2"
 		(at 96.52 66.04 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3724,7 +3687,6 @@
 	)
 	(label "DOUT3"
 		(at 96.52 78.74 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3735,7 +3697,6 @@
 	)
 	(label "AIN3"
 		(at 140.97 55.88 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3746,7 +3707,6 @@
 	)
 	(label "PWM1"
 		(at 96.52 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3757,7 +3717,6 @@
 	)
 	(label "DOUT1"
 		(at 96.52 73.66 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3768,7 +3727,6 @@
 	)
 	(label "SYS_LED"
 		(at 16.51 186.69 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3779,7 +3737,6 @@
 	)
 	(label "PWM0"
 		(at 140.97 85.09 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3790,7 +3747,6 @@
 	)
 	(label "AIN0"
 		(at 140.97 48.26 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3801,7 +3757,6 @@
 	)
 	(label "DIN1"
 		(at 140.97 36.83 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3812,7 +3767,6 @@
 	)
 	(label "LED2"
 		(at 140.97 105.41 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

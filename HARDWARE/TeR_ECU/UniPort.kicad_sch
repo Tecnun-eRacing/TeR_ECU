@@ -672,7 +672,6 @@
 	(hierarchical_label "CAN+"
 		(shape bidirectional)
 		(at 153.67 92.71 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -684,7 +683,6 @@
 	(hierarchical_label "CAN-"
 		(shape bidirectional)
 		(at 153.67 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

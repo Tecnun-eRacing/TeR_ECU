@@ -2948,7 +2948,6 @@
 	(hierarchical_label "CAN_RX"
 		(shape output)
 		(at 80.01 92.71 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2960,7 +2959,6 @@
 	(hierarchical_label "CAN+"
 		(shape bidirectional)
 		(at 219.71 80.01 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2972,7 +2970,6 @@
 	(hierarchical_label "CAN-"
 		(shape bidirectional)
 		(at 220.98 110.49 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2984,7 +2981,6 @@
 	(hierarchical_label "CAN_TX"
 		(shape input)
 		(at 80.01 90.17 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3089,7 +3085,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "120R"
+		(property "Value" "60R"
 			(at 186.69 86.3599 0)
 			(effects
 				(font
@@ -4411,7 +4407,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "120R"
+		(property "Value" "60R"
 			(at 186.69 104.1399 0)
 			(effects
 				(font

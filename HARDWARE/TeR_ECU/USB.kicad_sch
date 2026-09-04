@@ -1262,7 +1262,6 @@
 	)
 	(label "D+"
 		(at 128.27 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1273,7 +1272,6 @@
 	)
 	(label "D-"
 		(at 128.27 97.79 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1285,7 +1283,6 @@
 	(hierarchical_label "USB_D+"
 		(shape input)
 		(at 146.05 95.25 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1297,7 +1294,6 @@
 	(hierarchical_label "USB_D-"
 		(shape input)
 		(at 146.05 97.79 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

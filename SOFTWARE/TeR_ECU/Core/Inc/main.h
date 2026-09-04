@@ -57,14 +57,40 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BSPD_Pin GPIO_PIN_12
-#define BSPD_GPIO_Port GPIOB
-#define TSMS_Pin GPIO_PIN_13
-#define TSMS_GPIO_Port GPIOB
-#define BL_Pin GPIO_PIN_11
-#define BL_GPIO_Port GPIOA
-#define HORN_Pin GPIO_PIN_12
-#define HORN_GPIO_Port GPIOA
+#define DOUT1_Pin GPIO_PIN_2
+#define DOUT1_GPIO_Port GPIOE
+#define DOUT0_Pin GPIO_PIN_3
+#define DOUT0_GPIO_Port GPIOE
+#define DIN2_Pin GPIO_PIN_4
+#define DIN2_GPIO_Port GPIOE
+#define DIN1_Pin GPIO_PIN_5
+#define DIN1_GPIO_Port GPIOE
+#define DIN0_Pin GPIO_PIN_6
+#define DIN0_GPIO_Port GPIOE
+#define AIN2_Pin GPIO_PIN_0
+#define AIN2_GPIO_Port GPIOA
+#define AIN3_Pin GPIO_PIN_1
+#define AIN3_GPIO_Port GPIOA
+#define AIN0_Pin GPIO_PIN_2
+#define AIN0_GPIO_Port GPIOA
+#define AIN1_Pin GPIO_PIN_3
+#define AIN1_GPIO_Port GPIOA
+#define SYS_LED_Pin GPIO_PIN_0
+#define SYS_LED_GPIO_Port GPIOB
+#define ERR_LED_Pin GPIO_PIN_1
+#define ERR_LED_GPIO_Port GPIOB
+#define IMU_LED_Pin GPIO_PIN_2
+#define IMU_LED_GPIO_Port GPIOB
+#define DIN3_Pin GPIO_PIN_7
+#define DIN3_GPIO_Port GPIOE
+#define YELLOW_Pin GPIO_PIN_8
+#define YELLOW_GPIO_Port GPIOC
+#define SC_EN_Pin GPIO_PIN_9
+#define SC_EN_GPIO_Port GPIOB
+#define DOUT3_Pin GPIO_PIN_0
+#define DOUT3_GPIO_Port GPIOE
+#define DOUT2_Pin GPIO_PIN_1
+#define DOUT2_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
 
