@@ -208,7 +208,7 @@ static void MX_NVIC_Init(void)
 
 /* USER CODE BEGIN 4 */
 int _write(int file, char *ptr, int len) {
-	CDC_Transmit_FS((uint8_t*) ptr, len);  // Send data via USB CDC
+	//CDC_Transmit_FS((uint8_t*) ptr, len);  // Send data via USB CDC
 	return len;
 }
 /* USER CODE END 4 */

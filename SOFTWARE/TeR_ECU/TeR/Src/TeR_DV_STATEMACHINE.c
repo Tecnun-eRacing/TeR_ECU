@@ -489,7 +489,7 @@ void as_act_statemachine() {
 	dv_act_state = state; // tengo que crear la señal de can luego lo hago todo
 	switch (state) { // permanent checking
 	case AS_ACT_READY2PRECH:
-		if (heldFor(ext_ts, HAL_GPIO_ReadPin(DIN2_GPIO_Port, DIN2_Pin), 500)) { // TODO lectura boton TS externo + SL cerrada
+		if (heldFor(&ext_ts, HAL_GPIO_ReadPin(DIN2_GPIO_Port, DIN2_Pin), 500)) { // TODO lectura boton TS externo + SL cerrada
 			easyCommand(TER_COMMAND_CMD_PRECHARGE_DV_CHOICE); // enviamos request de precarga DV ( no deberia de haber problema al mantener pulsado, el coche cambia de estado a dirving y listo)
 		}
 		break;

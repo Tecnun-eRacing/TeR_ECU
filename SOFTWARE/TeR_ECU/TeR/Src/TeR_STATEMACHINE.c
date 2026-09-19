@@ -112,7 +112,7 @@ void stateLoop(void) {
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
-			printf("TeR is Waiting for Safety Line");
+			//printf("TeR is Waiting for Safety Line");
 
 			//	Apagamos refri ventis bombas
 			ter_refri_config_init(&refri);
@@ -140,7 +140,7 @@ void stateLoop(void) {
 //			TeR.BmsAppReq.app_state_req =
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_STANDBY_CHOICE;
 			//Anounce through USB CDC
-			printf("TeR is Ready To Precharge");
+			//printf("TeR is Ready To Precharge");
 			//Security
 			TeR.appReqLeft.app_state_req = 2; //Manda el Inverter a ready
 			TeR.appReqRight.app_state_req = 2;
@@ -148,7 +148,7 @@ void stateLoop(void) {
 
 		case PRECHARGING:
 			//Anounce through USB CDC
-			printf("TeR is Precharging");
+			//printf("TeR is Precharging");
 			break;
 
 		case PRECHARGED:
@@ -169,7 +169,7 @@ void stateLoop(void) {
 //			HVBMS_BMS_RX_CTRL_1_APP_STATE_REQ_HV_READY_CHOICE; //mandamos a ready
 			TeR.bms_req.state_req = AMS_BMS_REQ_STATE_REQ_RUNNING_REQ_CHOICE;
 			//Anounce through USB CDC
-			printf("TeR is Precharged");
+			//printf("TeR is Precharged");
 
 //			 activamos cooling potencia LOW de MAIN
 			ter_refri_config_init(&refri);
